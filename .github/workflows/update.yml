@@ -1,0 +1,50 @@
+name: Refresh opportunities
+
+# Runs the Python scraper on a schedule, commits the regenerated data files,
+# and the push triggers a Netlify deploy automatically.
+on:
+  schedule:
+    - cron: "0 6 * * *"      # daily at 06:00 UTC
+  workflow_dispatch: {}       # allow manual "Run workflow" from the Actions tab
+
+# Prevent overlapping runs from racing on the same commit.
+concurrency:
+  group: refresh-opportunities
+  cancel-in-progress: false
+
+permissions:
+  contents: write             # needed to commit the refreshed data back
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: artist-aggregator
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run aggregator
+        # data.db is committed in the repo, so "NEW since last run" detection and
+        # first-seen timestamps survive across CI runs.
+        run: python aggregator.py update
+
+      - name: Commit refreshed data
+        run: |
+          git config user.name  "art-funding-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add opportunities.js opportunities.json data.db
+          if git diff --cached --quiet; then
+            echo "No changes — nothing to deploy."
+          else
+            git commit -m "chore: refresh opportunities ($(date -u +%Y-%m-%d))"
+            git push
+          fi

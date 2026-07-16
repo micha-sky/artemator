@@ -1,0 +1,21 @@
+# Netlify config — serves the static dashboard.
+# The Python scraper does NOT run here; it runs in GitHub Actions (see
+# .github/workflows/update.yml), which commits a fresh opportunities.js that
+# Netlify then auto-deploys on push.
+
+[build]
+  # No build step: the site is plain static files inside artist-aggregator/.
+  publish = "artist-aggregator"
+  command = ""
+
+# Serve the dashboard at the site root.
+[[redirects]]
+  from = "/"
+  to = "/dashboard.html"
+  status = 200
+
+# Long-lived cache for fonts; data file must stay fresh so never cache it hard.
+[[headers]]
+  for = "/opportunities.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
