@@ -84,7 +84,7 @@ def cmd_list(args):
     rows = store.query(
         region=args.region, type=args.type, funded=args.funded, source=args.source,
         search=args.search, within_days=args.within, new_since=since,
-        has_deadline=args.has_deadline, sort=args.sort,
+        has_deadline=args.has_deadline, sort=args.sort, discipline=args.discipline,
     )
     if not rows:
         print("no matches.")
@@ -141,6 +141,7 @@ def build_parser():
     l = sub.add_parser("list", help="filter stored opportunities")
     l.add_argument("--region", choices=["DE", "EU", "Intl"])
     l.add_argument("--type", help="Residency / Grant / Mobility / Prize / Open Call / Other")
+    l.add_argument("--discipline", help="Painting / Sound/Music / Writing / Photography / … (substring)")
     l.add_argument("--funded", choices=["likely", "fee-based", "mixed", "unknown"])
     l.add_argument("--source")
     l.add_argument("--search", help="keyword in title/summary")

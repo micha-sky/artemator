@@ -27,6 +27,24 @@ EU_COUNTRIES = {
     "united kingdom","switzerland","swiss",
 }
 
+# Discipline / medium tags. An item can match several (a call can be open to
+# painting *and* sculpture), so guess_disciplines() returns a list. Matched with
+# word boundaries to avoid false hits (e.g. "sound" inside "resounding").
+DISCIPLINE_RULES = [
+    ("Painting",          ["painting", "painter", "painters", "malerei"]),
+    ("Drawing",           ["drawing", "drawings", "illustration", "illustrator", "zeichnung"]),
+    ("Sculpture",         ["sculpture", "sculptor", "sculptural", "skulptur"]),
+    ("Photography",       ["photography", "photographer", "photographic", "fotografie", "photobook"]),
+    ("Film/Video",        ["film", "filmmaker", "filmmaking", "video", "cinema", "cinematic", "documentary", "animation", "moving image"]),
+    ("Sound/Music",       ["sound", "sonic", "music", "musical", "musician", "composer", "composition", "audio", "field recording"]),
+    ("Performance",       ["performance", "performing", "dance", "dancer", "choreography", "choreographer", "theatre", "theater", "live art", "opera"]),
+    ("Writing",           ["writing", "writer", "literature", "literary", "poetry", "poet", "fiction", "nonfiction", "essay", "essays", "novel", "playwright"]),
+    ("Digital/New Media", ["digital", "new media", "net art", "generative", "interactive", "video game", "game art", "virtual reality", "augmented reality", "electronic art", "creative coding", "software art"]),
+    ("Printmaking",       ["printmaking", "printmaker", "etching", "lithography", "lithograph", "screenprint", "screen print", "engraving", "risograph"]),
+    ("Craft/Textile",     ["textile", "textiles", "fiber art", "fibre art", "weaving", "embroidery", "ceramic", "ceramics", "glass art", "jewellery", "jewelry", "woodwork", "craft"]),
+    ("Curatorial",        ["curator", "curatorial", "curating"]),
+]
+
 TYPE_RULES = [
     ("Residency", ["residency", "residencies", "résidence", "residence", "atelier", "artist-in-residence", "air "]),
     ("Grant",     ["grant", "stipend", "stipendium", "stipendien", "fellowship", "bursary", "förder", "funding", "scholarship"]),
@@ -106,6 +124,16 @@ def guess_region(text: str) -> str:
     return "Intl"
 
 
+def guess_disciplines(text: str) -> list:
+    """Return the list of discipline tags whose keywords appear in the text."""
+    t = (text or "").lower()
+    out = []
+    for label, kws in DISCIPLINE_RULES:
+        if any(re.search(r"\b" + re.escape(k) + r"\b", t) for k in kws):
+            out.append(label)
+    return out
+
+
 def guess_type(text: str) -> str:
     t = (text or "").lower()
     for label, kws in TYPE_RULES:
@@ -178,4 +206,5 @@ def normalize(raw: dict) -> dict:
         "type": raw.get("type") or guess_type(blob),
         "funded": guess_funded(blob),
         "amount": extract_amount(blob),
+        "discipline": ", ".join(guess_disciplines(blob)),
     }

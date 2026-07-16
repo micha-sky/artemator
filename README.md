@@ -46,10 +46,16 @@ a silently-broken source is visible at a glance.
 > CI run and tune selectors in `sources.py` if a source reads 0.
 
 ## Sources
-RSS (reliable): **Colossal** (monthly "Opportunities" roundups), **e-flux**.
+RSS (reliable): **Colossal** (monthly "Opportunities" roundup feed), **Hyperallergic**
+(dedicated Opportunities tag feed — grants, fellowships, prizes, residencies), **e-flux**.
 HTML (scraped — selectors may need tuning): **Res Artis**, **On the Move**, **Stiftung Kunstfonds**.
 Add your own by writing a `fetch_x()` in `sources.py` that returns
 `{title, url, summary, source}` dicts and registering it in `SOURCES`.
+
+Sources that were checked and **not** added (no usable RSS / bot-blocked as of
+this writing): ArtRabbit and Rhizome (Cloudflare 403), CreativeApplications
+(feed disabled), NYFA, ArtsThread, Creative Capital, bbk. These would each need a
+custom HTML scraper or an API key — add one as a `fetch_x()` if you want it.
 
 > HTML scrapers depend on each site's markup. On the first live run, if a source
 > returns 0 items, open the page, inspect it, and fix the CSS selector marked
@@ -58,13 +64,21 @@ Add your own by writing a `fetch_x()` in `sources.py` that returns
 ## Filtering (CLI)
 ```bash
 python aggregator.py list --region DE --funded likely --within 60
-python aggregator.py list --type Residency --search painting --sort newest
+python aggregator.py list --type Residency --discipline Painting --sort newest
+python aggregator.py list --discipline Sound/Music --search festival
 python aggregator.py list --new --since-days 7        # only recently-appeared
 python aggregator.py mark <id> --status applied --notes "sent 12 Aug"
 ```
-The dashboard offers the same filters (source, region, type, funded, deadline
-window, keyword, new-only, has-deadline) plus a NEW badge and .ics export with
-reminders 2 weeks and 3 days before each deadline.
+The dashboard offers the same filters (source, region, type, **discipline**,
+funded, deadline window, keyword, new-only, has-deadline) plus a NEW badge, a
+per-source health strip, dark mode, pagination, and .ics export with reminders
+2 weeks and 3 days before each deadline.
+
+**Discipline** is a keyword-tagged medium — Painting, Drawing, Sculpture,
+Photography, Film/Video, Sound/Music, Performance, Writing, Digital/New Media,
+Printmaking, Craft/Textile, Curatorial. A call can carry several tags (or none —
+many open calls are discipline-agnostic). Like region/type, it's a heuristic
+guess from the listing text; edit `DISCIPLINE_RULES` in `normalize.py` to tune it.
 
 ## "Tell me when new ones appear"
 Run `update` on a schedule and let it email you a digest of new items:

@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS opportunities (
     id         TEXT PRIMARY KEY,
     title      TEXT, org TEXT, url TEXT, source TEXT, summary TEXT,
     deadline   TEXT, region TEXT, type TEXT, funded TEXT, amount TEXT,
+    discipline TEXT,
     first_seen TEXT, last_seen TEXT
 );
 CREATE TABLE IF NOT EXISTS status (          -- your own marks, kept even if a call drops off
@@ -30,6 +31,10 @@ def _conn():
 def init():
     with _conn() as c:
         c.executescript(SCHEMA)
+        # Migration for DBs created before the discipline column existed.
+        cols = {r["name"] for r in c.execute("PRAGMA table_info(opportunities)")}
+        if "discipline" not in cols:
+            c.execute("ALTER TABLE opportunities ADD COLUMN discipline TEXT")
 
 
 def upsert_many(items):
@@ -43,17 +48,19 @@ def upsert_many(items):
                 new_items.append(it)
                 c.execute(
                     """INSERT INTO opportunities
-                       (id,title,org,url,source,summary,deadline,region,type,funded,amount,first_seen,last_seen)
-                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                       (id,title,org,url,source,summary,deadline,region,type,funded,amount,discipline,first_seen,last_seen)
+                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                     (it["id"], it["title"], it["org"], it["url"], it["source"], it["summary"],
-                     it["deadline"], it["region"], it["type"], it["funded"], it["amount"], now, now),
+                     it["deadline"], it["region"], it["type"], it["funded"], it["amount"],
+                     it.get("discipline", ""), now, now),
                 )
             else:
                 c.execute(
                     """UPDATE opportunities SET title=?,org=?,url=?,source=?,summary=?,
-                       deadline=?,region=?,type=?,funded=?,amount=?,last_seen=? WHERE id=?""",
+                       deadline=?,region=?,type=?,funded=?,amount=?,discipline=?,last_seen=? WHERE id=?""",
                     (it["title"], it["org"], it["url"], it["source"], it["summary"],
-                     it["deadline"], it["region"], it["type"], it["funded"], it["amount"], now, it["id"]),
+                     it["deadline"], it["region"], it["type"], it["funded"], it["amount"],
+                     it.get("discipline", ""), now, it["id"]),
                 )
     return new_items
 
@@ -66,13 +73,15 @@ def set_mark(opp_id, mark=None, notes=None):
 
 
 def query(region=None, type=None, funded=None, source=None, search=None,
-          within_days=None, new_since=None, has_deadline=None, sort="deadline"):
+          within_days=None, new_since=None, has_deadline=None, sort="deadline",
+          discipline=None):
     sql = "SELECT o.*, s.mark, s.notes FROM opportunities o LEFT JOIN status s ON o.id=s.id WHERE 1=1"
     args = []
     if region:   sql += " AND o.region=?";               args.append(region)
     if type:     sql += " AND o.type=?";                 args.append(type)
     if funded:   sql += " AND o.funded=?";               args.append(funded)
     if source:   sql += " AND o.source=?";               args.append(source)
+    if discipline: sql += " AND o.discipline LIKE ?";    args.append(f"%{discipline}%")
     if search:   sql += " AND (LOWER(o.title) LIKE ? OR LOWER(o.summary) LIKE ?)"; \
                  args += [f"%{search.lower()}%", f"%{search.lower()}%"]
     if has_deadline: sql += " AND o.deadline IS NOT NULL"

@@ -24,19 +24,14 @@ def _get(url):
 # ---------- RSS sources (robust) ----------
 
 def fetch_colossal():
-    """This Is Colossal — keep only the monthly 'Opportunities' roundups."""
-    feed = feedparser.parse("https://www.thisiscolossal.com/feed/")
-    out = []
-    for e in feed.entries:
-        title = e.get("title", "")
-        if "opportunit" not in title.lower():
-            continue
-        # each roundup post lists many calls in its body; emit the post itself,
-        # and also split out bullet-like lines that contain "Deadline"
-        body = BeautifulSoup(e.get("summary", ""), "html.parser").get_text(" ", strip=True)
-        out.append({"title": title, "url": e.get("link", ""),
-                    "summary": body, "source": "Colossal"})
-    return out
+    """This Is Colossal — dedicated monthly 'Opportunities' roundup feed.
+
+    Each roundup post lists many calls in its body; we emit the post itself.
+    """
+    feed = feedparser.parse("https://www.thisiscolossal.com/category/opportunities/feed/")
+    return [{"title": e.get("title", ""), "url": e.get("link", ""),
+             "summary": BeautifulSoup(e.get("summary", ""), "html.parser").get_text(" ", strip=True),
+             "source": "Colossal"} for e in feed.entries]
 
 
 def fetch_eflux():
@@ -44,6 +39,15 @@ def fetch_eflux():
     return [{"title": e.get("title", ""), "url": e.get("link", ""),
              "summary": BeautifulSoup(e.get("summary", ""), "html.parser").get_text(" ", strip=True),
              "source": "e-flux"} for e in feed.entries]
+
+
+def fetch_hyperallergic():
+    """Hyperallergic — dedicated 'Opportunities' tag feed (open calls, grants,
+    fellowships, residencies). Reliable RSS."""
+    feed = feedparser.parse("https://hyperallergic.com/tag/opportunities/feed/")
+    return [{"title": e.get("title", ""), "url": e.get("link", ""),
+             "summary": BeautifulSoup(e.get("summary", ""), "html.parser").get_text(" ", strip=True),
+             "source": "Hyperallergic"} for e in feed.entries]
 
 
 # ---------- HTML scrapers (TUNE selectors on first live run) ----------
@@ -121,9 +125,10 @@ def _dedupe_local(items):
 
 # Registry: name -> callable. Toggle what runs from the CLI with --sources.
 SOURCES = {
-    "colossal":   fetch_colossal,
-    "eflux":      fetch_eflux,
-    "resartis":   fetch_resartis,
-    "onthemove":  fetch_onthemove,
-    "kunstfonds": fetch_kunstfonds,
+    "colossal":     fetch_colossal,
+    "eflux":        fetch_eflux,
+    "hyperallergic": fetch_hyperallergic,
+    "resartis":     fetch_resartis,
+    "onthemove":    fetch_onthemove,
+    "kunstfonds":   fetch_kunstfonds,
 }
