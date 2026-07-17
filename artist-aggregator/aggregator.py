@@ -48,7 +48,7 @@ def cmd_update(args):
             print(f"  {name:12s} {len(items):4d} items")
         except Exception as e:  # one bad source must not kill the run
             errors.append(f"{name}: {type(e).__name__}: {e}")
-            health[name] = f"error: {type(e).__name__}"
+            health[name] = f"error: {e}"[:60] or f"error: {type(e).__name__}"
             print(f"  {name:12s} FAILED — {e}")
 
     normalized, seen, dropped = [], set(), 0
@@ -110,7 +110,8 @@ def _fmt_line(r):
     dleft = r.get("days_left")
     days = f"{dleft:>4}d" if isinstance(dleft, int) else "  --"
     fund = {"likely": "€", "fee-based": "fee", "mixed": "€/fee", "unknown": " ? "}.get(r.get("funded"), " ? ")
-    return f"{dl:<11} {days}  {fund:>4}  [{r.get('region','?'):<4}] {r.get('type','?'):<10} {r['title'][:70]}  ({r['source']})"
+    disc = f"  {{{r['discipline']}}}" if r.get("discipline") else ""
+    return f"{dl:<11} {days}  {fund:>4}  [{r.get('region','?'):<4}] {r.get('type','?'):<10} {r['title'][:70]}{disc}  ({r['source']})"
 
 
 def _send_digest(new_items):

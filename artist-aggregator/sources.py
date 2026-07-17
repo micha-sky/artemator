@@ -53,11 +53,18 @@ def fetch_hyperallergic():
 # ---------- HTML scrapers (TUNE selectors on first live run) ----------
 
 def fetch_resartis():
-    """Res Artis open calls — deadline + country render in list rows."""
+    """Res Artis open calls.
+
+    The open-calls page sits behind an sgcaptcha bot-challenge that serves a
+    182-byte meta-refresh instead of listings, so plain HTTP can't read it.
+    Detect the challenge and fail loudly rather than emit garbage — the health
+    strip then shows this source as broken instead of silently empty.
+    """
     html = _get("https://resartis.org/open-calls/")
+    if "sgcaptcha" in html or "http-equiv=\"refresh\"" in html.lower() or len(html) < 1000:
+        raise RuntimeError("bot-challenge (sgcaptcha) — needs a real browser")
     soup = BeautifulSoup(html, "html.parser")
     out = []
-    # TUNE: inspect the actual list item wrapper; this targets anchor cards.
     for card in soup.select("article, .open-call, .listing, li"):
         a = card.find("a", href=True)
         if not a:
@@ -73,42 +80,82 @@ def fetch_resartis():
     return _dedupe_local(out)
 
 
+# On the Move groups listings by Drupal view "deadline blocks", each carrying a
+# view-display-id-<category> class. Map the useful ones to a type; skip the
+# categories that aren't funding/open-call opportunities.
+_OTM_CATEGORY_TYPE = {
+    "residencies": "Residency", "fellowships": "Grant", "project_funding": "Grant",
+    "commissions": "Open Call", "presenting_work": "Open Call",
+    "competitions": "Prize", "training": "Other",
+}
+_OTM_SKIP = {"jobs", "meeting", "surveys"}
+
+
 def fetch_onthemove():
-    """On the Move deadlines page — entries carry country + deadline in the text."""
+    """On the Move deadlines — real listings are /news/ links inside the
+    .view-deadline-blocks views; nav/boilerplate links live outside them."""
     html = _get("https://on-the-move.org/news/deadlines")
     soup = BeautifulSoup(html, "html.parser")
     out = []
-    for a in soup.select("a[href]"):  # TUNE: narrow to the deadline-list container
-        title = a.get_text(" ", strip=True)
-        parent_text = a.find_parent().get_text(" ", strip=True) if a.find_parent() else title
-        if "deadline" not in parent_text.lower() or len(title) < 10:
+    for view in soup.select("[class*=view-display-id-]"):
+        cat = next((c.split("view-display-id-", 1)[1] for c in view.get("class", [])
+                    if c.startswith("view-display-id-")), "")
+        if cat in _OTM_SKIP:
             continue
-        href = a["href"]
-        if href.startswith("/"):
-            href = "https://on-the-move.org" + href
-        out.append({"title": title, "url": href,
-                    "summary": parent_text, "source": "On the Move"})
+        for a in view.select('a[href^="/news/"]'):
+            title = a.get_text(" ", strip=True)
+            if len(title) < 10 or "?" in a["href"]:  # skip country/region facet links
+                continue
+            # climb to the nearest wrapper carrying the "Deadline: …" text; a real
+            # listing always has one — facet/nav links inside the view don't.
+            summary, node = None, a
+            for _ in range(6):
+                node = node.parent
+                if node is None:
+                    break
+                t = node.get_text(" ", strip=True)
+                if "deadline" in t.lower():
+                    summary = t
+                    break
+            if summary is None:
+                continue
+            out.append({"title": title, "url": "https://on-the-move.org" + a["href"],
+                        "summary": summary, "source": "On the Move",
+                        "type": _OTM_CATEGORY_TYPE.get(cat)})
     return _dedupe_local(out)
 
 
+# kunstfonds.de/aktuelles is a general news feed (obituaries, statements,
+# retrospective "we distributed €X" press releases) with the open calls mixed
+# in. Require a German call/application signal so only actual calls come through.
+_KFN_CALL_SIGNALS = ("ausschreibung", "bewerbung", "bewerbungsschluss",
+                     "einsendeschluss", "frist", "jetzt bewerben", "call for",
+                     "deadline", "stipendienprogramm")
+
+
 def fetch_kunstfonds():
-    """Stiftung Kunstfonds — German federal visual-arts funding announcements."""
+    """Stiftung Kunstfonds — German federal visual-arts funding foundation. Each
+    post is a .kfn-newsPreviews__listItem (title in an h4); keep only posts whose
+    text carries a call/application signal, then normalize/is_relevant do the rest."""
     html = _get("https://www.kunstfonds.de/aktuelles/")
     soup = BeautifulSoup(html, "html.parser")
     out = []
-    for card in soup.select("article, .news-item, a[href]"):  # TUNE
-        a = card if card.name == "a" else card.find("a", href=True)
-        if not a or not a.get("href"):
+    for it in soup.select(".kfn-newsPreviews__listItem"):
+        a = it.find("a", href=True)
+        head = it.select_one("h4") or a
+        if not a or not head:
             continue
-        title = a.get_text(" ", strip=True)
+        title = head.get_text(" ", strip=True)
         if len(title) < 8:
+            continue
+        text = it.get_text(" ", strip=True)
+        if not any(s in text.lower() for s in _KFN_CALL_SIGNALS):
             continue
         href = a["href"]
         if href.startswith("/"):
             href = "https://www.kunstfonds.de" + href
         out.append({"title": title, "url": href, "org": "Stiftung Kunstfonds",
-                    "summary": card.get_text(" ", strip=True), "source": "Kunstfonds",
-                    "region": "DE"})
+                    "summary": text, "source": "Kunstfonds", "region": "DE"})
     return _dedupe_local(out)
 
 

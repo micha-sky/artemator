@@ -200,6 +200,13 @@ const relTime = iso => {
   return Math.round(s/86400)+"d ago";
 };
 
+// ---- escaping: card/health content is scraped from third-party feeds and this
+// page is public, so every interpolated field is escaped and every link scheme-
+// checked before it touches innerHTML. ----
+const ESC = {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"};
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c=>ESC[c]);
+const safeUrl = u => { const s=String(u==null?"":u).trim(); return /^https?:\/\//i.test(s) ? s : "#"; };
+
 // ---- theme ----
 const applyTheme = t => { if(t) document.documentElement.setAttribute("data-theme",t); else document.documentElement.removeAttribute("data-theme"); };
 applyTheme(localStorage.getItem("agg:theme"));
@@ -227,7 +234,7 @@ document.getElementById("themeBtn").onclick = () => {
     const bad = typeof v!=="number", warn = v===0;
     const cls = bad?"bad":warn?"warn":"ok";
     const txt = bad ? String(v) : v+"";
-    return `<span class="src-chip"><span class="sdot ${cls}"></span>${n} · ${txt}</span>`;
+    return `<span class="src-chip"><span class="sdot ${cls}"></span>${esc(n)} · ${esc(txt)}</span>`;
   }).join("");
 })();
 
@@ -286,23 +293,24 @@ function cardHTML(o){
   }
   const cardCls=["card","f-"+o.funded,(d!==null&&d>=0&&d<=14?"urgent":""),(d!==null&&d<0?"past":""),(st==="applied"?"applied":"")].join(" ");
   const fTag=o.funded==="likely"?`<span class="tag funded">funded?</span>`:o.funded==="fee-based"?`<span class="tag fee">fee</span>`:o.funded==="mixed"?`<span class="tag fee">mixed</span>`:`<span class="tag">funding ?</span>`;
+  const url=safeUrl(o.url), id=esc(o.id);
   return `<article class="${cardCls}">
     <div class="c-head">
       <div>
-        <div class="c-eyebrow">${o._new?'<span class="badge-new">NEW</span>':''}${o.type}${o.discipline?' · '+o.discipline:''} · ${o.region} · <span class="src">${o.source}</span></div>
-        <h3 class="c-title"><a href="${o.url}" target="_blank" rel="noreferrer">${o.title}</a></h3>
-        <div class="c-org">${o.org||""} ${fTag} ${o.amount?`<span class="src">◈ ${o.amount}</span>`:""}</div>
+        <div class="c-eyebrow">${o._new?'<span class="badge-new">NEW</span>':''}${esc(o.type)}${o.discipline?' · '+esc(o.discipline):''} · ${esc(o.region)} · <span class="src">${esc(o.source)}</span></div>
+        <h3 class="c-title"><a href="${url}" target="_blank" rel="noreferrer">${esc(o.title)}</a></h3>
+        <div class="c-org">${esc(o.org||"")} ${fTag} ${o.amount?`<span class="src">◈ ${esc(o.amount)}</span>`:""}</div>
       </div>
       <div class="dl ${dlCls}"><div class="date">${dateTxt}</div><div class="days">${daysTxt}</div>${meter}</div>
     </div>
-    ${o.summary?`<div class="c-sum">${o.summary}</div>`:""}
+    ${o.summary?`<div class="c-sum">${esc(o.summary)}</div>`:""}
     <div class="c-foot">
       <div class="status-btns">
-        <button class="sbtn ${st==="interested"?"on-int":""}" data-id="${o.id}" data-act="interested">Interested</button>
-        <button class="sbtn ${st==="applied"?"on-app":""}" data-id="${o.id}" data-act="applied">✓ Applied</button>
-        <button class="sbtn ${st==="skip"?"on-skip":""}" data-id="${o.id}" data-act="skip">✕ Skip</button>
+        <button class="sbtn ${st==="interested"?"on-int":""}" data-id="${id}" data-act="interested">Interested</button>
+        <button class="sbtn ${st==="applied"?"on-app":""}" data-id="${id}" data-act="applied">✓ Applied</button>
+        <button class="sbtn ${st==="skip"?"on-skip":""}" data-id="${id}" data-act="skip">✕ Skip</button>
       </div>
-      <a class="src" href="${o.url}" target="_blank" rel="noreferrer">open ↗</a>
+      <a class="src" href="${url}" target="_blank" rel="noreferrer">open ↗</a>
     </div>
   </article>`;
 }
@@ -334,6 +342,10 @@ function renderPager(totalRows){
 function render(){
   renderStats();
   const rows = filtered();
+  // clamp BEFORE slicing so removing the last item on the last page (e.g. skip)
+  // re-renders the corrected page in the same frame instead of an empty state
+  const pages = Math.max(1, Math.ceil(rows.length/PAGE_SIZE));
+  page = Math.min(Math.max(1, page), pages);
   const start=(page-1)*PAGE_SIZE;
   const pageRows = rows.slice(start, start+PAGE_SIZE);
   document.getElementById("list").innerHTML = pageRows.map(cardHTML).join("")

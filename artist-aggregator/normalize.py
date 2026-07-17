@@ -79,24 +79,39 @@ def _clean(t: str) -> str:
 
 # Words that mark an item as an actual opportunity worth tracking, used by
 # is_relevant() to reject noise (e.g. museum exhibition notices) that slips
-# through broad HTML scrapers. Complements TYPE_RULES: an item typed "Other"
-# is kept only if it still carries one of these application/funding signals.
+# through broad HTML scrapers. Only consulted for items typed "Other": since
+# that type means guess_type() already found no TYPE_RULES keyword, the live
+# signals here are the application/funding vocabularies, not the type keywords.
 OPP_SIGNALS = (
     ["open call", "call for", "apply", "application", "applications", "submit",
      "submission", "eligible", "eligibility", "nominate", "nomination",
      "ausschreibung", "bewerbung", "bewerbungen", "einreichung"]
-    + DEADLINE_CUES + [k for _, kws in TYPE_RULES for k in kws] + FUNDED_POS
+    + DEADLINE_CUES + FUNDED_POS
 )
+
+# Common scraper boilerplate/nav labels that broad selectors pick up as "calls".
+BOILERPLATE_TITLES = {
+    "skip to main content", "skip to content", "direkt zum inhalt",
+    "gebärdensprache", "leichte sprache", "menu", "main navigation",
+    "search", "newsletter", "home", "accessibility", "aktuelles",
+}
 
 
 def is_relevant(n: dict) -> bool:
     """Keep-or-drop gate applied before storing a normalized item.
 
-    Drops (a) anything whose parsed deadline is already in the past — an expired
-    call is noise for a tracker — and (b) generic items ("Other" type) that show
-    no application/funding signal at all. Conservative on purpose: anything with
-    a real opportunity type or a future deadline is always kept.
+    Drops (a) obvious scraper boilerplate (nav links, in-page anchors),
+    (b) anything whose parsed deadline is already in the past — an expired call
+    is noise for a tracker — and (c) generic items ("Other" type) that show no
+    application/funding signal at all. Conservative on purpose: anything with a
+    real opportunity type or a future deadline is otherwise always kept.
     """
+    title = (n.get("title") or "").strip().lower()
+    url = (n.get("url") or "").strip()
+    if not title or title in BOILERPLATE_TITLES:
+        return False
+    if not url or url.startswith("#"):  # bare in-page fragment → not a real listing
+        return False
     dl = n.get("deadline")
     if dl:
         try:
@@ -129,7 +144,9 @@ def guess_disciplines(text: str) -> list:
     t = (text or "").lower()
     out = []
     for label, kws in DISCIPLINE_RULES:
-        if any(re.search(r"\b" + re.escape(k) + r"\b", t) for k in kws):
+        # trailing "s?" catches the domain's common "call for X-ers/-ors/-ists"
+        # plural phrasing (poets, sculptors, musicians…) from the singular nouns
+        if any(re.search(r"\b" + re.escape(k) + r"s?\b", t) for k in kws):
             out.append(label)
     return out
 

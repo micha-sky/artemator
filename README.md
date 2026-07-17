@@ -48,7 +48,11 @@ a silently-broken source is visible at a glance.
 ## Sources
 RSS (reliable): **Colossal** (monthly "Opportunities" roundup feed), **Hyperallergic**
 (dedicated Opportunities tag feed — grants, fellowships, prizes, residencies), **e-flux**.
-HTML (scraped — selectors may need tuning): **Res Artis**, **On the Move**, **Stiftung Kunstfonds**.
+HTML (scraped): **On the Move** (Drupal "deadline blocks" — listings only, typed
+by category), **Stiftung Kunstfonds** (news feed, gated to posts with a German
+call/application signal). **Res Artis** is behind an `sgcaptcha` bot-challenge and
+can't be scraped over plain HTTP — its fetcher fails loudly so the health strip
+flags it rather than emitting junk; it needs a headless browser to revive.
 Add your own by writing a `fetch_x()` in `sources.py` that returns
 `{title, url, summary, source}` dicts and registering it in `SOURCES`.
 
@@ -57,9 +61,10 @@ this writing): ArtRabbit and Rhizome (Cloudflare 403), CreativeApplications
 (feed disabled), NYFA, ArtsThread, Creative Capital, bbk. These would each need a
 custom HTML scraper or an API key — add one as a `fetch_x()` if you want it.
 
-> HTML scrapers depend on each site's markup. On the first live run, if a source
-> returns 0 items, open the page, inspect it, and fix the CSS selector marked
-> `# TUNE` in `sources.py`. One failing source never stops the others.
+> HTML scrapers depend on each site's markup, which changes over time. Selectors
+> are tuned to the current markup; if a site redesigns and its count drops to 0
+> in the health strip, open the page, inspect it, and fix that fetcher's selector
+> in `sources.py`. One failing source never stops the others.
 
 ## Filtering (CLI)
 ```bash

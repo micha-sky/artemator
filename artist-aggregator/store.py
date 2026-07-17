@@ -104,17 +104,25 @@ def export(js_path=None, json_path=None, sources=None):
     """Write a data file the dashboard can read. JS form works from file:// (no CORS).
 
     `sources` is an optional per-source health map ({name: count | "error: ..."})
-    surfaced in the dashboard so a silently-broken scraper is visible.
+    surfaced in the dashboard so a silently-broken scraper is visible. When not
+    supplied (e.g. an export triggered by `mark`), the last-written health map is
+    preserved rather than blanked — only `update` refreshes it.
     """
     rows = query(sort="deadline")
-    payload = {
-        "generated": datetime.utcnow().isoformat(timespec="seconds"),
-        "sources": sources or {},
-        "opportunities": rows,
-    }
     base = os.path.dirname(__file__)
     js_path = js_path or os.path.join(base, "opportunities.js")
     json_path = json_path or os.path.join(base, "opportunities.json")
+    if sources is None:
+        try:
+            with open(json_path) as f:
+                sources = json.load(f).get("sources", {})
+        except (OSError, ValueError):
+            sources = {}
+    payload = {
+        "generated": datetime.utcnow().isoformat(timespec="seconds"),
+        "sources": sources,
+        "opportunities": rows,
+    }
     with open(json_path, "w") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
     with open(js_path, "w") as f:
