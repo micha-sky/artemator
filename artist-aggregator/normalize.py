@@ -45,6 +45,22 @@ DISCIPLINE_RULES = [
     ("Curatorial",        ["curator", "curatorial", "curating"]),
 ]
 
+# Application materials a call may ask for. Matched with word boundaries like
+# disciplines; a call can require several. Listing blurbs rarely spell these
+# out — the detail-page text fetched by `update`'s enrich step is what usually
+# populates them.
+REQUIREMENT_RULES = [
+    ("CV",                ["cv", "curriculum vitae", "resume", "résumé", "lebenslauf"]),
+    ("Portfolio",         ["portfolio", "arbeitsproben"]),
+    ("Artist statement",  ["artist statement", "artist's statement", "artists statement"]),
+    ("Work samples",      ["work sample", "images of your work", "image files", "jpeg", "jpg", "bildmaterial", "documentation of work"]),
+    ("Project proposal",  ["project proposal", "project description", "project plan", "proposal", "concept note", "projektbeschreibung", "projektskizze", "exposé"]),
+    ("Motivation letter", ["cover letter", "letter of motivation", "motivation letter", "letter of intent", "motivationsschreiben", "anschreiben"]),
+    ("References",        ["letter of recommendation", "letters of recommendation", "reference letter", "referee", "empfehlungsschreiben"]),
+    ("Budget",            ["budget", "kostenplan", "finanzierungsplan"]),
+    ("Application form",  ["application form", "online form", "entry form", "submission form", "online portal", "bewerbungsformular", "antragsformular"]),
+]
+
 TYPE_RULES = [
     ("Residency", ["residency", "residencies", "résidence", "residence", "atelier", "artist-in-residence", "air "]),
     ("Grant",     ["grant", "stipend", "stipendium", "stipendien", "fellowship", "bursary", "förder", "funding", "scholarship"]),
@@ -151,6 +167,19 @@ def guess_disciplines(text: str) -> list:
     return out
 
 
+def extract_requirements(text: str) -> list:
+    """Return the list of application materials whose keywords appear in the text."""
+    t = (text or "").lower()
+    out = []
+    for label, kws in REQUIREMENT_RULES:
+        if any(re.search(r"\b" + re.escape(k) + r"s?\b", t) for k in kws):
+            out.append(label)
+    # a fee is something you "apply with" too — reuse the funding vocabulary
+    if any(w in t for w in FEE_WORDS):
+        out.append("Entry fee")
+    return out
+
+
 def guess_type(text: str) -> str:
     t = (text or "").lower()
     for label, kws in TYPE_RULES:
@@ -224,4 +253,5 @@ def normalize(raw: dict) -> dict:
         "funded": guess_funded(blob),
         "amount": extract_amount(blob),
         "discipline": ", ".join(guess_disciplines(blob)),
+        "requirements": ", ".join(extract_requirements(blob)),
     }

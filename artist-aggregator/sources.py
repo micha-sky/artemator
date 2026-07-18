@@ -7,6 +7,8 @@ changes over time — the CSS selectors marked "TUNE" are the bits you'll adjust
 on the first live run (open the page, inspect, fix the selector). Every fetcher
 is wrapped so one broken source never kills the whole run.
 """
+import re
+
 import requests
 import feedparser
 from bs4 import BeautifulSoup
@@ -157,6 +159,23 @@ def fetch_kunstfonds():
         out.append({"title": title, "url": href, "org": "Stiftung Kunstfonds",
                     "summary": text, "source": "Kunstfonds", "region": "DE"})
     return _dedupe_local(out)
+
+
+def fetch_detail(url):
+    """Fetch a call's own page and return its readable text, best-effort.
+
+    Used by `update`'s enrich step: listing blurbs rarely say what an
+    application asks for (CV, portfolio, fee…) or even the deadline — the
+    detail page usually does. Strips chrome (nav/header/footer/scripts) and
+    prefers the <main>/<article> region when the page marks one.
+    """
+    html = _get(url)
+    soup = BeautifulSoup(html, "html.parser")
+    for t in soup(["script", "style", "nav", "header", "footer", "aside", "noscript", "form"]):
+        t.decompose()
+    node = soup.find("main") or soup.find("article") or soup.body or soup
+    text = re.sub(r"\s+", " ", node.get_text(" ", strip=True)).strip()
+    return text[:6000]
 
 
 def _dedupe_local(items):

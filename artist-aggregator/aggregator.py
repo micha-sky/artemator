@@ -28,7 +28,8 @@ from email.mime.text import MIMEText
 
 import store
 import sources as src
-from normalize import normalize, is_relevant
+from normalize import (normalize, is_relevant, extract_requirements,
+                       extract_deadline, extract_amount, guess_funded)
 
 
 def cmd_update(args):
@@ -63,6 +64,8 @@ def cmd_update(args):
         normalized.append(n)
 
     new_items = store.upsert_many(normalized)
+    if args.enrich:
+        _enrich(args.enrich)
     total = store.export(sources=health)
     print(f"\n{len(normalized)} unique · {len(new_items)} NEW · {dropped} filtered · {total} in store")
     if errors:
@@ -74,6 +77,34 @@ def cmd_update(args):
             print(_fmt_line(it))
         if args.email:
             _send_digest(new_items)
+
+
+def _enrich(cap):
+    """Fetch each not-yet-enriched call's own page (soonest deadline first, up
+    to `cap` per run) to pull the full description and detect what the
+    application asks for; fills deadline/amount/funded only where missing."""
+    todo = store.needing_details(limit=cap)
+    if not todo:
+        return
+    print(f"\nenriching {len(todo)} item(s) from their detail pages…")
+    ok = 0
+    for it in todo:
+        try:
+            details = src.fetch_detail(it["url"])
+        except Exception as e:  # leave details NULL → retried on a later run
+            print(f"  ✗ {it['title'][:60]} — {type(e).__name__}: {e}")
+            continue
+        blob = " ".join(filter(None, [it["title"], it["summary"], details]))
+        funded = guess_funded(blob)
+        store.save_details(
+            it["id"], details,
+            requirements=", ".join(extract_requirements(blob)),
+            deadline=extract_deadline(blob),
+            amount=extract_amount(blob),
+            funded=funded if funded != "unknown" else None,
+        )
+        ok += 1
+    print(f"  enriched {ok}/{len(todo)}")
 
 
 def cmd_list(args):
@@ -137,6 +168,8 @@ def build_parser():
     u = sub.add_parser("update", help="fetch sources, store, detect new, export")
     u.add_argument("--sources", help="comma list, e.g. colossal,resartis (default: all)")
     u.add_argument("--email", action="store_true", help="email a digest of new items")
+    u.add_argument("--enrich", type=int, default=25, metavar="N",
+                   help="fetch up to N detail pages for description/requirements (0 = off, default 25)")
     u.set_defaults(func=cmd_update)
 
     l = sub.add_parser("list", help="filter stored opportunities")

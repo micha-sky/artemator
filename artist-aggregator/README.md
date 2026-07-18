@@ -2,8 +2,9 @@
 
 Pulls art-funding open calls from several sources, works out what's **new** since
 the last run, tags each with best-effort region / type / funded guesses, and feeds
-a filterable dashboard. You write the applications; this just does discovery,
-aggregation, dedup, new-detection and deadline tracking.
+a filterable dashboard. You write the applications; this does discovery,
+aggregation, dedup, new-detection, deadline tracking — and per-call application
+prep (full description, "apply with" checklist, notes, reusable kit).
 
 ```
 aggregator.py     orchestrator + CLI (update / list / mark)
@@ -41,6 +42,19 @@ python aggregator.py mark <id> --status applied --notes "sent 12 Aug"
 The dashboard offers the same filters (source, region, type, funded, deadline
 window, keyword, new-only, has-deadline) plus a NEW badge and .ics export with
 reminders 2 weeks and 3 days before each deadline.
+
+## Detail enrichment & applying
+`update` also visits each call's own page (up to `--enrich N` per run, default 25,
+soonest deadline first; `--enrich 0` disables) to pull the **full description**,
+detect the **application materials** it asks for (CV, portfolio, statement, work
+samples, proposal, fee…), and fill in missing deadlines/amounts.
+
+In the dashboard every card shows an "apply with: …" chip row, and
+**▾ Details / Apply** expands the card in place: full description, a checklist of
+required materials you can tick off as you prepare, per-call notes, and your
+**My kit** links (portfolio / CV / statement, set once via the masthead button)
+with one-click copy — so applying on the source page is just paste-paste-submit.
+Checklists, notes and the kit live in your browser's localStorage.
 
 ## "Tell me when new ones appear"
 Run `update` on a schedule and let it email you a digest of new items:

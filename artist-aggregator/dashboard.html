@@ -162,6 +162,50 @@
   .tag.fee{color:var(--ochre); border-color:var(--ochre);}
   .c-sum{font-size:12px; color:var(--ink-soft); margin-top:9px; max-width:62ch;
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+
+  /* ── "apply with" chips (collapsed card) ── */
+  .c-req{display:flex; align-items:baseline; gap:5px 6px; flex-wrap:wrap; margin-top:9px;
+    font-family:"Space Mono",monospace; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint);}
+  .req{padding:2px 6px; border:1px dashed var(--line); color:var(--ink-soft); border-radius:1px;}
+  .req.done{border:1px solid var(--klein); color:var(--klein);}
+
+  /* ── expandable apply panel ── */
+  .c-detail{grid-column:1/-1; border-top:1px dashed var(--line); margin-top:2px; padding-top:13px;
+    display:flex; flex-direction:column; gap:13px;}
+  .detail-text{font-size:12.5px; color:var(--ink-soft); line-height:1.6; max-width:75ch;
+    max-height:190px; overflow:auto; padding-right:8px;}
+  .d-label{font-family:"Space Mono",monospace; font-size:9.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--ink-faint); margin-bottom:6px;}
+  .req-list{display:flex; gap:6px 9px; flex-wrap:wrap;}
+  .req-check{display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-soft);
+    border:1px solid var(--line); padding:5px 9px; border-radius:2px; cursor:pointer; background:var(--wall);}
+  .req-check input{accent-color:var(--klein); margin:0;}
+  .req-check.done{border-color:var(--klein); color:var(--klein); text-decoration:line-through;}
+  .d-kit{display:flex; gap:7px; flex-wrap:wrap; align-items:center;}
+  .copybtn,.kitlink{font-family:"Space Mono",monospace; font-size:10px; border:1px solid var(--line);
+    background:var(--wall); color:var(--ink-soft); padding:5px 9px; border-radius:2px; text-decoration:none; cursor:pointer;}
+  .copybtn:hover,.kitlink:hover{border-color:var(--klein); color:var(--klein);}
+  .notes{width:100%; max-width:75ch; font-family:"Inter",sans-serif; font-size:12.5px;
+    background:var(--wall); border:1px solid var(--line); border-radius:2px; padding:8px 10px;
+    color:var(--ink); resize:vertical; min-height:42px;}
+  .d-actions{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  a.applylink{background:var(--klein); color:#fff; border:1px solid var(--klein); border-radius:2px;
+    font-size:12px; font-weight:600; padding:8px 13px; text-decoration:none;}
+  a.applylink:hover{box-shadow:var(--shadow-lift);}
+
+  /* ── "my kit" editor ── */
+  .btn-ghost{background:transparent; border:1px solid var(--line); color:var(--ink-soft);
+    font-size:12.5px; font-weight:600; padding:9px 14px;}
+  .btn-ghost:hover{border-color:var(--klein); color:var(--klein);}
+  .kit{border:1px solid var(--line); background:var(--panel); box-shadow:var(--shadow);
+    border-radius:2px; padding:16px 18px; margin-bottom:22px;}
+  .kit-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0;}
+  .kit-grid label{display:flex; flex-direction:column; gap:5px; font-family:"Space Mono",monospace;
+    font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint);}
+  .kit-grid .full{grid-column:1/-1;}
+  .kit-grid input,.kit-grid textarea{font-family:"Inter",sans-serif; font-size:13px; background:var(--wall);
+    border:1px solid var(--line); padding:8px 10px; color:var(--ink); border-radius:2px; resize:vertical;}
+  .kit-hint{font-size:11px; color:var(--ink-faint);}
   .c-foot{display:flex; justify-content:space-between; align-items:center; margin-top:12px; gap:10px; flex-wrap:wrap;}
   .status-btns{display:flex; gap:6px;}
   .sbtn{font-family:"Inter",sans-serif; font-size:11.5px; font-weight:500; padding:4px 10px;
@@ -217,6 +261,7 @@
     </div>
     <div class="mast-side">
       <div class="mast-actions">
+        <button class="btn-ghost" id="kitBtn">✎ My kit</button>
         <button class="btn-solid" id="exportBtn">↓ Export .ics</button>
         <button class="icon-btn" id="themeBtn" title="Toggle dark mode" aria-label="Toggle dark mode">◐</button>
       </div>
@@ -225,6 +270,17 @@
   </header>
 
   <section class="summary" id="stats"></section>
+
+  <section class="kit" id="kitPanel" hidden>
+    <div class="d-label">My application kit</div>
+    <div class="kit-hint">Saved only in this browser. Every call's Apply panel shows these with one-click copy, so you never dig for links mid-application.</div>
+    <div class="kit-grid">
+      <label>Portfolio URL<input id="kitPortfolio" placeholder="https://…"></label>
+      <label>CV link<input id="kitCv" placeholder="https://… (Drive / Dropbox / PDF)"></label>
+      <label class="full">Artist statement / short bio<textarea id="kitStatement" rows="4" placeholder="Paste the statement you usually apply with…"></textarea></label>
+    </div>
+    <button class="btn-solid" id="kitSave">Save kit</button>
+  </section>
   <section class="hero" id="hero" hidden></section>
   <section class="health" id="health" hidden></section>
 
@@ -263,6 +319,13 @@ let page = 1;
 let overlay = {};
 try { overlay = JSON.parse(localStorage.getItem("agg:overlay") || "{}"); } catch(e){ overlay = {}; }
 const saveOverlay = () => localStorage.setItem("agg:overlay", JSON.stringify(overlay));
+
+// reusable application materials (portfolio/CV/statement) — browser-local
+let kit = {};
+try { kit = JSON.parse(localStorage.getItem("agg:kit") || "{}"); } catch(e){ kit = {}; }
+
+// which cards have their apply panel open (survives re-renders, not reloads)
+const openCards = new Set();
 
 const daysLeft = d => d ? Math.round((new Date(d+"T00:00:00") - TODAY)/86400000) : null;
 const isNew = o => { if(!o.first_seen) return false; return (Date.now() - new Date(o.first_seen+"Z").getTime()) < 7*864e5; };
@@ -381,6 +444,34 @@ function renderHero(){
     }).join("") +`</div>`;
 }
 
+function applyPanelHTML(o, id, url){
+  const ov = overlay[o.id]||{}, done = ov.done||{};
+  const reqs = (o.requirements||"").split(",").map(s=>s.trim()).filter(Boolean);
+  const text = o.details || o.summary;
+  const checklist = reqs.length
+    ? `<div><div class="d-label">Apply with — check off as you prepare</div><div class="req-list">${
+        reqs.map(r=>`<label class="req-check ${done[r]?"done":""}"><input type="checkbox" data-id="${id}" data-req="${esc(r)}" ${done[r]?"checked":""}>${esc(r)}</label>`).join("")
+      }</div></div>`
+    : `<div class="kit-hint">No application materials detected in this listing yet — check the source page.</div>`;
+  const kitBtns = [
+    kit.portfolio ? `<button class="copybtn" data-copy="${esc(kit.portfolio)}">⧉ portfolio link</button>` : "",
+    kit.cv        ? `<button class="copybtn" data-copy="${esc(kit.cv)}">⧉ CV link</button>` : "",
+    kit.statement ? `<button class="copybtn" data-copy="${esc(kit.statement)}">⧉ statement</button>` : "",
+  ].join("");
+  return `<div class="c-detail">
+    ${text?`<div><div class="d-label">Description</div><div class="detail-text">${esc(text)}</div></div>`:""}
+    ${checklist}
+    <div class="d-kit"><span class="d-label" style="margin:0">My kit</span>${
+      kitBtns || `<button class="kitlink kit-open">✎ set up your kit for one-click copy</button>`
+    }</div>
+    <textarea class="notes" data-id="${id}" placeholder="Notes for this application… (saved in this browser)">${esc(ov.notes||"")}</textarea>
+    <div class="d-actions">
+      <a class="applylink" href="${url}" target="_blank" rel="noreferrer">Open application page ↗</a>
+      ${o.deadline?`<span class="src">deadline ${esc(fmtDate(o.deadline))}</span>`:""}
+    </div>
+  </div>`;
+}
+
 function cardHTML(o){
   const st=o._mark, d=o.dleft;
   let dlCls="none", daysTxt="—", unit="", dateTxt="no date";
@@ -393,14 +484,21 @@ function cardHTML(o){
   const cardCls=["card","f-"+o.funded,uCls,(d!==null&&d<0?"past":""),(st==="applied"?"applied":"")].join(" ");
   const fTag=o.funded==="likely"?`<span class="tag funded">funded?</span>`:o.funded==="fee-based"?`<span class="tag fee">fee</span>`:o.funded==="mixed"?`<span class="tag fee">mixed</span>`:`<span class="tag">funding ?</span>`;
   const url=safeUrl(o.url), id=esc(o.id);
+  const isOpen = openCards.has(o.id);
+  const done = (overlay[o.id]||{}).done||{};
+  const reqs = (o.requirements||"").split(",").map(s=>s.trim()).filter(Boolean);
+  const reqChips = reqs.length
+    ? `<div class="c-req">apply with:${reqs.map(r=>`<span class="req ${done[r]?"done":""}">${done[r]?"✓ ":""}${esc(r)}</span>`).join("")}</div>` : "";
   return `<article class="${cardCls}">
     <div class="c-main">
       <div class="c-eyebrow">${o._new?'<span class="badge-new">NEW</span>':''}${esc(o.type)}${o.discipline?' · '+esc(o.discipline):''} · ${esc(o.region)} · <span class="src">${esc(o.source)}</span></div>
       <h3 class="c-title"><a href="${url}" target="_blank" rel="noreferrer">${esc(o.title)}</a></h3>
       <div class="c-org">${o.org?`<span>${esc(o.org)}</span>`:""}${fTag}${o.amount?`<span class="src">◈ ${esc(o.amount)}</span>`:""}</div>
-      ${o.summary?`<div class="c-sum">${esc(o.summary)}</div>`:""}
+      ${!isOpen&&o.summary?`<div class="c-sum">${esc(o.summary)}</div>`:""}
+      ${!isOpen?reqChips:""}
       <div class="c-foot">
         <div class="status-btns">
+          <button class="sbtn morebtn" data-id="${id}">${isOpen?"▴ Close":"▾ Details / Apply"}</button>
           <button class="sbtn ${st==="interested"?"on-int":""}" data-id="${id}" data-act="interested">Interested</button>
           <button class="sbtn ${st==="applied"?"on-app":""}" data-id="${id}" data-act="applied">✓ Applied</button>
           <button class="sbtn ${st==="skip"?"on-skip":""}" data-id="${id}" data-act="skip">✕ Skip</button>
@@ -412,6 +510,7 @@ function cardHTML(o){
       <div class="dl-days">${daysTxt}</div>${unit?`<div class="dl-unit">${unit} left</div>`:""}
       <div class="dl-date">${dateTxt}</div>
     </div>
+    ${isOpen?applyPanelHTML(o,id,url):""}
   </article>`;
 }
 
@@ -452,10 +551,37 @@ function render(){
   document.getElementById("regLabel").textContent = rows.length===DATA.length ? "The register" : `The register · ${rows.length} match${rows.length===1?"":"es"}`;
   document.getElementById("list").innerHTML = pageRows.map(cardHTML).join("")
     || `<div class="empty">No calls match these filters. ${DATA.length?"":"Run <code>python aggregator.py update</code> to populate."}</div>`;
-  document.querySelectorAll(".sbtn").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".sbtn[data-act]").forEach(b=>b.onclick=()=>{
     const id=b.dataset.id, act=b.dataset.act;
     overlay[id]=overlay[id]||{}; overlay[id].status = overlay[id].status===act?null:act;
     saveOverlay(); render();
+  });
+  document.querySelectorAll(".morebtn").forEach(b=>b.onclick=()=>{
+    const id=b.dataset.id;
+    openCards.has(id) ? openCards.delete(id) : openCards.add(id);
+    render();
+  });
+  document.querySelectorAll(".req-check input").forEach(cb=>cb.onchange=()=>{
+    const id=cb.dataset.id;
+    overlay[id]=overlay[id]||{}; const done=overlay[id].done=overlay[id].done||{};
+    if(cb.checked) done[cb.dataset.req]=true; else delete done[cb.dataset.req];
+    saveOverlay(); render();
+  });
+  document.querySelectorAll(".notes").forEach(t=>t.onchange=()=>{
+    const id=t.dataset.id;
+    overlay[id]=overlay[id]||{}; overlay[id].notes=t.value.trim();
+    saveOverlay();
+  });
+  document.querySelectorAll(".copybtn").forEach(b=>b.onclick=()=>{
+    navigator.clipboard.writeText(b.dataset.copy).then(()=>{
+      const t=b.textContent; b.textContent="✓ copied";
+      setTimeout(()=>{ b.textContent=t; }, 900);
+    });
+  });
+  document.querySelectorAll(".kit-open").forEach(b=>b.onclick=()=>{
+    document.getElementById("kitPanel").hidden=false;
+    window.scrollTo({top:0,behavior:"smooth"});
+    document.getElementById("kitPortfolio").focus();
   });
   renderPager(rows.length);
 }
@@ -470,6 +596,19 @@ document.getElementById("resetBtn").onclick=()=>{
   document.getElementById("fHideSkip").checked=true;
   page=1; render();
 };
+
+// ---- my application kit ----
+(function initKit(){
+  const panel=document.getElementById("kitPanel");
+  const fields={portfolio:"kitPortfolio", cv:"kitCv", statement:"kitStatement"};
+  Object.entries(fields).forEach(([k,id])=>{ document.getElementById(id).value = kit[k]||""; });
+  document.getElementById("kitBtn").onclick=()=>{ panel.hidden=!panel.hidden; };
+  document.getElementById("kitSave").onclick=()=>{
+    Object.entries(fields).forEach(([k,id])=>{ kit[k]=document.getElementById(id).value.trim(); });
+    localStorage.setItem("agg:kit", JSON.stringify(kit));
+    panel.hidden=true; render();
+  };
+})();
 
 document.getElementById("exportBtn").onclick=()=>{
   const pad=n=>String(n).padStart(2,"0"), fmt=d=>`${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}`;
@@ -492,7 +631,7 @@ document.getElementById("gen").innerHTML = GENERATED
   ? `<span class="dot"></span>updated ${esc(relTime(GENERATED))} · ${esc(GENERATED.replace("T"," "))} UTC · auto-refreshes daily`
   : "no data yet — run: python aggregator.py update";
 document.getElementById("footnote").textContent =
-  "Region, type, discipline and funding tags are heuristic guesses from each listing's text — confirm on the source page before relying on them. Deadlines are auto-parsed and may be wrong or missing. Your status marks are saved in this browser. This page reads opportunities.js, regenerated on each aggregator run.";
+  "Region, type, discipline, funding tags and the “apply with” materials are heuristic guesses from each listing's (and its detail page's) text — confirm on the source page before relying on them. Deadlines are auto-parsed and may be wrong or missing. Your status marks, checklists, notes and application kit are saved only in this browser. This page reads opportunities.js, regenerated on each aggregator run.";
 
 render();
 </script>

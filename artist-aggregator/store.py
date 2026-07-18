@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS opportunities (
     id         TEXT PRIMARY KEY,
     title      TEXT, org TEXT, url TEXT, source TEXT, summary TEXT,
     deadline   TEXT, region TEXT, type TEXT, funded TEXT, amount TEXT,
-    discipline TEXT,
+    discipline TEXT, requirements TEXT, details TEXT,
     first_seen TEXT, last_seen TEXT
 );
 CREATE TABLE IF NOT EXISTS status (          -- your own marks, kept even if a call drops off
@@ -31,10 +31,11 @@ def _conn():
 def init():
     with _conn() as c:
         c.executescript(SCHEMA)
-        # Migration for DBs created before the discipline column existed.
+        # Migrations for DBs created before newer columns existed.
         cols = {r["name"] for r in c.execute("PRAGMA table_info(opportunities)")}
-        if "discipline" not in cols:
-            c.execute("ALTER TABLE opportunities ADD COLUMN discipline TEXT")
+        for col in ("discipline", "requirements", "details"):
+            if col not in cols:
+                c.execute(f"ALTER TABLE opportunities ADD COLUMN {col} TEXT")
 
 
 def upsert_many(items):
@@ -48,21 +49,49 @@ def upsert_many(items):
                 new_items.append(it)
                 c.execute(
                     """INSERT INTO opportunities
-                       (id,title,org,url,source,summary,deadline,region,type,funded,amount,discipline,first_seen,last_seen)
-                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                       (id,title,org,url,source,summary,deadline,region,type,funded,amount,discipline,requirements,first_seen,last_seen)
+                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                     (it["id"], it["title"], it["org"], it["url"], it["source"], it["summary"],
                      it["deadline"], it["region"], it["type"], it["funded"], it["amount"],
-                     it.get("discipline", ""), now, now),
+                     it.get("discipline", ""), it.get("requirements", ""), now, now),
                 )
             else:
+                # requirements: listing-page text is a subset of what enrichment saw,
+                # so never let an emptier re-scrape blank an enriched value.
                 c.execute(
                     """UPDATE opportunities SET title=?,org=?,url=?,source=?,summary=?,
-                       deadline=?,region=?,type=?,funded=?,amount=?,discipline=?,last_seen=? WHERE id=?""",
+                       deadline=?,region=?,type=?,funded=?,amount=?,discipline=?,
+                       requirements=COALESCE(NULLIF(?,''),requirements),last_seen=? WHERE id=?""",
                     (it["title"], it["org"], it["url"], it["source"], it["summary"],
                      it["deadline"], it["region"], it["type"], it["funded"], it["amount"],
-                     it.get("discipline", ""), now, it["id"]),
+                     it.get("discipline", ""), it.get("requirements", ""), now, it["id"]),
                 )
     return new_items
+
+
+def needing_details(limit=25):
+    """Items whose own page hasn't been fetched yet (details is NULL — a failed
+    fetch leaves it NULL so it's retried on a later run). Soonest deadline first
+    so the most urgent calls get enriched before the cap cuts off."""
+    with _conn() as c:
+        rows = c.execute(
+            """SELECT id, url, title, summary, deadline, amount, funded FROM opportunities
+               WHERE details IS NULL ORDER BY COALESCE(deadline,'9999'), first_seen DESC LIMIT ?""",
+            (limit,)).fetchall()
+    return [dict(r) for r in rows]
+
+
+def save_details(opp_id, details, requirements=None, deadline=None, amount=None, funded=None):
+    """Store detail-page text; fill deadline/amount/funded only where missing."""
+    with _conn() as c:
+        c.execute(
+            """UPDATE opportunities SET details=?,
+               requirements=COALESCE(NULLIF(?,''),requirements),
+               deadline=COALESCE(deadline,?),
+               amount=CASE WHEN amount IS NULL OR amount='' THEN COALESCE(?,amount) ELSE amount END,
+               funded=CASE WHEN (funded IS NULL OR funded='unknown') AND ? IS NOT NULL THEN ? ELSE funded END
+               WHERE id=?""",
+            (details, requirements, deadline, amount, funded, funded, opp_id))
 
 
 def set_mark(opp_id, mark=None, notes=None):
@@ -109,6 +138,11 @@ def export(js_path=None, json_path=None, sources=None):
     preserved rather than blanked — only `update` refreshes it.
     """
     rows = query(sort="deadline")
+    # full detail text is kept in the DB for parsing; the dashboard only needs
+    # enough to read, so cap it to keep opportunities.js light
+    for r in rows:
+        if r.get("details") and len(r["details"]) > 1500:
+            r["details"] = r["details"][:1500].rsplit(" ", 1)[0] + " …"
     base = os.path.dirname(__file__)
     js_path = js_path or os.path.join(base, "opportunities.js")
     json_path = json_path or os.path.join(base, "opportunities.json")
