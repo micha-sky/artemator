@@ -1,11 +1,11 @@
 {
-  "generated": "2026-07-17T10:26:19",
+  "generated": "2026-07-18T07:29:34",
   "sources": {
     "colossal": 10,
     "eflux": 0,
     "hyperallergic": 15,
-    "resartis": "error: bot-challenge (sgcaptcha) — needs a real browser",
-    "onthemove": 51,
+    "resartis": 1,
+    "onthemove": "error: 415 Client Error: Unsupported Media Type for url: htt",
     "kunstfonds": 59
   },
   "opportunities": [
@@ -24,6 +24,25 @@
       "first_seen": "2026-07-17T10:26:19",
       "last_seen": "2026-07-17T10:26:19",
       "discipline": "",
+      "mark": null,
+      "notes": null,
+      "days_left": -1
+    },
+    {
+      "id": "e7d889a8fe62abaf",
+      "title": "click here >>",
+      "org": "",
+      "url": "/listings",
+      "source": "Res Artis",
+      "summary": "Open Calls Use the filters below to search all Res Artis open calls. To search current residency profiles only, click here >> To search online/virtual residencies, please select ‘Global’ as your country option PigPrints: Assisted and Intensive printmaking residencies in Milan Deadline: 18 Jul 2026 Country: Italy OPEN CALL for Artists – Fall & Winter 2026 Deadline: 18 Jul 2026 Country: Spain Last m",
+      "deadline": "2026-07-18",
+      "region": "DE",
+      "type": "Residency",
+      "funded": "unknown",
+      "amount": "",
+      "first_seen": "2026-07-18T07:29:34",
+      "last_seen": "2026-07-18T07:29:34",
+      "discipline": "Painting, Photography, Film/Video, Sound/Music, Performance, Writing, Digital/New Media, Printmaking, Craft/Textile, Curatorial",
       "mark": null,
       "notes": null,
       "days_left": 0
@@ -45,7 +64,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 1
     },
     {
       "id": "c7c6ad8389bdf642",
@@ -64,7 +83,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 1
     },
     {
       "id": "375360887c2adcd8",
@@ -83,7 +102,7 @@
       "discipline": "Sound/Music",
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 1
     },
     {
       "id": "a0d19098efb4ab54",
@@ -102,7 +121,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 1
     },
     {
       "id": "300c43c00a8eed62",
@@ -121,7 +140,7 @@
       "discipline": "Performance",
       "mark": null,
       "notes": null,
-      "days_left": 3
+      "days_left": 2
     },
     {
       "id": "f558487ec2bdad45",
@@ -140,7 +159,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 3
+      "days_left": 2
     },
     {
       "id": "f71b0ee19cecb762",
@@ -159,7 +178,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 3
+      "days_left": 2
     },
     {
       "id": "26b4611edc70f423",
@@ -178,7 +197,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 4
+      "days_left": 3
     },
     {
       "id": "73a46068ce279a8b",
@@ -197,7 +216,7 @@
       "discipline": "Curatorial",
       "mark": null,
       "notes": null,
-      "days_left": 5
+      "days_left": 4
     },
     {
       "id": "bedf4590fa152921",
@@ -216,7 +235,7 @@
       "discipline": "Film/Video, Performance",
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 8
     },
     {
       "id": "8d6c0c498a1ff35d",
@@ -235,7 +254,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 8
     },
     {
       "id": "4b182d16a83902a3",
@@ -254,7 +273,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 8
     },
     {
       "id": "a82003a088f01aa5",
@@ -273,7 +292,7 @@
       "discipline": "Curatorial",
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 8
     },
     {
       "id": "f03ced849f9e4569",
@@ -292,7 +311,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 10
+      "days_left": 9
     },
     {
       "id": "ba750a45aa53dbdc",
@@ -311,7 +330,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 13
+      "days_left": 12
     },
     {
       "id": "8ff173c9c9ba4a91",
@@ -330,7 +349,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 13
+      "days_left": 12
     },
     {
       "id": "0a973688e29fa077",
@@ -349,7 +368,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 13
+      "days_left": 12
     },
     {
       "id": "22364556f55e017e",
@@ -368,7 +387,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 13
     },
     {
       "id": "8fda1e1ef80eb658",
@@ -387,7 +406,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 13
     },
     {
       "id": "b11596f70235b305",
@@ -406,7 +425,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 13
     },
     {
       "id": "eb8c290d47b2e064",
@@ -425,7 +444,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 13
     },
     {
       "id": "0e0444bd3fe75961",
@@ -444,7 +463,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 13
     },
     {
       "id": "5e670c1e3bfefab1",
@@ -463,7 +482,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 13
     },
     {
       "id": "2679c4640178cec9",
@@ -482,7 +501,7 @@
       "discipline": "Photography, Writing",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 13
     },
     {
       "id": "95aa5211481bee64",
@@ -501,7 +520,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 13
     },
     {
       "id": "63a7de2f8ac7302f",
@@ -520,7 +539,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 15
+      "days_left": 14
     },
     {
       "id": "35f39975bc67f86c",
@@ -539,7 +558,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 15
+      "days_left": 14
     },
     {
       "id": "684ad1285c24ae3f",
@@ -558,7 +577,7 @@
       "discipline": "Performance",
       "mark": null,
       "notes": null,
-      "days_left": 17
+      "days_left": 16
     },
     {
       "id": "4726c5d8d8f757b5",
@@ -577,7 +596,7 @@
       "discipline": "Writing",
       "mark": null,
       "notes": null,
-      "days_left": 21
+      "days_left": 20
     },
     {
       "id": "8ec1fd87e0a657b8",
@@ -596,7 +615,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 24
+      "days_left": 23
     },
     {
       "id": "4ff26b59eb30f03c",
@@ -615,7 +634,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 26
+      "days_left": 25
     },
     {
       "id": "146baa1127d4ca00",
@@ -634,7 +653,7 @@
       "discipline": "Performance",
       "mark": null,
       "notes": null,
-      "days_left": 26
+      "days_left": 25
     },
     {
       "id": "09113e08ecc3c350",
@@ -653,7 +672,7 @@
       "discipline": "Craft/Textile",
       "mark": null,
       "notes": null,
-      "days_left": 26
+      "days_left": 25
     },
     {
       "id": "5482ca004ba48d2e",
@@ -672,7 +691,7 @@
       "discipline": "Writing",
       "mark": null,
       "notes": null,
-      "days_left": 28
+      "days_left": 27
     },
     {
       "id": "98788c70c75d9257",
@@ -691,7 +710,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 29
+      "days_left": 28
     },
     {
       "id": "5b48e7817aaab2ba",
@@ -710,7 +729,7 @@
       "discipline": "Digital/New Media",
       "mark": null,
       "notes": null,
-      "days_left": 29
+      "days_left": 28
     },
     {
       "id": "11ce639f41cb18ff",
@@ -729,7 +748,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 37
+      "days_left": 36
     },
     {
       "id": "6236e1085504c4f8",
@@ -748,7 +767,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 44
+      "days_left": 43
     },
     {
       "id": "2dde47d872981af4",
@@ -767,7 +786,7 @@
       "discipline": "Performance",
       "mark": null,
       "notes": null,
-      "days_left": 45
+      "days_left": 44
     },
     {
       "id": "d2273471447a24af",
@@ -786,7 +805,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 45
+      "days_left": 44
     },
     {
       "id": "92d3d622f10cf153",
@@ -805,7 +824,7 @@
       "discipline": "Performance",
       "mark": null,
       "notes": null,
-      "days_left": 45
+      "days_left": 44
     },
     {
       "id": "eca1e0a201ecd31b",
@@ -824,7 +843,7 @@
       "discipline": "Writing",
       "mark": null,
       "notes": null,
-      "days_left": 45
+      "days_left": 44
     },
     {
       "id": "f3ca8fbcdd9488b6",
@@ -843,7 +862,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 50
+      "days_left": 49
     },
     {
       "id": "e82e222975b17727",
@@ -862,7 +881,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 59
+      "days_left": 58
     },
     {
       "id": "0ffcf8755d6ac426",
@@ -881,7 +900,7 @@
       "discipline": "Photography",
       "mark": null,
       "notes": null,
-      "days_left": 75
+      "days_left": 74
     },
     {
       "id": "f2e2bc74ff7d7805",
@@ -900,7 +919,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 75
+      "days_left": 74
     },
     {
       "id": "0417249d320262d7",
@@ -919,7 +938,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 91
+      "days_left": 90
     },
     {
       "id": "4d5bfac3daa45614",
@@ -938,7 +957,7 @@
       "discipline": "Performance",
       "mark": null,
       "notes": null,
-      "days_left": 97
+      "days_left": 96
     },
     {
       "id": "bf39e947b9f14a6a",
@@ -957,7 +976,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 107
+      "days_left": 106
     },
     {
       "id": "027de9f0918f5701",
@@ -976,7 +995,7 @@
       "discipline": "",
       "mark": null,
       "notes": null,
-      "days_left": 167
+      "days_left": 166
     },
     {
       "id": "f14730e4b40905f3",
@@ -991,7 +1010,7 @@
       "funded": "likely",
       "amount": "$7",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1010,7 +1029,7 @@
       "funded": "likely",
       "amount": "$7",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1029,7 +1048,7 @@
       "funded": "likely",
       "amount": "$7",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1048,7 +1067,7 @@
       "funded": "likely",
       "amount": "$7",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1067,7 +1086,7 @@
       "funded": "likely",
       "amount": "$7",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1086,7 +1105,7 @@
       "funded": "likely",
       "amount": "$7",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1105,7 +1124,7 @@
       "funded": "likely",
       "amount": "$7",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1124,7 +1143,7 @@
       "funded": "likely",
       "amount": "$7",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1143,7 +1162,7 @@
       "funded": "likely",
       "amount": "$7",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1162,7 +1181,7 @@
       "funded": "likely",
       "amount": "$7",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1181,7 +1200,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "Writing",
       "mark": null,
       "notes": null,
@@ -1200,7 +1219,7 @@
       "funded": "likely",
       "amount": "$90,000",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1219,7 +1238,7 @@
       "funded": "likely",
       "amount": "$25,000",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1238,7 +1257,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "Writing",
       "mark": null,
       "notes": null,
@@ -1257,7 +1276,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1276,7 +1295,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "Writing",
       "mark": null,
       "notes": null,
@@ -1295,7 +1314,7 @@
       "funded": "likely",
       "amount": "$75,000",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "Painting",
       "mark": null,
       "notes": null,
@@ -1314,7 +1333,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "Writing",
       "mark": null,
       "notes": null,
@@ -1333,7 +1352,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1352,7 +1371,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "Writing",
       "mark": null,
       "notes": null,
@@ -1371,7 +1390,7 @@
       "funded": "likely",
       "amount": "$5,000",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "Craft/Textile",
       "mark": null,
       "notes": null,
@@ -1390,7 +1409,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "Writing",
       "mark": null,
       "notes": null,
@@ -1409,7 +1428,7 @@
       "funded": "likely",
       "amount": "$17.5",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1428,7 +1447,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1447,7 +1466,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1466,7 +1485,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1485,7 +1504,7 @@
       "funded": "likely",
       "amount": "1.386.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1504,7 +1523,7 @@
       "funded": "likely",
       "amount": "€ 11.",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1523,7 +1542,7 @@
       "funded": "likely",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1542,7 +1561,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1561,7 +1580,7 @@
       "funded": "unknown",
       "amount": "10.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1580,7 +1599,7 @@
       "funded": "unknown",
       "amount": "810.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1599,7 +1618,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1618,7 +1637,7 @@
       "funded": "likely",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1637,7 +1656,7 @@
       "funded": "likely",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1656,7 +1675,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1675,7 +1694,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1694,7 +1713,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1713,7 +1732,7 @@
       "funded": "likely",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1732,7 +1751,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1751,7 +1770,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1770,7 +1789,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1789,7 +1808,7 @@
       "funded": "unknown",
       "amount": "10.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1808,7 +1827,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1827,7 +1846,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1846,7 +1865,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1865,7 +1884,7 @@
       "funded": "likely",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1884,7 +1903,7 @@
       "funded": "likely",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1903,7 +1922,7 @@
       "funded": "likely",
       "amount": "18.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1922,7 +1941,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1941,7 +1960,7 @@
       "funded": "unknown",
       "amount": "500.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1960,7 +1979,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1979,7 +1998,7 @@
       "funded": "likely",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -1998,7 +2017,7 @@
       "funded": "unknown",
       "amount": "30.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2017,7 +2036,7 @@
       "funded": "likely",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2036,7 +2055,7 @@
       "funded": "likely",
       "amount": "9.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2055,7 +2074,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2074,7 +2093,7 @@
       "funded": "likely",
       "amount": "22.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2093,7 +2112,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2112,7 +2131,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2131,7 +2150,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2150,7 +2169,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "Digital/New Media",
       "mark": null,
       "notes": null,
@@ -2169,7 +2188,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2188,7 +2207,7 @@
       "funded": "unknown",
       "amount": "30.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2207,7 +2226,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2226,7 +2245,7 @@
       "funded": "likely",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2245,7 +2264,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2264,7 +2283,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2283,7 +2302,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2302,7 +2321,7 @@
       "funded": "likely",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2321,7 +2340,7 @@
       "funded": "likely",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2340,7 +2359,7 @@
       "funded": "likely",
       "amount": "22.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2359,7 +2378,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2378,7 +2397,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2397,7 +2416,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2416,7 +2435,7 @@
       "funded": "unknown",
       "amount": "30.000 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2435,7 +2454,7 @@
       "funded": "likely",
       "amount": "18.500 Eur",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2454,7 +2473,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
@@ -2473,7 +2492,7 @@
       "funded": "unknown",
       "amount": "",
       "first_seen": "2026-07-17T10:26:19",
-      "last_seen": "2026-07-17T10:26:19",
+      "last_seen": "2026-07-18T07:29:34",
       "discipline": "",
       "mark": null,
       "notes": null,
