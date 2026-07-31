@@ -10,6 +10,8 @@ import hashlib
 from datetime import datetime, date
 from dateutil import parser as dparser
 
+import geo
+
 # --- Creative Europe / European country set (for region tagging) ---
 DE_WORDS = {"germany", "deutschland", "german", "berlin", "hamburg", "munich",
             "münchen", "cologne", "köln", "frankfurt", "stuttgart", "hesse",
@@ -76,6 +78,36 @@ FUNDED_POS = ["stipend", "stipendium", "bursary", "fully funded", "fully-funded"
               "free of charge", "€", "eur ", "usd", "$", "£"]
 FEE_WORDS  = ["application fee", "entry fee", "submission fee", "participation fee",
               "tuition", "fee to apply", "self-funded", "self funded"]
+
+# Explicit "free to apply" signals → fee_eur = 0.
+NO_FEE_PHRASES = ["no fee", "no application fee", "no entry fee", "no submission fee",
+                  "no participation fee", "free to apply", "free to enter",
+                  "free to submit", "free of charge", "no cost to apply",
+                  "kostenlos", "gebührenfrei", "keine gebühr", "keine bewerbungsgebühr"]
+
+# money amounts, with the currency marker on either side: €30 / 30€ / 30 EUR / USD 25
+_MONEY_RE = re.compile(
+    r"([€$£])\s?(\d{1,4}(?:[.,]\d{2})?)(?!\d)"
+    r"|(\d{1,4}(?:[.,]\d{2})?)\s?([€$£])"
+    r"|(\d{1,4}(?:[.,]\d{2})?)\s?(eur|usd|gbp|euros?|dollars?|pounds?)\b"
+    r"|\b(eur|usd|gbp)\s?(\d{1,4}(?:[.,]\d{2})?)(?!\d)",
+    re.IGNORECASE)
+# fixed rough conversion — this is triage, not accounting
+_TO_EUR = {"€": 1.0, "eur": 1.0, "euro": 1.0, "euros": 1.0,
+           "$": 0.9, "usd": 0.9, "dollar": 0.9, "dollars": 0.9,
+           "£": 1.15, "gbp": 1.15, "pound": 1.15, "pounds": 1.15}
+
+# Career-stage vocabulary. "emerging" wins over "established" when both appear
+# ("open to emerging and mid-career artists" IS open to an emerging artist).
+EMERGING_WORDS = ["emerging", "early career", "early-career", "young artist",
+                  "young artists", "young creatives", "recent graduate",
+                  "recent graduates", "up-and-coming", "under 30", "under 35",
+                  "nachwuchs", "débutant", "debut"]
+ESTABLISHED_WORDS = ["mid-career", "mid career", "established artist",
+                     "established artists", "established practice",
+                     "professional track record", "extensive exhibition history"]
+_YEARS_REQ_RE = re.compile(
+    r"(?:at least|minimum(?: of)?|min\.?)\s+\d+\s+years?", re.IGNORECASE)
 
 DEADLINE_CUES = ["deadline", "closes", "closing", "apply by", "applications close",
                  "until", "submit by", "bewerbungsschluss", "einsendeschluss", "frist"]
@@ -201,6 +233,75 @@ def guess_funded(text: str) -> str:
     return "unknown"
 
 
+def extract_fee(text: str):
+    """Application fee in EUR: a number, 0 for explicitly free, None for no signal.
+
+    An amount only counts as a fee when it sits within ~70 chars of a fee word
+    ("application fee €30", "entry fee of $25") — otherwise grant/stipend sums
+    would be misread as fees. Multiple candidates → the smallest (fee lists
+    like "€15 members / €30 others" should filter optimistically)."""
+    t = (text or "").lower()
+    if not t:
+        return None
+    candidates = []
+    for m in _MONEY_RE.finditer(t):
+        g = m.groups()
+        cur, num = (g[0], g[1]) if g[0] else (g[3], g[2]) if g[3] else \
+                   (g[5], g[4]) if g[5] else (g[6], g[7])
+        window = t[max(0, m.start() - 70): m.end() + 40]
+        if not any(w in window for w in ("fee", "gebühr")):
+            continue
+        try:
+            val = float(num.replace(",", "."))
+        except ValueError:
+            continue
+        eur = round(val * _TO_EUR.get(cur.lower(), 1.0))
+        if 0 < eur <= 1000:   # >1000 near "fee" is almost certainly not an application fee
+            candidates.append(eur)
+    if candidates:
+        return min(candidates)
+    if any(p in t for p in NO_FEE_PHRASES):
+        return 0
+    return None
+
+
+def guess_career_stage(text: str) -> str:
+    """'emerging' / 'established' / 'any'. Emerging-friendly calls win ties."""
+    t = (text or "").lower()
+    if any(w in t for w in EMERGING_WORDS):
+        return "emerging"
+    if any(w in t for w in ESTABLISHED_WORDS) or _YEARS_REQ_RE.search(t):
+        return "established"
+    return "any"
+
+
+def _jitter(opp_id: str, scale: float):
+    """Small deterministic offset per item so same-place pins don't stack."""
+    h = int(hashlib.sha1((opp_id or "").encode("utf-8")).hexdigest()[8:16], 16)
+    dx = ((h & 0xffff) / 0xffff - 0.5) * scale
+    dy = (((h >> 16) & 0xffff) / 0xffff - 0.5) * scale
+    return dx, dy
+
+
+def guess_location(text: str, opp_id: str = "") -> dict:
+    """Country / region groups / map coords via the offline gazetteer.
+
+    Returns {} when nothing matched. Country-centroid pins get a wider jitter
+    than city pins — they're approximate anyway, and spreading them keeps a
+    country's calls individually clickable on the map."""
+    loc = geo.locate(text)
+    if not loc:
+        return {}
+    dx, dy = _jitter(opp_id, 0.08 if loc["precise"] else 1.0)
+    return {
+        "country": loc["country"],
+        "place": loc["place"],
+        "region_group": ", ".join(loc["groups"]),
+        "lat": round(loc["lat"] + dx, 4),
+        "lon": round(loc["lon"] + dy, 4),
+    }
+
+
 def extract_amount(text: str) -> str:
     m = re.search(r"([€$£]\s?\d[\d.,]*\s?(?:/\s?(?:day|month|week|year|mo|yr))?)", text or "")
     if m:
@@ -240,18 +341,33 @@ def normalize(raw: dict) -> dict:
     title = _clean(raw.get("title"))
     summary = _clean(raw.get("summary"))
     blob = " ".join(filter(None, [title, summary, raw.get("country", "")]))
+    opp_id = stable_id(raw.get("url", ""), title)
+    loc = guess_location(blob, opp_id)
+    # legacy coarse region: prefer the gazetteer country, fall back to keywords
+    if loc:
+        region = "DE" if loc["country"] == "DE" else \
+                 "EU" if loc["country"] in geo.EUROPE_ISO else "Intl"
+    else:
+        region = guess_region(blob)
     return {
-        "id": stable_id(raw.get("url", ""), title),
+        "id": opp_id,
         "title": title,
         "org": _clean(raw.get("org", "")),
         "url": _clean(raw.get("url", "")),
         "source": raw.get("source", "?"),
         "summary": summary[:400],
         "deadline": extract_deadline(blob) or (raw.get("deadline") or None),
-        "region": raw.get("region") or guess_region(blob),
+        "region": raw.get("region") or region,
         "type": raw.get("type") or guess_type(blob),
         "funded": guess_funded(blob),
         "amount": extract_amount(blob),
         "discipline": ", ".join(guess_disciplines(blob)),
         "requirements": ", ".join(extract_requirements(blob)),
+        "country": loc.get("country", ""),
+        "place": loc.get("place", ""),
+        "region_group": loc.get("region_group", ""),
+        "lat": loc.get("lat"),
+        "lon": loc.get("lon"),
+        "fee_eur": extract_fee(blob),
+        "career_stage": guess_career_stage(blob),
     }

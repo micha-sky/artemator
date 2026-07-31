@@ -9,9 +9,10 @@ prep (full description, "apply with" checklist, notes, reusable kit).
 ```
 aggregator.py     orchestrator + CLI (update / list / mark)
 sources.py        one fetcher per source (RSS + HTML scrapers)
-normalize.py      deadline / region / type / funded extraction (heuristic)
+normalize.py      deadline / region / type / funded / fee / career-stage extraction (heuristic)
+geo.py            offline gazetteer: text → country, region groups, map coordinates
 store.py          SQLite storage, new-detection, filtering, export
-dashboard.html    filterable UI (reads opportunities.js)
+dashboard.html    filterable UI with list + map views (reads opportunities.js)
 opportunities.js  generated data (a sample is included to start)
 ```
 
@@ -23,8 +24,11 @@ open dashboard.html                  # or serve the folder
 ```
 
 ## Sources
-RSS (reliable): **Colossal** (monthly "Opportunities" roundups), **e-flux**.
-HTML (scraped — selectors may need tuning): **Res Artis**, **On the Move**, **Stiftung Kunstfonds**.
+RSS (reliable): **Colossal** (monthly "Opportunities" roundups), **e-flux**, **Hyperallergic**.
+HTML/JSON (scraped — selectors may need tuning): **On the Move**, **Stiftung Kunstfonds**,
+**TransArtists** (call-for-artists board; via curl — Cloudflare 403s python-requests),
+**ArtConnect** (residencies category, structured `__NEXT_DATA__` JSON),
+**Res Artis** (via the WP sitemap + per-call pages; the listing page itself is captcha-walled).
 Add your own by writing a `fetch_x()` in `sources.py` that returns
 `{title, url, summary, source}` dicts and registering it in `SOURCES`.
 
@@ -36,12 +40,22 @@ Add your own by writing a `fetch_x()` in `sources.py` that returns
 ```bash
 python aggregator.py list --region DE --funded likely --within 60
 python aggregator.py list --type Residency --search painting --sort newest
+python aggregator.py list --group "Southeast Asia" --stage emerging --max-fee 50
 python aggregator.py list --new --since-days 7        # only recently-appeared
 python aggregator.py mark <id> --status applied --notes "sent 12 Aug"
 ```
-The dashboard offers the same filters (source, region, type, funded, deadline
-window, keyword, new-only, has-deadline) plus a NEW badge and .ics export with
-reminders 2 weeks and 3 days before each deadline.
+The dashboard offers the same filters (source, type, discipline, funded,
+career stage, deadline window, keyword, new-only, has-deadline) plus:
+- **region-group chips** (Southeast Asia, Balkans, Mediterranean, Baltic, Iberia,
+  France/Paris, Mongolia/Central Asia, Eastern Europe, …) with a **★ my regions** preset;
+- an **application-fee slider** (0–200 €; "incl. unknown fee" keeps the many calls
+  that never state a fee visible — stage and fee filters fail open by design);
+- a **⌂ Residency mode** preset: residencies · painting/sculpture/writing ·
+  my regions · fee ≤ 50 € · emerging-friendly, in one click;
+- a **map view** (Leaflet + clustering; pins are city- or country-level from the
+  offline gazetteer, red = closing ≤ 7 days, popups with Interested/Skip);
+- a NEW badge and .ics export with reminders 2 weeks and 3 days before each deadline.
+Filter state persists in the browser.
 
 ## Detail enrichment & applying
 `update` also visits each call's own page (up to `--enrich N` per run, default 25,
