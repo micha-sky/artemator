@@ -129,6 +129,7 @@
     cursor:pointer; font-family:inherit; font-size:12px; font-weight:700;}
   .frow{flex-basis:100%; display:flex; gap:6px; flex-wrap:wrap; align-items:center;
     padding-top:10px; border-top:1px solid var(--line-soft);}
+  .frow[hidden]{display:none;}
   .chip{font-family:inherit; font-size:11.5px; font-weight:700; padding:4px 11px;
     border:1px solid var(--ink); border-radius:999px; background:var(--paper); color:var(--ink); cursor:pointer;}
   .chip:hover{background:var(--ink); color:var(--paper);}
@@ -136,6 +137,11 @@
   .fee-ctl{color:var(--ink); font-weight:700;}
   .fee-ctl input[type=range]{accent-color:var(--ink); width:110px; margin:0 2px;}
   .fee-ctl b{min-width:44px; display:inline-block; font-weight:800;}
+  .advbtn{font-family:inherit; font-size:12px; font-weight:700; letter-spacing:.04em;
+    border:1px solid var(--ink); background:var(--paper); color:var(--ink);
+    border-radius:999px; padding:5px 13px; cursor:pointer;}
+  .advbtn:hover{background:var(--ink); color:var(--paper);}
+  .advbtn.active{background:var(--ink); color:var(--paper);}
 
   /* ── presets ── */
   .presets{display:flex; gap:8px 10px; flex-wrap:wrap; align-items:center; margin:0 0 12px;
@@ -326,20 +332,23 @@
   <section class="filters" id="filters">
     <span class="flabel">Filter</span>
     <input class="search" id="fSearch" placeholder="keyword…">
-    <select id="fSource"><option value="">source: all</option></select>
     <select id="fType"><option value="">type: all</option></select>
     <select id="fDiscipline"><option value="">discipline: all</option><option value="__mine__">★ my disciplines</option></select>
-    <select id="fFunded"><option value="">funded: any</option><option value="likely">likely funded</option><option value="fee-based">fee-based</option><option value="mixed">mixed</option><option value="unknown">unknown</option></select>
-    <select id="fStage"><option value="">career: any</option><option value="emerging">emerging-friendly</option><option value="established">established</option></select>
-    <select id="fWithin"><option value="">deadline: any</option><option value="14">≤ 14 days</option><option value="30">≤ 30 days</option><option value="60">≤ 60 days</option><option value="90">≤ 90 days</option></select>
-    <select id="fSort"><option value="deadline">sort: soonest</option><option value="newest">sort: newest</option></select>
-    <label class="chk fee-ctl" title="Application-fee cap. Calls that never state a fee are controlled by the checkbox next to this.">fee ≤ <input type="range" id="fFee" min="0" max="200" step="5" value="50"> <b id="fFeeVal"></b></label>
-    <label class="chk" title="Most listings don't state a fee — unchecking this hides all of them"><input type="checkbox" id="fUnkFee" checked> incl. unknown fee</label>
-    <label class="chk"><input type="checkbox" id="fNew"> new only (7d)</label>
-    <label class="chk"><input type="checkbox" id="fHasDl"> has deadline</label>
-    <label class="chk"><input type="checkbox" id="fHideExpired" checked> hide expired</label>
-    <label class="chk"><input type="checkbox" id="fHideSkip" checked> hide skipped</label>
+    <label class="chk fee-ctl" title="Application-fee cap. Calls that never state a fee are controlled by 'incl. unknown fee' under advanced.">fee ≤ <input type="range" id="fFee" min="0" max="200" step="5" value="200"> <b id="fFeeVal"></b></label>
+    <button class="advbtn" id="advBtn">advanced ▾</button>
     <button class="reset" id="resetBtn">reset</button>
+    <div class="frow" id="advRow" hidden>
+      <select id="fSource"><option value="">source: all</option></select>
+      <select id="fFunded"><option value="">funded: any</option><option value="likely">likely funded</option><option value="fee-based">fee-based</option><option value="mixed">mixed</option><option value="unknown">unknown</option></select>
+      <select id="fStage"><option value="">career: any</option><option value="emerging">emerging-friendly</option><option value="established">established</option></select>
+      <select id="fWithin"><option value="">deadline: any</option><option value="14">≤ 14 days</option><option value="30">≤ 30 days</option><option value="60">≤ 60 days</option><option value="90">≤ 90 days</option></select>
+      <select id="fSort"><option value="deadline">sort: soonest</option><option value="newest">sort: newest</option></select>
+      <label class="chk" title="Most listings don't state a fee — unchecking this hides all of them"><input type="checkbox" id="fUnkFee" checked> incl. unknown fee</label>
+      <label class="chk"><input type="checkbox" id="fNew"> new only (7d)</label>
+      <label class="chk"><input type="checkbox" id="fHasDl"> has deadline</label>
+      <label class="chk"><input type="checkbox" id="fHideExpired" checked> hide expired</label>
+      <label class="chk"><input type="checkbox" id="fHideSkip" checked> hide skipped</label>
+    </div>
     <div class="frow" id="groupChips"></div>
   </section>
 
@@ -489,6 +498,26 @@ function updateFeeLabel(){
 }
 document.getElementById("fFee").addEventListener("input", updateFeeLabel);
 
+// ---- advanced filter row (source / funded / career / deadline / sort + checkboxes) ----
+let advOpen = false;
+function setAdv(open){
+  advOpen = open;
+  document.getElementById("advRow").hidden = !open;
+  document.getElementById("advBtn").textContent = open ? "advanced ▴" : "advanced ▾";
+}
+document.getElementById("advBtn").onclick = ()=>{ setAdv(!advOpen); saveFilters(); };
+// mark the button when a collapsed advanced filter is narrowing the results
+function updateAdvBtn(){
+  const active =
+    !!document.getElementById("fSource").value || !!document.getElementById("fFunded").value ||
+    !!document.getElementById("fStage").value  || !!document.getElementById("fWithin").value ||
+    document.getElementById("fSort").value!=="deadline" ||
+    !document.getElementById("fUnkFee").checked ||
+    document.getElementById("fNew").checked || document.getElementById("fHasDl").checked ||
+    !document.getElementById("fHideExpired").checked || !document.getElementById("fHideSkip").checked;
+  document.getElementById("advBtn").classList.toggle("active", active);
+}
+
 function renderChips(){
   const el = document.getElementById("groupChips");
   const inData = [...new Set(DATA.flatMap(o=>(o.region_group||"").split(",").map(s=>s.trim()).filter(Boolean)))];
@@ -507,7 +536,7 @@ function renderChips(){
 const FILTER_IDS = ["fSearch","fSource","fType","fDiscipline","fFunded","fStage","fWithin",
                     "fSort","fFee","fUnkFee","fNew","fHasDl","fHideExpired","fHideSkip"];
 function saveFilters(){
-  const s = {groups:[...selGroups], view};
+  const s = {groups:[...selGroups], view, advOpen};
   FILTER_IDS.forEach(id=>{ const el=document.getElementById(id);
     s[id] = el.type==="checkbox" ? el.checked : el.value; });
   localStorage.setItem("agg:filters", JSON.stringify(s));
@@ -519,6 +548,7 @@ function restoreFilters(){
     if(el.type==="checkbox") el.checked=!!s[id]; else el.value=s[id]; });
   selGroups = new Set(s.groups||[]);
   if(s.view==="map"||s.view==="list") view=s.view;
+  setAdv(!!s.advOpen);
 }
 
 function renderStats(){
@@ -532,11 +562,11 @@ function renderStats(){
     `<span class="su fund"><b>${fund}</b>likely funded</span>`;
 }
 
-// ---- signature: closing-soon poster tiles ----
-function renderHero(){
+// ---- signature: closing-soon poster tiles (drawn from the FILTERED rows, so
+// the big numbers always match what the register below is showing) ----
+function renderHero(rows){
   const el = document.getElementById("hero");
-  const soon = DATA
-    .map(o=>({ ...o, dleft:daysLeft(o.deadline), _mark:(overlay[o.id]||{}).status }))
+  const soon = rows
     .filter(o=> o.dleft!==null && o.dleft>=0 && o._mark!=="skip")
     .sort((a,b)=> a.dleft-b.dleft)
     .slice(0,3);
@@ -715,8 +745,9 @@ function renderMap(rows){
 
 function render(){
   renderStats();
-  renderHero();
   const rows = filtered();
+  renderHero(rows);
+  updateAdvBtn();
   document.getElementById("regLabel").textContent = rows.length===DATA.length ? "The register" : `The register · ${rows.length} match${rows.length===1?"":"es"}`;
   const isMap = view==="map";
   document.getElementById("viewListBtn").classList.toggle("on", !isMap);
