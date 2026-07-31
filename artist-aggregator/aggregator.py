@@ -29,7 +29,8 @@ from email.mime.text import MIMEText
 import store
 import sources as src
 from normalize import (normalize, is_relevant, extract_requirements,
-                       extract_deadline, extract_amount, guess_funded)
+                       extract_deadline, extract_amount, guess_funded,
+                       guess_location, extract_fee, guess_career_stage)
 
 
 def cmd_update(args):
@@ -96,12 +97,16 @@ def _enrich(cap):
             continue
         blob = " ".join(filter(None, [it["title"], it["summary"], details]))
         funded = guess_funded(blob)
+        stage = guess_career_stage(blob)
         store.save_details(
             it["id"], details,
             requirements=", ".join(extract_requirements(blob)),
             deadline=extract_deadline(blob),
             amount=extract_amount(blob),
             funded=funded if funded != "unknown" else None,
+            location=guess_location(blob, it["id"]),
+            fee_eur=extract_fee(blob),
+            career_stage=stage if stage != "any" else None,
         )
         ok += 1
     print(f"  enriched {ok}/{len(todo)}")
@@ -116,6 +121,7 @@ def cmd_list(args):
         region=args.region, type=args.type, funded=args.funded, source=args.source,
         search=args.search, within_days=args.within, new_since=since,
         has_deadline=args.has_deadline, sort=args.sort, discipline=args.discipline,
+        group=args.group, stage=args.stage, max_fee=args.max_fee,
     )
     if not rows:
         print("no matches.")
@@ -177,6 +183,11 @@ def build_parser():
     l.add_argument("--type", help="Residency / Grant / Mobility / Prize / Open Call / Other")
     l.add_argument("--discipline", help="Painting / Sound/Music / Writing / Photography / … (substring)")
     l.add_argument("--funded", choices=["likely", "fee-based", "mixed", "unknown"])
+    l.add_argument("--group", help="region group, e.g. 'Southeast Asia', 'Balkans', 'Baltic' (substring)")
+    l.add_argument("--stage", choices=["emerging", "established"],
+                   help="career stage; 'any'-stage calls always pass")
+    l.add_argument("--max-fee", type=int, metavar="EUR",
+                   help="max application fee in EUR (unknown-fee calls always pass)")
     l.add_argument("--source")
     l.add_argument("--search", help="keyword in title/summary")
     l.add_argument("--within", type=int, metavar="DAYS", help="deadline within N days")
