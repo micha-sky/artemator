@@ -87,7 +87,7 @@ def fetch_hyperallergic():
 
 # ---------- HTML scrapers (TUNE selectors on first live run) ----------
 
-def fetch_resartis(newest=40):
+def fetch_resartis(newest=100):
     """Res Artis open calls, via the WordPress sitemap.
 
     The /open-calls/ listing page sits behind an sgcaptcha bot-challenge, but
@@ -155,7 +155,7 @@ _AC_TYPE = {"RESIDENCY": "Residency", "OPEN_CALL": "Open Call", "GRANT": "Grant"
             "COMPETITION": "Prize", "EXHIBITION": "Open Call", "JOB": "Other"}
 
 
-def fetch_artconnect(pages=3):
+def fetch_artconnect(pages=5):
     """ArtConnect opportunities, residency category. Next.js app: listings sit
     fully structured (deadline, fee, country, artistic fields) in the
     __NEXT_DATA__ JSON blob, so no selector guessing. Fee/location/disciplines
@@ -281,6 +281,39 @@ def fetch_kunstfonds():
     return _dedupe_local(out)
 
 
+_C360_CAT_TYPE = {"residencies": "Residency", "grants": "Grant", "open calls": "Open Call",
+                  "competitions": "Prize", "festivals": "Open Call"}
+
+
+def fetch_culture360(pages=3):
+    """ASEF culture360 opportunities — the Asia-Europe Foundation's board and
+    the main aggregator for Asia-side (incl. Southeast Asia / Mekong) open
+    calls and residencies. Cards are .c360-card-opportunity with the title in
+    h3.card-title (usually "Country | Title" — the gazetteer feeds on that),
+    plus category and "deadline: 09 Aug 2026" text. Their RSS feed 502s, so
+    HTML it is; ?page=N pagination works unchallenged."""
+    out = []
+    for p in range(1, pages + 1):
+        url = "https://culture360.asef.org/opportunities/" + (f"?page={p}" if p > 1 else "")
+        soup = BeautifulSoup(_get(url), "html.parser")
+        for card in soup.select(".c360-card-opportunity"):
+            a = card.select_one("h3.card-title a") or card.select_one("h3 a")
+            if not a or not a.get("href"):
+                continue
+            title = a.get_text(" ", strip=True)
+            if len(title) < 6:
+                continue
+            href = a["href"]
+            if href.startswith("/"):
+                href = "https://culture360.asef.org" + href
+            cat = (card.select_one(".item-footer-category") or card).get_text(" ", strip=True).lower()
+            out.append({"title": title, "url": href,
+                        "summary": card.get_text(" ", strip=True)[:400],
+                        "source": "culture360",
+                        "type": next((t for k, t in _C360_CAT_TYPE.items() if k in cat), None)})
+    return _dedupe_local(out)
+
+
 def fetch_detail(url):
     """Fetch a call's own page and return its readable text, best-effort.
 
@@ -319,4 +352,5 @@ SOURCES = {
     "kunstfonds":   fetch_kunstfonds,
     "transartists": fetch_transartists,
     "artconnect":   fetch_artconnect,
+    "culture360":   fetch_culture360,
 }

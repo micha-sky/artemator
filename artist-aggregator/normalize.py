@@ -288,18 +288,23 @@ def guess_location(text: str, opp_id: str = "") -> dict:
 
     Returns {} when nothing matched. Country-centroid pins get a wider jitter
     than city pins — they're approximate anyway, and spreading them keeps a
-    country's calls individually clickable on the map."""
+    country's calls individually clickable on the map. Umbrella-phrase-only
+    hits ("open to ASEAN artists") carry region groups but no pin."""
     loc = geo.locate(text)
     if not loc:
         return {}
-    dx, dy = _jitter(opp_id, 0.08 if loc["precise"] else 1.0)
-    return {
+    out = {
         "country": loc["country"],
         "place": loc["place"],
         "region_group": ", ".join(loc["groups"]),
-        "lat": round(loc["lat"] + dx, 4),
-        "lon": round(loc["lon"] + dy, 4),
+        "lat": None,
+        "lon": None,
     }
+    if loc["lat"] is not None:
+        dx, dy = _jitter(opp_id, 0.08 if loc["precise"] else 1.0)
+        out["lat"] = round(loc["lat"] + dx, 4)
+        out["lon"] = round(loc["lon"] + dy, 4)
+    return out
 
 
 def extract_amount(text: str) -> str:
@@ -344,7 +349,7 @@ def normalize(raw: dict) -> dict:
     opp_id = stable_id(raw.get("url", ""), title)
     loc = guess_location(blob, opp_id)
     # legacy coarse region: prefer the gazetteer country, fall back to keywords
-    if loc:
+    if loc and loc["country"]:
         region = "DE" if loc["country"] == "DE" else \
                  "EU" if loc["country"] in geo.EUROPE_ISO else "Intl"
     else:

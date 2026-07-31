@@ -322,6 +322,34 @@ CITIES = {
     "auckland": ("NZ", -36.85, 174.76), "wellington": ("NZ", -41.29, 174.78),
 }
 
+# Umbrella region phrases: calls that name a region without any country
+# ("open to artists from Southeast Asia", "ASEAN nationals", "the Mekong
+# region"). They contribute region groups — so the chip filters find them —
+# but no coordinates: a phrase has no honest map pin, and the dashboard's
+# "unmapped (N)" note covers that. Matched with word boundaries, so "east
+# asia" never fires inside "southeast asia".
+REGION_PHRASES = [
+    (("southeast asia", "southeast asian", "south east asia", "south east asian",
+      "south-east asia", "south-east asian", "asean", "mekong"),
+     ("Southeast Asia",)),
+    (("central asia", "central asian"), ("Mongolia/Central Asia",)),
+    (("eastern europe", "eastern european"), ("Eastern Europe",)),
+    (("western balkans", "balkans", "balkan"), ("Balkans",)),
+    (("baltic states", "baltics", "baltic"), ("Baltic",)),
+    (("mediterranean",), ("Mediterranean",)),
+    (("iberian peninsula", "iberian", "iberia"), ("Iberia",)),
+    (("east asia", "east asian"), ("East Asia",)),
+    (("south asia", "south asian"), ("South Asia",)),
+    (("middle east", "middle eastern"), ("Middle East",)),
+    (("latin america", "latin american", "south america", "south american"),
+     ("Latin America",)),
+    (("nordic", "scandinavia", "scandinavian"), ("Nordics",)),
+    # deliberately broad — the group filter is recall-friendly by design
+    (("asia-pacific", "asia pacific"), ("Southeast Asia", "East Asia", "South Asia", "Oceania")),
+]
+_PHRASE_PATS = [(re.compile(r"(?<!\w)(" + "|".join(re.escape(p) for p in ps) + r")(?!\w)"),
+                 groups) for ps, groups in REGION_PHRASES]
+
 # ISO set used to derive the legacy coarse region (DE / EU / Intl).
 EUROPE_ISO = {
     "AL", "BA", "BG", "HR", "GR", "XK", "ME", "MK", "RO", "RS", "SI",
@@ -370,19 +398,25 @@ def locate(text):
             iso = key
         if iso not in countries:
             countries.append(iso)
-    if not countries:
+    phrase_groups = [g for pat, groups in _PHRASE_PATS if pat.search(t) for g in groups]
+    if not countries and not phrase_groups:
         return None
     if first_city:
         iso, lat, lon = CITIES[first_city]
         place = first_city.title()
-    else:
+    elif countries:
         iso = countries[0]
         lat, lon = COUNTRIES[iso][1]
         place = ""
+    else:                       # phrase-only hit: groups yes, pin no
+        iso, lat, lon, place = "", None, None, ""
     groups = []
     for c in countries:
         for g in COUNTRIES.get(c, ((), (), ()))[2]:
             if g not in groups:
                 groups.append(g)
+    for g in phrase_groups:
+        if g not in groups:
+            groups.append(g)
     return {"country": iso, "place": place, "lat": lat, "lon": lon,
             "precise": first_city is not None, "groups": groups}

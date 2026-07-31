@@ -28,7 +28,8 @@ RSS (reliable): **Colossal** (monthly "Opportunities" roundups), **e-flux**, **H
 HTML/JSON (scraped — selectors may need tuning): **On the Move**, **Stiftung Kunstfonds**,
 **TransArtists** (call-for-artists board; via curl — Cloudflare 403s python-requests),
 **ArtConnect** (residencies category, structured `__NEXT_DATA__` JSON),
-**Res Artis** (via the WP sitemap + per-call pages; the listing page itself is captcha-walled).
+**Res Artis** (via the WP sitemap + per-call pages; the listing page itself is captcha-walled),
+**culture360** (ASEF's Asia-Europe board — the main supply of Southeast Asia / Mekong calls).
 Add your own by writing a `fetch_x()` in `sources.py` that returns
 `{title, url, summary, source}` dicts and registering it in `SOURCES`.
 
