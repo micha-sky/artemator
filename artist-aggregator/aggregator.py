@@ -30,7 +30,8 @@ import store
 import sources as src
 from normalize import (normalize, is_relevant, extract_requirements,
                        extract_deadline, extract_amount, guess_funded,
-                       guess_location, extract_fee, guess_career_stage)
+                       guess_location, extract_fee, guess_career_stage,
+                       guess_disciplines, fit_score)
 
 
 def cmd_update(args):
@@ -98,6 +99,11 @@ def _enrich(cap):
         blob = " ".join(filter(None, [it["title"], it["summary"], details]))
         funded = guess_funded(blob)
         stage = guess_career_stage(blob)
+        # recompute fit on the fuller detail text: pick up keywords/discipline
+        # signals the listing blurb didn't carry. save_details keeps the max.
+        disciplines = ", ".join(guess_disciplines(blob)) or it.get("discipline", "")
+        fit, fit_tags = fit_score(blob, funded=funded, region=it.get("region"),
+                                  disciplines=disciplines)
         store.save_details(
             it["id"], details,
             requirements=", ".join(extract_requirements(blob)),
@@ -107,6 +113,7 @@ def _enrich(cap):
             location=guess_location(blob, it["id"]),
             fee_eur=extract_fee(blob),
             career_stage=stage if stage != "any" else None,
+            fit=fit, fit_tags=", ".join(fit_tags),
         )
         ok += 1
     print(f"  enriched {ok}/{len(todo)}")
@@ -148,7 +155,9 @@ def _fmt_line(r):
     days = f"{dleft:>4}d" if isinstance(dleft, int) else "  --"
     fund = {"likely": "€", "fee-based": "fee", "mixed": "€/fee", "unknown": " ? "}.get(r.get("funded"), " ? ")
     disc = f"  {{{r['discipline']}}}" if r.get("discipline") else ""
-    return f"{dl:<11} {days}  {fund:>4}  [{r.get('region','?'):<4}] {r.get('type','?'):<10} {r['title'][:70]}{disc}  ({r['source']})"
+    fit = int(r.get("fit") or 0)
+    fitm = f"{'★' * min(fit // 3 + (fit > 0), 3):<3}" if fit else "   "
+    return f"{fitm} {dl:<11} {days}  {fund:>4}  [{r.get('region','?'):<4}] {r.get('type','?'):<10} {r['title'][:70]}{disc}  ({r['source']})"
 
 
 def _send_digest(new_items):
@@ -194,7 +203,7 @@ def build_parser():
     l.add_argument("--has-deadline", action="store_true", help="only calls with a parsed deadline")
     l.add_argument("--new", action="store_true", help="only recently first-seen")
     l.add_argument("--since-days", type=int, default=7)
-    l.add_argument("--sort", choices=["deadline", "newest"], default="deadline")
+    l.add_argument("--sort", choices=["deadline", "newest", "fit"], default="deadline")
     l.set_defaults(func=cmd_list)
 
     m = sub.add_parser("mark", help="set your own status/notes on a call")

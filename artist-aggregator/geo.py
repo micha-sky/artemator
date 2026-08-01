@@ -15,8 +15,8 @@ is the searcher's own shortlist, surfaced as the "★ my regions" preset.
 import re
 
 PREFERRED_GROUPS = (
-    "Southeast Asia", "Balkans", "Mediterranean", "Baltic", "Iberia",
-    "France/Paris", "Mongolia/Central Asia", "Eastern Europe",
+    "Germany", "German-speaking", "Western Europe", "Nordics",
+    "Eastern Europe", "Baltic", "France/Paris", "Mediterranean",
 )
 
 # iso: (name aliases…, (lat, lon), region groups…)   — aliases lowercase.
@@ -54,10 +54,12 @@ COUNTRIES = {
     "AM": (("armenia",), (40.3, 45.0), ("Eastern Europe",)),
     "AZ": (("azerbaijan",), (40.3, 47.7), ("Eastern Europe",)),
     "RU": (("russia",), (55.8, 45.0), ("Eastern Europe",)),
-    # Western Europe
-    "DE": (("germany", "deutschland"), (51.1, 10.4), ("Western Europe",)),
-    "AT": (("austria", "österreich"), (47.6, 14.1), ("Western Europe",)),
-    "CH": (("switzerland", "schweiz", "suisse"), (46.8, 8.2), ("Western Europe",)),
+    # Western Europe (German-speaking core carries its own groups: this is the
+    # searcher's home turf, so DE gets a dedicated "Germany" facet and DE/AT/CH
+    # share "German-speaking" for the wider Ableton/media-art funding ecosystem.)
+    "DE": (("germany", "deutschland"), (51.1, 10.4), ("Germany", "German-speaking", "Western Europe")),
+    "AT": (("austria", "österreich"), (47.6, 14.1), ("German-speaking", "Western Europe")),
+    "CH": (("switzerland", "schweiz", "suisse"), (46.8, 8.2), ("German-speaking", "Western Europe")),
     "NL": (("netherlands", "holland"), (52.2, 5.3), ("Western Europe",)),
     "BE": (("belgium",), (50.6, 4.7), ("Western Europe",)),
     "LU": (("luxembourg",), (49.8, 6.1), ("Western Europe",)),
@@ -256,6 +258,13 @@ CITIES = {
     "leipzig": ("DE", 51.34, 12.37), "dresden": ("DE", 51.05, 13.74),
     "düsseldorf": ("DE", 51.23, 6.77), "dusseldorf": ("DE", 51.23, 6.77),
     "kassel": ("DE", 51.31, 9.49), "bremen": ("DE", 53.08, 8.80),
+    # Hesse (searcher's home region) + Karlsruhe (ZKM Hertzlab) + media-art hubs
+    "gießen": ("DE", 50.58, 8.68), "giessen": ("DE", 50.58, 8.68),
+    "marburg": ("DE", 50.81, 8.77), "darmstadt": ("DE", 49.87, 8.65),
+    "wiesbaden": ("DE", 50.08, 8.24), "offenbach": ("DE", 50.10, 8.77),
+    "fulda": ("DE", 50.55, 9.68), "karlsruhe": ("DE", 49.01, 8.40),
+    "nuremberg": ("DE", 49.45, 11.08), "nürnberg": ("DE", 49.45, 11.08),
+    "halle": ("DE", 51.48, 11.97), "weimar": ("DE", 50.98, 11.33),
     "vienna": ("AT", 48.21, 16.37), "wien": ("AT", 48.21, 16.37),
     "salzburg": ("AT", 47.81, 13.04), "linz": ("AT", 48.31, 14.29),
     "zurich": ("CH", 47.37, 8.54), "zürich": ("CH", 47.37, 8.54),
@@ -329,6 +338,11 @@ CITIES = {
 # "unmapped (N)" note covers that. Matched with word boundaries, so "east
 # asia" never fires inside "southeast asia".
 REGION_PHRASES = [
+    # home-turf umbrellas: a call scoped to Germany/Hesse or the German-speaking
+    # region without naming a city still tags to the right facet.
+    (("hesse", "hessen"), ("Germany", "German-speaking", "Western Europe")),
+    (("german-speaking", "germanspeaking", "deutschsprachig",
+      "dach region", "d-a-ch", "dach-raum"), ("German-speaking", "Western Europe")),
     (("southeast asia", "southeast asian", "south east asia", "south east asian",
       "south-east asia", "south-east asian", "asean", "mekong"),
      ("Southeast Asia",)),

@@ -202,6 +202,12 @@
     color:var(--grey); margin-bottom:6px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
   .badge-new{background:var(--red); color:#fff; border-radius:999px; padding:2px 9px;
     letter-spacing:.12em; font-weight:800;}
+  /* fit: keyword/funded/region match score + the matched lineage keywords */
+  .fit-badge{background:var(--ink); color:var(--paper); border-radius:999px; padding:2px 9px;
+    letter-spacing:.1em; font-weight:800;}
+  .c-fit{display:flex; gap:6px; flex-wrap:wrap; margin:-1px 0 7px;}
+  .fit-kw{font-size:10px; letter-spacing:.06em; font-weight:700; text-transform:lowercase;
+    padding:2px 8px; border:1px dashed var(--ink); border-radius:999px; color:var(--ink);}
   .c-title{font-weight:800; font-style:italic; font-size:22px; line-height:1.15; margin:0; letter-spacing:-.015em;}
   .c-title a{text-decoration:none;} .c-title a:hover{text-decoration:underline; text-decoration-thickness:2px;}
   .c-org{font-size:13.5px; font-weight:600; margin-top:6px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
@@ -296,7 +302,7 @@
     <div>
       <div class="eyebrow">Open-Call Register · multi-source · new-flagged</div>
       <h1>Funding &amp; Open Calls</h1>
-      <div class="sub">Emerging visual artist · Hesse-based · Europe &amp; worldwide</div>
+      <div class="sub">Sound &amp; media art · biofeedback / spatial audio · Hesse-based · Germany + Europe</div>
     </div>
     <div class="mast-side">
       <div class="mast-actions">
@@ -325,8 +331,9 @@
 
   <div class="presets">
     <span class="flabel">Presets</span>
-    <button class="preset" id="presetRes" title="Residencies · painting/sculpture/writing · my regions · fee ≤ 50 € · emerging-friendly">⌂ Residency mode</button>
-    <button class="preset" id="presetMyRegions" title="Toggle all preferred regions at once">★ my regions</button>
+    <button class="preset" id="presetSymbiont" title="Sound/new-media/performance work, ranked by fit (lineage keywords + funded + home-turf). Add ★ my regions to narrow to Germany + Europe.">◈ SYMBIONT fit</button>
+    <button class="preset" id="presetRes" title="Residencies · sound/new-media/performance · my regions · best-fit sort">⌂ Residency mode</button>
+    <button class="preset" id="presetMyRegions" title="Toggle all preferred regions at once (Germany → Europe)">★ my regions</button>
   </div>
 
   <section class="filters" id="filters">
@@ -342,7 +349,7 @@
       <select id="fFunded"><option value="">funded: any</option><option value="likely">likely funded</option><option value="fee-based">fee-based</option><option value="mixed">mixed</option><option value="unknown">unknown</option></select>
       <select id="fStage"><option value="">career: any</option><option value="emerging">emerging-friendly</option><option value="established">established</option></select>
       <select id="fWithin"><option value="">deadline: any</option><option value="14">≤ 14 days</option><option value="30">≤ 30 days</option><option value="60">≤ 60 days</option><option value="90">≤ 90 days</option></select>
-      <select id="fSort"><option value="deadline">sort: soonest</option><option value="newest">sort: newest</option></select>
+      <select id="fSort"><option value="deadline">sort: soonest</option><option value="newest">sort: newest</option><option value="fit">sort: best fit</option></select>
       <label class="chk" title="Most listings don't state a fee — unchecking this hides all of them"><input type="checkbox" id="fUnkFee" checked> incl. unknown fee</label>
       <label class="chk"><input type="checkbox" id="fNew"> new only (7d)</label>
       <label class="chk"><input type="checkbox" id="fHasDl"> has deadline</label>
@@ -376,9 +383,9 @@ let page = 1;
 
 // Residency-search presets. PREF_GROUPS mirrors geo.PREFERRED_GROUPS in the
 // Python side; MY_DISC is the "★ my disciplines" shortcut.
-const PREF_GROUPS = ["Southeast Asia","Balkans","Mediterranean","Baltic","Iberia",
-                     "France/Paris","Mongolia/Central Asia","Eastern Europe"];
-const MY_DISC = ["Painting","Sculpture","Writing"];
+const PREF_GROUPS = ["Germany","German-speaking","Western Europe","Nordics",
+                     "Eastern Europe","Baltic","France/Paris","Mediterranean"];
+const MY_DISC = ["Sound/Music","Digital/New Media","Performance"];
 let selGroups = new Set();   // active region-group chips
 let view = "list";           // "list" | "map"
 
@@ -485,9 +492,11 @@ function filtered(){
     .filter(o=> !f.within || (o.dleft!==null && o.dleft>=0 && o.dleft<=+f.within))
     .filter(o=> !(f.hideExpired && o.dleft!==null && o.dleft<0))
     .filter(o=> !(f.hideSkip && o._mark==="skip"));
-  rows.sort(f.sort==="newest"
-    ? (a,b)=> (b.first_seen||"").localeCompare(a.first_seen||"")
-    : (a,b)=> (a.dleft===null)-(b.dleft===null) || (a.dleft??1e9)-(b.dleft??1e9));
+  const byDeadline = (a,b)=> (a.dleft===null)-(b.dleft===null) || (a.dleft??1e9)-(b.dleft??1e9);
+  rows.sort(
+    f.sort==="newest" ? (a,b)=> (b.first_seen||"").localeCompare(a.first_seen||"")
+    : f.sort==="fit"  ? (a,b)=> ((b.fit||0)-(a.fit||0)) || byDeadline(a,b)
+    : byDeadline);
   return rows;
 }
 
@@ -627,6 +636,12 @@ function cardHTML(o){
   const reqs = (o.requirements||"").split(",").map(s=>s.trim()).filter(Boolean);
   const reqChips = reqs.length
     ? `<div class="c-req">${reqs.map(r=>`<span class="req ${done[r]?"done":""}">${done[r]?"✓ ":""}${esc(r)}</span>`).join("")}</div>` : "";
+  // fit: score badge in the eyebrow + the matched lineage keywords as chips
+  const fitN = Math.round(o.fit||0);
+  const fitBadge = fitN>0 ? `<span class="fit-badge" title="fit score — lineage-keyword, funded &amp; region match">◈ fit ${fitN}</span>` : "";
+  const fitTags = (o.fit_tags||"").split(",").map(s=>s.trim()).filter(Boolean);
+  const fitTagChips = fitTags.length
+    ? `<div class="c-fit">${fitTags.slice(0,6).map(t=>`<span class="fit-kw">${esc(t)}</span>`).join("")}</div>` : "";
   // left column: when / how long / where from — the Kunsthaus date slot
   const days = o.deadline
     ? (d<0 ? `<div class="w-days past">closed</div>`
@@ -640,7 +655,8 @@ function cardHTML(o){
       ${!isOpen?reqChips:""}
     </div>
     <div class="c-main">
-      <div class="c-eyebrow">${o._new?'<span class="badge-new">NEW</span>':''}${o.discipline?esc(o.discipline)+' · ':''}${esc(loc)}${o.region_group?' · '+esc(o.region_group):''}</div>
+      <div class="c-eyebrow">${o._new?'<span class="badge-new">NEW</span>':''}${fitBadge}${o.discipline?esc(o.discipline)+' · ':''}${esc(loc)}${o.region_group?' · '+esc(o.region_group):''}</div>
+      ${!isOpen?fitTagChips:""}
       <h3 class="c-title"><a href="${url}" target="_blank" rel="noreferrer">${esc(o.title)}</a></h3>
       <div class="c-org">${o.org?`<span>${esc(o.org)}</span>`:""}${fTag}${feeTag}${o.amount?`<span class="src">◈ ${esc(o.amount)}</span>`:""}</div>
       ${!isOpen&&o.summary?`<div class="c-sum">${esc(o.summary)}</div>`:""}
@@ -821,14 +837,32 @@ document.getElementById("presetMyRegions").onclick=()=>{
   selGroups = allOn ? new Set() : new Set(PREF_GROUPS);
   page=1; renderChips(); render();
 };
+document.getElementById("presetSymbiont").onclick=()=>{
+  // the SYMBIONT brief in one click: sound/new-media/performance work, ranked by
+  // fit (keywords + funded + home-turf). Funded/region are *preferences* the fit
+  // sort already encodes, so they stay soft — nothing relevant is hard-filtered
+  // out. Use ★ my regions to narrow to home turf when you want to.
+  document.getElementById("fType").value="";
+  document.getElementById("fDiscipline").value="__mine__";
+  document.getElementById("fFunded").value="";
+  document.getElementById("fStage").value="";
+  document.getElementById("fFee").value=200;
+  document.getElementById("fUnkFee").checked=true;
+  document.getElementById("fSort").value="fit";
+  updateFeeLabel(); updateAdvBtn();
+  selGroups=new Set();
+  page=1; renderChips(); render();
+};
 document.getElementById("presetRes").onclick=()=>{
-  // the whole residency-search brief in one click
+  // residency-focused cut of the same brief
   document.getElementById("fType").value="Residency";
   document.getElementById("fDiscipline").value="__mine__";
-  document.getElementById("fStage").value="emerging";
-  document.getElementById("fFee").value=50;
+  document.getElementById("fFunded").value="";
+  document.getElementById("fStage").value="";
+  document.getElementById("fFee").value=200;
   document.getElementById("fUnkFee").checked=true;
-  updateFeeLabel();
+  document.getElementById("fSort").value="fit";
+  updateFeeLabel(); updateAdvBtn();
   selGroups=new Set(PREF_GROUPS);
   page=1; renderChips(); render();
 };

@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS opportunities (
     discipline TEXT, requirements TEXT, details TEXT,
     country    TEXT, place TEXT, region_group TEXT,
     career_stage TEXT, fee_eur REAL, lat REAL, lon REAL,
+    fit REAL, fit_tags TEXT,
     first_seen TEXT, last_seen TEXT
 );
 CREATE TABLE IF NOT EXISTS status (          -- your own marks, kept even if a call drops off
@@ -36,10 +37,10 @@ def init():
         # Migrations for DBs created before newer columns existed.
         cols = {r["name"] for r in c.execute("PRAGMA table_info(opportunities)")}
         for col in ("discipline", "requirements", "details",
-                    "country", "place", "region_group", "career_stage"):
+                    "country", "place", "region_group", "career_stage", "fit_tags"):
             if col not in cols:
                 c.execute(f"ALTER TABLE opportunities ADD COLUMN {col} TEXT")
-        for col in ("fee_eur", "lat", "lon"):
+        for col in ("fee_eur", "lat", "lon", "fit"):
             if col not in cols:
                 c.execute(f"ALTER TABLE opportunities ADD COLUMN {col} REAL")
 
@@ -57,14 +58,15 @@ def upsert_many(items):
                     """INSERT INTO opportunities
                        (id,title,org,url,source,summary,deadline,region,type,funded,amount,
                         discipline,requirements,country,place,region_group,career_stage,
-                        fee_eur,lat,lon,first_seen,last_seen)
-                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                        fee_eur,lat,lon,fit,fit_tags,first_seen,last_seen)
+                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                     (it["id"], it["title"], it["org"], it["url"], it["source"], it["summary"],
                      it["deadline"], it["region"], it["type"], it["funded"], it["amount"],
                      it.get("discipline", ""), it.get("requirements", ""),
                      it.get("country", ""), it.get("place", ""), it.get("region_group", ""),
                      it.get("career_stage", "any"), it.get("fee_eur"),
-                     it.get("lat"), it.get("lon"), now, now),
+                     it.get("lat"), it.get("lon"),
+                     it.get("fit"), it.get("fit_tags", ""), now, now),
                 )
             else:
                 # requirements/location/fee/stage: listing-page text is a subset of
@@ -80,13 +82,16 @@ def upsert_many(items):
                        career_stage=COALESCE(NULLIF(?,'any'),career_stage,'any'),
                        fee_eur=COALESCE(?,fee_eur),
                        lat=COALESCE(?,lat), lon=COALESCE(?,lon),
+                       fit=MAX(COALESCE(fit,0),COALESCE(?,0)),
+                       fit_tags=COALESCE(NULLIF(?,''),fit_tags),
                        last_seen=? WHERE id=?""",
                     (it["title"], it["org"], it["url"], it["source"], it["summary"],
                      it["deadline"], it["region"], it["type"], it["funded"], it["amount"],
                      it.get("discipline", ""), it.get("requirements", ""),
                      it.get("country", ""), it.get("place", ""), it.get("region_group", ""),
                      it.get("career_stage", "any"), it.get("fee_eur"),
-                     it.get("lat"), it.get("lon"), now, it["id"]),
+                     it.get("lat"), it.get("lon"),
+                     it.get("fit"), it.get("fit_tags", ""), now, it["id"]),
                 )
     return new_items
 
@@ -97,17 +102,20 @@ def needing_details(limit=25):
     so the most urgent calls get enriched before the cap cuts off."""
     with _conn() as c:
         rows = c.execute(
-            """SELECT id, url, title, summary, deadline, amount, funded FROM opportunities
+            """SELECT id, url, title, summary, deadline, amount, funded, region, discipline
+               FROM opportunities
                WHERE details IS NULL ORDER BY COALESCE(deadline,'9999'), first_seen DESC LIMIT ?""",
             (limit,)).fetchall()
     return [dict(r) for r in rows]
 
 
 def save_details(opp_id, details, requirements=None, deadline=None, amount=None,
-                 funded=None, location=None, fee_eur=None, career_stage=None):
+                 funded=None, location=None, fee_eur=None, career_stage=None,
+                 fit=None, fit_tags=None):
     """Store detail-page text; fill deadline/amount/funded/location/fee/stage
     only where the listing-level guess left a gap. `location` is the dict from
-    normalize.guess_location (may be {})."""
+    normalize.guess_location (may be {}). fit is recomputed on the richer
+    detail text — keep whichever score is higher and never blank the tags."""
     loc = location or {}
     with _conn() as c:
         c.execute(
@@ -122,12 +130,14 @@ def save_details(opp_id, details, requirements=None, deadline=None, amount=None,
                lat=COALESCE(lat,?), lon=COALESCE(lon,?),
                fee_eur=COALESCE(fee_eur,?),
                career_stage=CASE WHEN (career_stage IS NULL OR career_stage='any')
-                                 AND ? IS NOT NULL THEN ? ELSE career_stage END
+                                 AND ? IS NOT NULL THEN ? ELSE career_stage END,
+               fit=MAX(COALESCE(fit,0),COALESCE(?,0)),
+               fit_tags=COALESCE(NULLIF(?,''),fit_tags)
                WHERE id=?""",
             (details, requirements, deadline, amount, funded, funded,
              loc.get("country", ""), loc.get("place", ""), loc.get("region_group", ""),
              loc.get("lat"), loc.get("lon"), fee_eur,
-             career_stage, career_stage, opp_id))
+             career_stage, career_stage, fit, fit_tags, opp_id))
 
 
 def set_mark(opp_id, mark=None, notes=None):
@@ -167,6 +177,12 @@ def query(region=None, type=None, funded=None, source=None, search=None,
         rows.sort(key=lambda r: (r["days_left"] is None, r["days_left"] if r["days_left"] is not None else 1e9))
     elif sort == "newest":
         rows.sort(key=lambda r: r["first_seen"], reverse=True)
+    elif sort == "fit":
+        # best fit first; among equally-fit calls, the soonest deadline wins
+        rows.sort(key=lambda r: (
+            -(r.get("fit") or 0),
+            r["days_left"] is None,
+            r["days_left"] if r["days_left"] is not None else 1e9))
     return rows
 
 

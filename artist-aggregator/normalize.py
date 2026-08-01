@@ -38,10 +38,13 @@ DISCIPLINE_RULES = [
     ("Sculpture",         ["sculpture", "sculptor", "sculptural", "skulptur"]),
     ("Photography",       ["photography", "photographer", "photographic", "fotografie", "photobook"]),
     ("Film/Video",        ["film", "filmmaker", "filmmaking", "video", "cinema", "cinematic", "documentary", "animation", "moving image"]),
-    ("Sound/Music",       ["sound", "sonic", "music", "musical", "musician", "composer", "composition", "audio", "field recording"]),
-    ("Performance",       ["performance", "performing", "dance", "dancer", "choreography", "choreographer", "theatre", "theater", "live art", "opera"]),
+    ("Sound/Music",       ["sound", "sonic", "music", "musical", "musician", "composer", "composition", "audio", "field recording",
+                           "musik", "musikalisch", "musiker", "musikerin", "komponist", "komponistin", "komposition", "klang", "klangkunst", "tonkunst"]),
+    ("Performance",       ["performance", "performing", "dance", "dancer", "choreography", "choreographer", "theatre", "theater", "live art", "opera",
+                           "tanz", "choreografie", "choreographie", "aufführung", "darstellende"]),
     ("Writing",           ["writing", "writer", "literature", "literary", "poetry", "poet", "fiction", "nonfiction", "essay", "essays", "novel", "playwright"]),
-    ("Digital/New Media", ["digital", "new media", "net art", "generative", "interactive", "video game", "game art", "virtual reality", "augmented reality", "electronic art", "creative coding", "software art"]),
+    ("Digital/New Media", ["digital", "new media", "net art", "generative", "interactive", "video game", "game art", "virtual reality", "augmented reality", "electronic art", "creative coding", "software art",
+                           "medienkunst", "neue medien", "digitale kunst", "netzkunst", "computerkunst", "generativ", "interaktiv"]),
     ("Printmaking",       ["printmaking", "printmaker", "etching", "lithography", "lithograph", "screenprint", "screen print", "engraving", "risograph"]),
     ("Craft/Textile",     ["textile", "textiles", "fiber art", "fibre art", "weaving", "embroidery", "ceramic", "ceramics", "glass art", "jewellery", "jewelry", "woodwork", "craft"]),
     ("Curatorial",        ["curator", "curatorial", "curating"]),
@@ -275,6 +278,85 @@ def guess_career_stage(text: str) -> str:
     return "any"
 
 
+# --- Fit scoring: how closely a call matches the searcher's actual practice ---
+# Tuned for OM/SYMBIONT: biofeedback-driven spatial composition (EEG, plant
+# bioelectric sensing), live electronics, sound/media-art residencies. Keyword
+# groups are weighted by how strong a signal they are; the score also folds in
+# funded/region/discipline boosts (see fit_score). This is triage sugar — it
+# reorders the same calls filtering already surfaced, it never hides anything.
+FIT_KEYWORDS = [
+    # weight 3 — lineage-defining: if these appear, it's almost certainly for OM
+    # (DE equivalents included — the searcher works in German and the home-turf
+    #  funders publish in German)
+    (3, ["biofeedback", "neurofeedback", "eeg", "brainwave", "brainwaves",
+         "brain-computer", "brain computer", "bio-art", "bioart", "bio art",
+         "bioelectric", "biosignal", "biosignals", "biosensor", "biosensing",
+         "spatial audio", "multichannel", "multi-channel", "ambisonic",
+         "ambisonics", "sound installation", "sound art", "sonic art", "sonic arts",
+         "klangkunst", "klanginstallation", "räumlicher klang", "mehrkanal",
+         "mehrkanalig", "bioelektrisch"]),
+    # weight 2 — strong medium/practice signals
+    (2, ["experimental music", "live electronics", "electroacoustic",
+         "electro-acoustic", "acousmatic", "generative", "media art", "new media",
+         "media-art", "max/msp", "max msp", "max for live", "creative coding",
+         "interactive installation", "immersive audio", "computer music",
+         "algorithmic", "art-science", "art science", "art and science",
+         "bio-media", "post-human", "posthuman",
+         "medienkunst", "elektroakustisch", "elektroakustische", "experimentelle musik",
+         "neue musik", "generativ", "live-elektronik", "klangforschung"]),
+    # weight 1 — context words: real but broad, capped so they can't dominate
+    (1, ["sound", "sonic", "audio", "composer", "composition", "installation",
+         "immersive", "electronic", "field recording", "spatial", "gestural",
+         "sensor", "sensors", "real-time", "real time", "modular", "synthesis",
+         "ableton", "loudspeaker", "diffusion",
+         "klang", "komposition", "komponist", "räumlich"]),
+]
+_FIT_PATS = [(w, re.compile(r"(?<!\w)(" + "|".join(re.escape(p) for p in ps) + r")(?!\w)"))
+             for w, ps in FIT_KEYWORDS]
+_KW_CAP = 10   # ceiling on the keyword portion so a wall of weight-1 words can't
+               # outweigh a genuine biofeedback/sound-art hit
+
+
+def fit_signals(text: str):
+    """Return (matched_phrases, keyword_score).
+
+    matched_phrases are the weight≥2 hits worth showing as card badges, deduped
+    and order-stable. keyword_score is the summed weight of every distinct hit,
+    capped at _KW_CAP."""
+    t = (text or "").lower()
+    score, seen, tags = 0, set(), []
+    for w, pat in _FIT_PATS:
+        for m in pat.finditer(t):
+            p = m.group(1)
+            if p in seen:
+                continue
+            seen.add(p)
+            score += w
+            if w >= 2:
+                tags.append(p)
+    return tags, min(score, _KW_CAP)
+
+
+def fit_score(text: str, funded=None, region=None, disciplines=""):
+    """Overall fit (higher = better match), plus the badge phrases.
+
+    Keyword relevance is the core; funded calls, home-turf (DE > EU) calls, and
+    sound/new-media/performance disciplines each nudge it up; fee-based calls
+    down. Floors at 0."""
+    tags, score = fit_signals(text)
+    score += {"likely": 2, "mixed": 1, "fee-based": -2}.get(funded, 0)
+    score += {"DE": 2, "EU": 1}.get(region, 0)
+    # A call open to almost every discipline (the "open to all media" boards that
+    # fold every field into their text) is not a *sound/media* signal — only
+    # reward discipline focus when the list is reasonably specific.
+    d = [x.strip() for x in (disciplines or "").split(",") if x.strip()]
+    if len(d) <= 5:
+        if "Sound/Music" in d:       score += 2
+        if "Digital/New Media" in d: score += 2
+        if "Performance" in d:       score += 1
+    return max(score, 0), tags
+
+
 def _jitter(opp_id: str, scale: float):
     """Small deterministic offset per item so same-place pins don't stack."""
     h = int(hashlib.sha1((opp_id or "").encode("utf-8")).hexdigest()[8:16], 16)
@@ -354,6 +436,17 @@ def normalize(raw: dict) -> dict:
                  "EU" if loc["country"] in geo.EUROPE_ISO else "Intl"
     else:
         region = guess_region(blob)
+    final_region = raw.get("region") or region
+    # A DE-tagged call whose text names no city (many German funders — Musikfonds,
+    # Initiative Musik, Kunstfonds) would otherwise carry no region group and be
+    # hidden the moment any "my regions" chip is on. Backfill the German groups
+    # from the gazetteer so home-turf calls stay visible.
+    region_group = loc.get("region_group", "")
+    if not region_group and final_region == "DE":
+        region_group = ", ".join(geo.COUNTRIES["DE"][2])
+    funded = guess_funded(blob)
+    disciplines = ", ".join(guess_disciplines(blob))
+    fit, fit_tags = fit_score(blob, funded=funded, region=final_region, disciplines=disciplines)
     return {
         "id": opp_id,
         "title": title,
@@ -362,17 +455,19 @@ def normalize(raw: dict) -> dict:
         "source": raw.get("source", "?"),
         "summary": summary[:400],
         "deadline": extract_deadline(blob) or (raw.get("deadline") or None),
-        "region": raw.get("region") or region,
+        "region": final_region,
         "type": raw.get("type") or guess_type(blob),
-        "funded": guess_funded(blob),
+        "funded": funded,
         "amount": extract_amount(blob),
-        "discipline": ", ".join(guess_disciplines(blob)),
+        "discipline": disciplines,
         "requirements": ", ".join(extract_requirements(blob)),
         "country": loc.get("country", ""),
         "place": loc.get("place", ""),
-        "region_group": loc.get("region_group", ""),
+        "region_group": region_group,
         "lat": loc.get("lat"),
         "lon": loc.get("lon"),
         "fee_eur": extract_fee(blob),
         "career_stage": guess_career_stage(blob),
+        "fit": fit,
+        "fit_tags": ", ".join(fit_tags),
     }

@@ -24,14 +24,24 @@ open dashboard.html                  # or serve the folder
 ```
 
 ## Sources
-RSS (reliable): **Colossal** (monthly "Opportunities" roundups), **e-flux**, **Hyperallergic**.
-HTML/JSON (scraped — selectors may need tuning): **On the Move**, **Stiftung Kunstfonds**,
-**TransArtists** (call-for-artists board; via curl — Cloudflare 403s python-requests),
-**ArtConnect** (residencies category, structured `__NEXT_DATA__` JSON),
-**Res Artis** (via the WP sitemap + per-call pages; the listing page itself is captcha-walled),
-**culture360** (ASEF's Asia-Europe board — the main supply of Southeast Asia / Mekong calls).
+General art-funding: **Colossal**, **e-flux**, **Hyperallergic** (RSS); **On the Move**,
+**Stiftung Kunstfonds**, **TransArtists** (via curl — Cloudflare 403s python-requests),
+**ArtConnect** (`__NEXT_DATA__` JSON), **Res Artis** (WP sitemap + per-call pages),
+**culture360** (ASEF's Asia-Europe board) — HTML/JSON scraped.
+
+Sound / media-art (the SYMBIONT tilt): **Initiative Musik** and **Stiftung Musikfonds**
+(Germany's federal music funders — Projektförderung, STIP stipends, Outer Ear),
+**ZKM Karlsruhe** (Hertzlab open calls — the institutional sweet spot), **CTM Festival**
+(Berlin; open-calls index discovered from the homepage so the festival-year URL isn't
+hard-coded), **Ars Electronica** (Prix, emitted as one annual open call).
+
 Add your own by writing a `fetch_x()` in `sources.py` that returns
 `{title, url, summary, source}` dicts and registering it in `SOURCES`.
+
+> **Not added (checked):** Goethe-Institut has no central open-call board — its
+> residency/mobility calls are spread across program subpages and largely surface
+> via **On the Move** already; a dedicated scraper would be fragile. Add one as a
+> `fetch_x()` if a specific Goethe program becomes worth tracking.
 
 > HTML scrapers depend on each site's markup. On the first live run, if a source
 > returns 0 items, open the page, inspect it, and fix the CSS selector marked
@@ -40,19 +50,26 @@ Add your own by writing a `fetch_x()` in `sources.py` that returns
 ## Filtering (CLI)
 ```bash
 python aggregator.py list --region DE --funded likely --within 60
-python aggregator.py list --type Residency --search painting --sort newest
-python aggregator.py list --group "Southeast Asia" --stage emerging --max-fee 50
+python aggregator.py list --discipline Sound/Music --sort fit          # best-fit first
+python aggregator.py list --group "German-speaking" --funded likely --max-fee 0
 python aggregator.py list --new --since-days 7        # only recently-appeared
 python aggregator.py mark <id> --status applied --notes "sent 12 Aug"
 ```
 The dashboard offers the same filters (source, type, discipline, funded,
 career stage, deadline window, keyword, new-only, has-deadline) plus:
-- **region-group chips** (Southeast Asia, Balkans, Mediterranean, Baltic, Iberia,
-  France/Paris, Mongolia/Central Asia, Eastern Europe, …) with a **★ my regions** preset;
+- a **fit score** (`--sort fit`, "sort: best fit" in the UI): weights lineage
+  keywords (biofeedback, EEG, bio-art, spatial audio, live electronics, media art…)
+  plus funded / home-turf / sound-media-discipline signals. Cards show a **◈ fit N**
+  badge and the matched keyword chips. Tune `FIT_KEYWORDS`/`fit_score` in `normalize.py`;
+- **region-group chips** ordered home-turf first (Germany, German-speaking, Western
+  Europe, Nordics, Eastern Europe, Baltic, France/Paris, Mediterranean, …) with a
+  **★ my regions** preset;
+- a **◈ SYMBIONT fit** preset — sound/new-media/performance work, best-fit sort
+  (funded and home-turf stay *soft* preferences the ranking encodes, so nothing
+  relevant is hard-filtered out; add **★ my regions** to narrow to Germany + Europe) —
+  and a **⌂ Residency mode** cut of the same brief, one click each;
 - an **application-fee slider** (0–200 €; "incl. unknown fee" keeps the many calls
   that never state a fee visible — stage and fee filters fail open by design);
-- a **⌂ Residency mode** preset: residencies · painting/sculpture/writing ·
-  my regions · fee ≤ 50 € · emerging-friendly, in one click;
 - a **map view** (Leaflet + clustering; pins are city- or country-level from the
   offline gazetteer, red = closing ≤ 7 days, popups with Interested/Skip);
 - a NEW badge and .ics export with reminders 2 weeks and 3 days before each deadline.

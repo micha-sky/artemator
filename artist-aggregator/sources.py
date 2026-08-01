@@ -314,6 +314,136 @@ def fetch_culture360(pages=3):
     return _dedupe_local(out)
 
 
+# ---------- Sound / media-art sources (SYMBIONT-tuned) ----------
+
+_IM_PROG_RE = re.compile(r"https://www\.initiative-musik\.de/([a-zäöü-]+f[öo]erderung)/?$")
+
+
+def fetch_initiativemusik():
+    """Initiative Musik — Germany's federal music-funding agency (artist
+    development, structural / export / live-music grants). Its WordPress RSS feed
+    is an empty channel, so scrape the /foerderprogramme/ hub instead: each
+    active programme is a top-level /<name>förderung/ page. Emit those; enrich
+    fills each programme's conditions and current deadline."""
+    soup = BeautifulSoup(_get("https://www.initiative-musik.de/foerderprogramme/"), "html.parser")
+    out, seen = [], set()
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        m = _IM_PROG_RE.match(href)
+        if not m or href in seen:
+            continue
+        seen.add(href)
+        title = a.get_text(" ", strip=True)
+        if len(title) < 4:
+            title = m.group(1).title()
+        out.append({"title": f"Initiative Musik — {title}", "url": href,
+                    "summary": title, "source": "Initiative Musik",
+                    "org": "Initiative Musik", "region": "DE", "type": "Grant"})
+    return _dedupe_local(out)
+
+
+def fetch_musikfonds():
+    """Stiftung Musikfonds — Germany's federal fund for contemporary/experimental
+    music (Projektförderung up to €50k, the STIP stipends, Outer Ear). The
+    /foerderprogramme page lists each programme as an h2/h3 section; emit the
+    open ones (skip everything under 'Abgeschlossene Programme') with a couple
+    of paragraphs of body text so normalize picks up deadlines/stipend signals.
+    Each shares the page URL, so a title-slug fragment keeps their ids distinct."""
+    soup = BeautifulSoup(_get("https://www.musikfonds.de/foerderprogramme"), "html.parser")
+    _SECTION_LABELS = {"reguläre förderprogramme", "aktuelle sonderprogramme",
+                       "laufende sonderprogramme", "abgeschlossene programme"}
+    out, closed = [], False
+    for h in soup.find_all(["h2", "h3"]):
+        title = h.get_text(" ", strip=True)
+        low = title.lower()
+        if "abgeschlossen" in low:            # completed programmes → stop emitting
+            closed = True
+        if closed or not title or low in _SECTION_LABELS:
+            continue
+        ps, sib = [], h
+        while len(ps) < 2:                    # walk forward to the next heading
+            sib = sib.find_next(["p", "h2", "h3"])
+            if sib is None or sib.name in ("h2", "h3"):
+                break
+            txt = sib.get_text(" ", strip=True)
+            if txt:
+                ps.append(txt)
+        slug = re.sub(r"[^a-z0-9]+", "-", low).strip("-")[:40]
+        out.append({"title": title,
+                    "url": f"https://www.musikfonds.de/foerderprogramme#{slug}",
+                    "summary": (title + " — " + " ".join(ps))[:800],
+                    "source": "Musikfonds", "org": "Stiftung Musikfonds",
+                    "region": "DE", "type": "Grant"})
+    return _dedupe_local(out)
+
+
+def fetch_zkm():
+    """ZKM | Center for Art and Media, Karlsruhe — its Hertzlab runs sound /
+    immersive / media-art open calls (the searcher's institutional sweet spot,
+    home of the Sonic Experiments residency). The /en/open-calls page links each
+    live call as /en/open-call-<slug>; emit those and let enrich fill the page."""
+    soup = BeautifulSoup(_get("https://zkm.de/en/open-calls"), "html.parser")
+    out = []
+    for a in soup.select("a[href*='/open-call-']"):    # the trailing '-' skips the index /open-calls
+        href = a["href"]
+        if href.startswith("/"):
+            href = "https://zkm.de" + href
+        title = a.get_text(" ", strip=True)
+        if len(title) < 8:
+            continue
+        out.append({"title": title, "url": href, "summary": title,
+                    "source": "ZKM", "org": "ZKM Karlsruhe",
+                    "country": "Karlsruhe, Germany", "region": "DE", "type": "Open Call"})
+    return _dedupe_local(out)
+
+
+def fetch_ctm():
+    """CTM Festival, Berlin — adventurous electronic & experimental music; runs
+    annual open calls (performance, radio lab, research networking). The festival
+    year sits in the URL, so discover the current open-calls index from the
+    homepage nav rather than hard-coding it, then emit each sub-page."""
+    soup = BeautifulSoup(_get("https://www.ctm-festival.de/"), "html.parser")
+    idx = next((a["href"] for a in soup.find_all("a", href=True)
+                if re.search(r"/open-calls/?$", a["href"])), None)
+    if not idx:
+        raise RuntimeError("CTM open-calls index link not found on homepage")
+    if idx.startswith("/"):
+        idx = "https://www.ctm-festival.de" + idx
+    base = idx.rstrip("/")
+    soup = BeautifulSoup(_get(idx), "html.parser")
+    out = []
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        if "/open-calls/" not in href:
+            continue
+        full = href if href.startswith("http") else "https://www.ctm-festival.de" + href
+        if full.rstrip("/") == base:          # the index itself, not a call
+            continue
+        title = a.get_text(" ", strip=True)
+        if len(title) < 8:
+            continue
+        out.append({"title": title, "url": full, "summary": title,
+                    "source": "CTM", "org": "CTM Festival",
+                    "country": "Berlin, Germany", "region": "DE", "type": "Open Call"})
+    return _dedupe_local(out)
+
+
+def fetch_arselectronica():
+    """Ars Electronica, Linz — Prix Ars Electronica, the leading media-art prize
+    (Digital Musics & Sound Art, Interactive Art, AI). One annual open call, so
+    emit the Prix page as a single item; enrich pulls the current deadline and
+    category text (which carries strong sound/new-media keyword signal)."""
+    url = "https://ars.electronica.art/prix/en/"
+    soup = BeautifulSoup(_get(url), "html.parser")
+    h = soup.find("h1")
+    title = re.sub(r"\s+", " ", h.get_text(" ", strip=True)) if h else "Prix Ars Electronica"
+    body = soup.find("main") or soup.body or soup
+    summary = re.sub(r"\s+", " ", body.get_text(" ", strip=True))[:600]
+    return [{"title": title[:100], "url": url, "summary": summary,
+             "source": "Ars Electronica", "org": "Ars Electronica",
+             "country": "Linz, Austria", "region": "EU", "type": "Prize"}]
+
+
 def fetch_detail(url):
     """Fetch a call's own page and return its readable text, best-effort.
 
@@ -353,4 +483,10 @@ SOURCES = {
     "transartists": fetch_transartists,
     "artconnect":   fetch_artconnect,
     "culture360":   fetch_culture360,
+    # sound / media-art funders & festivals (SYMBIONT-tuned)
+    "initiativemusik": fetch_initiativemusik,
+    "musikfonds":   fetch_musikfonds,
+    "zkm":          fetch_zkm,
+    "ctm":          fetch_ctm,
+    "arselectronica": fetch_arselectronica,
 }
