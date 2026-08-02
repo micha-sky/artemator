@@ -325,6 +325,7 @@
 
   <div class="presets">
     <span class="flabel">Presets</span>
+    <button class="preset" id="presetSaved" title="Show only calls you marked Interested">★ Interested <b id="savedCount"></b></button>
     <button class="preset" id="presetRes" title="Residencies · painting/sculpture/writing · my regions · fee ≤ 50 € · emerging-friendly">⌂ Residency mode</button>
     <button class="preset" id="presetMyRegions" title="Toggle all preferred regions at once">★ my regions</button>
   </div>
@@ -334,6 +335,7 @@
     <input class="search" id="fSearch" placeholder="keyword…">
     <select id="fType"><option value="">type: all</option></select>
     <select id="fDiscipline"><option value="">discipline: all</option><option value="__mine__">★ my disciplines</option></select>
+    <select id="fWithin" title="How soon the deadline is"><option value="">deadline: any</option><option value="7">this week</option><option value="30">this month</option><option value="60">two months</option><option value="180">half a year</option></select>
     <label class="chk fee-ctl" title="Application-fee cap. Calls that never state a fee are controlled by 'incl. unknown fee' under advanced.">fee ≤ <input type="range" id="fFee" min="0" max="200" step="5" value="200"> <b id="fFeeVal"></b></label>
     <button class="advbtn" id="advBtn">advanced ▾</button>
     <button class="reset" id="resetBtn">reset</button>
@@ -341,7 +343,6 @@
       <select id="fSource"><option value="">source: all</option></select>
       <select id="fFunded"><option value="">funded: any</option><option value="likely">likely funded</option><option value="fee-based">fee-based</option><option value="mixed">mixed</option><option value="unknown">unknown</option></select>
       <select id="fStage"><option value="">career: any</option><option value="emerging">emerging-friendly</option><option value="established">established</option></select>
-      <select id="fWithin"><option value="">deadline: any</option><option value="14">≤ 14 days</option><option value="30">≤ 30 days</option><option value="60">≤ 60 days</option><option value="90">≤ 90 days</option></select>
       <select id="fSort"><option value="deadline">sort: soonest</option><option value="newest">sort: newest</option></select>
       <label class="chk" title="Most listings don't state a fee — unchecking this hides all of them"><input type="checkbox" id="fUnkFee" checked> incl. unknown fee</label>
       <label class="chk"><input type="checkbox" id="fNew"> new only (7d)</label>
@@ -381,6 +382,7 @@ const PREF_GROUPS = ["Southeast Asia","Balkans","Mediterranean","Baltic","Iberia
 const MY_DISC = ["Painting","Sculpture","Writing"];
 let selGroups = new Set();   // active region-group chips
 let view = "list";           // "list" | "map"
+let savedOnly = false;       // "★ Interested" — narrow register to marked-interested calls
 
 let overlay = {};
 try { overlay = JSON.parse(localStorage.getItem("agg:overlay") || "{}"); } catch(e){ overlay = {}; }
@@ -483,8 +485,12 @@ function filtered(){
     .filter(o=> !f.hasDl  || o.deadline)
     .filter(o=> !f.newOnly|| o._new)
     .filter(o=> !f.within || (o.dleft!==null && o.dleft>=0 && o.dleft<=+f.within))
-    .filter(o=> !(f.hideExpired && o.dleft!==null && o.dleft<0))
-    .filter(o=> !(f.hideSkip && o._mark==="skip"));
+    // in the Interested view, keep expired picks — a saved area shouldn't drop
+    // calls just because their deadline passed
+    .filter(o=> savedOnly || !(f.hideExpired && o.dleft!==null && o.dleft<0))
+    .filter(o=> !(f.hideSkip && o._mark==="skip"))
+    // "★ Interested" view: only calls marked interested
+    .filter(o=> !savedOnly || o._mark==="interested");
   rows.sort(f.sort==="newest"
     ? (a,b)=> (b.first_seen||"").localeCompare(a.first_seen||"")
     : (a,b)=> (a.dleft===null)-(b.dleft===null) || (a.dleft??1e9)-(b.dleft??1e9));
@@ -510,7 +516,7 @@ document.getElementById("advBtn").onclick = ()=>{ setAdv(!advOpen); saveFilters(
 function updateAdvBtn(){
   const active =
     !!document.getElementById("fSource").value || !!document.getElementById("fFunded").value ||
-    !!document.getElementById("fStage").value  || !!document.getElementById("fWithin").value ||
+    !!document.getElementById("fStage").value  ||
     document.getElementById("fSort").value!=="deadline" ||
     !document.getElementById("fUnkFee").checked ||
     document.getElementById("fNew").checked || document.getElementById("fHasDl").checked ||
@@ -536,7 +542,7 @@ function renderChips(){
 const FILTER_IDS = ["fSearch","fSource","fType","fDiscipline","fFunded","fStage","fWithin",
                     "fSort","fFee","fUnkFee","fNew","fHasDl","fHideExpired","fHideSkip"];
 function saveFilters(){
-  const s = {groups:[...selGroups], view, advOpen};
+  const s = {groups:[...selGroups], view, advOpen, savedOnly};
   FILTER_IDS.forEach(id=>{ const el=document.getElementById(id);
     s[id] = el.type==="checkbox" ? el.checked : el.value; });
   localStorage.setItem("agg:filters", JSON.stringify(s));
@@ -548,6 +554,7 @@ function restoreFilters(){
     if(el.type==="checkbox") el.checked=!!s[id]; else el.value=s[id]; });
   selGroups = new Set(s.groups||[]);
   if(s.view==="map"||s.view==="list") view=s.view;
+  savedOnly = !!s.savedOnly;
   setAdv(!!s.advOpen);
 }
 
@@ -748,7 +755,12 @@ function render(){
   const rows = filtered();
   renderHero(rows);
   updateAdvBtn();
-  document.getElementById("regLabel").textContent = rows.length===DATA.length ? "The register" : `The register · ${rows.length} match${rows.length===1?"":"es"}`;
+  const savedN = DATA.filter(o=>(overlay[o.id]||{}).status==="interested").length;
+  document.getElementById("savedCount").textContent = savedN ? `(${savedN})` : "";
+  document.getElementById("presetSaved").classList.toggle("on", savedOnly);
+  const regBase = savedOnly ? "Interested" : "The register";
+  document.getElementById("regLabel").textContent = (!savedOnly && rows.length===DATA.length)
+    ? regBase : `${regBase} · ${rows.length} match${rows.length===1?"":"es"}`;
   const isMap = view==="map";
   document.getElementById("viewListBtn").classList.toggle("on", !isMap);
   document.getElementById("viewMapBtn").classList.toggle("on", isMap);
@@ -811,11 +823,14 @@ document.getElementById("resetBtn").onclick=()=>{
   document.getElementById("fFee").value=200;           // reset = show everything
   document.getElementById("fUnkFee").checked=true;
   updateFeeLabel();
-  selGroups=new Set(); renderChips();
+  selGroups=new Set(); savedOnly=false; renderChips();
   page=1; render();
 };
 
 // ---- presets ----
+document.getElementById("presetSaved").onclick=()=>{
+  savedOnly=!savedOnly; page=1; render();
+};
 document.getElementById("presetMyRegions").onclick=()=>{
   const allOn = PREF_GROUPS.every(g=>selGroups.has(g));
   selGroups = allOn ? new Set() : new Set(PREF_GROUPS);
