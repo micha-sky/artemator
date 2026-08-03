@@ -1,0 +1,16 @@
+{
+  "label": "All calls — neutral",
+  "preferred_groups": [
+    "Germany", "German-speaking", "Western Europe", "Nordics",
+    "Eastern Europe", "Baltic", "France/Paris", "Mediterranean",
+    "Iberia", "Balkans", "Southeast Asia", "Mongolia/Central Asia"
+  ],
+  "my_disciplines": [],
+  "region_boost": {},
+  "enabled_sources": [
+    "colossal", "eflux", "hyperallergic", "resartis", "onthemove",
+    "kunstfonds", "transartists", "artconnect", "culture360",
+    "initiativemusik", "musikfonds", "zkm", "ctm", "arselectronica"
+  ],
+  "fit_keywords": []
+}

@@ -1,0 +1,26 @@
+{
+  "label": "Painting · sculpture · writing (SE-Asia & Europe)",
+  "preferred_groups": [
+    "Southeast Asia", "Balkans", "Mediterranean", "Baltic", "Iberia",
+    "France/Paris", "Mongolia/Central Asia", "Eastern Europe"
+  ],
+  "my_disciplines": ["Painting", "Sculpture", "Writing"],
+  "region_boost": {},
+  "enabled_sources": [
+    "colossal", "eflux", "hyperallergic", "resartis", "onthemove",
+    "kunstfonds", "transartists", "artconnect", "culture360"
+  ],
+  "fit_keywords": [
+    {"weight": 2, "phrases": [
+      "painting", "painter", "figurative", "figuration", "abstract painting",
+      "sculpture", "sculptor", "sculptural", "drawing", "printmaking", "ceramics",
+      "literature", "literary", "writer", "poetry", "poet", "fiction", "novel",
+      "essay", "playwright"
+    ]},
+    {"weight": 1, "phrases": [
+      "studio", "canvas", "exhibition", "solo show", "visual art", "visual arts",
+      "contemporary art", "mixed media", "figure", "narrative", "residency",
+      "installation", "works on paper"
+    ]}
+  ]
+}
