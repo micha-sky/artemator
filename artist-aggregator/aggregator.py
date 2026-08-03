@@ -26,6 +26,7 @@ import sys
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 
+import prefs
 import store
 import sources as src
 from normalize import (normalize, is_relevant, extract_requirements,
@@ -36,7 +37,12 @@ from normalize import (normalize, is_relevant, extract_requirements,
 
 def cmd_update(args):
     store.init()
-    which = args.sources.split(",") if args.sources else list(src.SOURCES)
+    # --sources overrides everything; otherwise run the active profile's set
+    # (prefs.ENABLED_SOURCES), falling back to every registered source.
+    if args.sources:
+        which = args.sources.split(",")
+    else:
+        which = list(prefs.ENABLED_SOURCES or src.SOURCES)
     raw_all, errors, health = [], [], {}
     for name in which:
         name = name.strip()
@@ -92,7 +98,7 @@ def _enrich(cap):
     ok = 0
     for it in todo:
         try:
-            details = src.fetch_detail(it["url"])
+            details, apply_url = src.fetch_detail(it["url"])
         except Exception as e:  # leave details NULL → retried on a later run
             print(f"  ✗ {it['title'][:60]} — {type(e).__name__}: {e}")
             continue
@@ -113,10 +119,44 @@ def _enrich(cap):
             location=guess_location(blob, it["id"]),
             fee_eur=extract_fee(blob),
             career_stage=stage if stage != "any" else None,
-            fit=fit, fit_tags=", ".join(fit_tags),
+            fit=fit, fit_tags=", ".join(fit_tags), apply_url=apply_url,
         )
         ok += 1
     print(f"  enriched {ok}/{len(todo)}")
+
+
+# Sources whose stored url is a middleman listing page, so an outbound
+# organiser "apply" link is worth digging out. Organiser-direct sources
+# (Kunstfonds, the sound funders…) already point at the real page; roundup
+# feeds (Colossal/Hyperallergic) list many calls at once, so a single link
+# would be meaningless; ArtConnect *is* the application portal (you apply on
+# artconnect.com), so it isn't a middleman — all three are left alone.
+INTERMEDIARY_SOURCES = ["Res Artis", "On the Move", "culture360"]
+
+
+def cmd_reapply(args):
+    """One-off backfill: re-fetch already-enriched intermediary listings just to
+    capture the real application link (apply_url) for calls stored before that
+    field existed. New calls get it during enrich, so this is only for the
+    backlog."""
+    store.init()
+    todo = store.needing_apply_url(limit=args.limit, sources=INTERMEDIARY_SOURCES)
+    if not todo:
+        print("nothing to backfill — every intermediary call already has an apply link.")
+        return
+    print(f"backfilling apply links for {len(todo)} call(s)…")
+    found = 0
+    for it in todo:
+        try:
+            _text, apply_url = src.fetch_detail(it["url"])
+        except Exception as e:
+            print(f"  ✗ {it['source']}: {type(e).__name__}: {e}")
+            continue
+        if apply_url:
+            store.save_apply_url(it["id"], apply_url)
+            found += 1
+    store.export()
+    print(f"  resolved {found}/{len(todo)} real apply links")
 
 
 def cmd_list(args):
@@ -211,6 +251,10 @@ def build_parser():
     m.add_argument("--status", choices=["interested", "applied", "skip"])
     m.add_argument("--notes")
     m.set_defaults(func=cmd_mark)
+
+    r = sub.add_parser("reapply", help="backfill real apply links on old aggregator listings")
+    r.add_argument("--limit", type=int, default=400, help="max listings to re-fetch")
+    r.set_defaults(func=cmd_reapply)
     return p
 
 

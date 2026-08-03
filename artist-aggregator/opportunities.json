@@ -1,5 +1,25 @@
 {
-  "generated": "2026-08-01T14:45:01",
+  "generated": "2026-08-03T12:01:45",
+  "profile": {
+    "name": "default",
+    "label": "All calls — neutral",
+    "preferred_groups": [
+      "Germany",
+      "German-speaking",
+      "Western Europe",
+      "Nordics",
+      "Eastern Europe",
+      "Baltic",
+      "France/Paris",
+      "Mediterranean",
+      "Iberia",
+      "Balkans",
+      "Southeast Asia",
+      "Mongolia/Central Asia"
+    ],
+    "my_disciplines": [],
+    "has_fit": false
+  },
   "sources": {
     "colossal": 10,
     "eflux": 0,
@@ -43,9 +63,10 @@
       "lon": 9.2732,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": "https://proprogressione.com/en/news/open-call-revitalizing-rituals-2026/",
       "mark": null,
       "notes": null,
-      "days_left": -13
+      "days_left": -15
     },
     {
       "id": "c7c6ad8389bdf642",
@@ -73,9 +94,10 @@
       "lon": 10.2107,
       "fit_tags": "new media",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -13
+      "days_left": -15
     },
     {
       "id": "375360887c2adcd8",
@@ -103,9 +125,10 @@
       "lon": 12.7337,
       "fit_tags": "sound art, experimental music",
       "fit": 10.0,
+      "apply_url": "https://www.vfa.art/events/sonic-connections-open-call-2027/",
       "mark": null,
       "notes": null,
-      "days_left": -13
+      "days_left": -15
     },
     {
       "id": "a0d19098efb4ab54",
@@ -133,9 +156,10 @@
       "lon": -8.4442,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -13
+      "days_left": -15
     },
     {
       "id": "300c43c00a8eed62",
@@ -163,9 +187,10 @@
       "lon": 19.1647,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": "https://www.bethlenszinhaz.hu/2026/06/23/open-call-for-artists-2/",
       "mark": null,
       "notes": null,
-      "days_left": -12
+      "days_left": -14
     },
     {
       "id": "f558487ec2bdad45",
@@ -193,9 +218,10 @@
       "lon": 14.7374,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -12
+      "days_left": -14
     },
     {
       "id": "f71b0ee19cecb762",
@@ -223,9 +249,10 @@
       "lon": 14.9253,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -12
+      "days_left": -14
     },
     {
       "id": "26b4611edc70f423",
@@ -253,9 +280,10 @@
       "lon": 14.2729,
       "fit_tags": "media art, new media",
       "fit": 4.0,
+      "apply_url": "https://vhaward.com",
       "mark": null,
       "notes": null,
-      "days_left": -11
+      "days_left": -13
     },
     {
       "id": "73a46068ce279a8b",
@@ -283,9 +311,10 @@
       "lon": -8.41,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.rezoomo.com/job/100322/?source=light&color=00263e&from=www.nationalgallery.ie",
       "mark": null,
       "notes": null,
-      "days_left": -10
+      "days_left": -12
     },
     {
       "id": "bedf4590fa152921",
@@ -313,9 +342,10 @@
       "lon": 11.3188,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://kepler452.it/Open-Call",
       "mark": null,
       "notes": null,
-      "days_left": -6
+      "days_left": -8
     },
     {
       "id": "8d6c0c498a1ff35d",
@@ -343,9 +373,10 @@
       "lon": 5.7057,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://www.neimenster.lu/en/calls/residences-land-art/",
       "mark": null,
       "notes": null,
-      "days_left": -6
+      "days_left": -8
     },
     {
       "id": "4b182d16a83902a3",
@@ -373,9 +404,10 @@
       "lon": 33.3632,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://d6.eu/open-call-apostaxis/",
       "mark": null,
       "notes": null,
-      "days_left": -6
+      "days_left": -8
     },
     {
       "id": "a82003a088f01aa5",
@@ -403,9 +435,10 @@
       "lon": 19.7807,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -6
+      "days_left": -8
     },
     {
       "id": "b9719746117c6703",
@@ -433,9 +466,10 @@
       "lon": 101.6703,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://maybankfoundation.com/what-we-do/our-pillars/community/balai-seni-art-series/maybank-foundation-artist-fellowship-programme-mfafp/",
       "mark": null,
       "notes": null,
-      "days_left": -6
+      "days_left": -8
     },
     {
       "id": "e89bb873a4320091",
@@ -463,9 +497,10 @@
       "lon": 23.8957,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://creart2-eu.org/open-calls/creart-3-0-open-call-artists-residency-in-lublin-poland",
       "mark": null,
       "notes": null,
-      "days_left": -6
+      "days_left": -8
     },
     {
       "id": "f03ced849f9e4569",
@@ -493,9 +528,10 @@
       "lon": 144.9216,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.socialequity.atlanticfellows.org/program",
       "mark": null,
       "notes": null,
-      "days_left": -5
+      "days_left": -7
     },
     {
       "id": "ba750a45aa53dbdc",
@@ -523,9 +559,10 @@
       "lon": -8.2919,
       "fit_tags": "new media",
       "fit": 4.0,
+      "apply_url": "https://www.imaginarius.pt/en/international-open-call/",
       "mark": null,
       "notes": null,
-      "days_left": -2
+      "days_left": -4
     },
     {
       "id": "8ff173c9c9ba4a91",
@@ -553,9 +590,10 @@
       "lon": 12.386,
       "fit_tags": "sound art, experimental music",
       "fit": 7.0,
+      "apply_url": "https://entepuccinisuvereto.com",
       "mark": null,
       "notes": null,
-      "days_left": -2
+      "days_left": -4
     },
     {
       "id": "0a973688e29fa077",
@@ -583,9 +621,10 @@
       "lon": 13.0008,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -2
+      "days_left": -4
     },
     {
       "id": "e7d889a8fe62abaf",
@@ -613,9 +652,10 @@
       "lon": -58.3753,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -2
+      "days_left": -4
     },
     {
       "id": "22364556f55e017e",
@@ -643,9 +683,10 @@
       "lon": 31.1528,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://elia-artschools.org/page/UAxEUInternshipProgramme2026Call",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "8fda1e1ef80eb658",
@@ -673,9 +714,10 @@
       "lon": 10.0938,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://werkstattwoche.art/bewerbung-2027/",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "b11596f70235b305",
@@ -703,9 +745,10 @@
       "lon": -3.1891,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.fundacioncamilacaneque.org/wp-content/uploads/FCC-Open-Call-2026.pdf",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "eb8c290d47b2e064",
@@ -733,9 +776,10 @@
       "lon": 19.0277,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "0e0444bd3fe75961",
@@ -763,9 +807,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://fineacts.co/ted-posca-residency",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "5e670c1e3bfefab1",
@@ -793,9 +838,10 @@
       "lon": 19.7889,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.performa-q.eu/open-call/",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "2679c4640178cec9",
@@ -823,9 +869,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://kometarevue.com/page/fellows",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "95aa5211481bee64",
@@ -853,9 +900,10 @@
       "lon": -98.3013,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.muuscollection.com",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "dc77e6c51cd959d8",
@@ -883,9 +931,10 @@
       "lon": 19.6542,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.trencin2026.eu/en/trenair-residency-program-2/",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "1746efcbc2b684a1",
@@ -913,9 +962,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://place-network.org/emerging-leaders-artivism-alliance-2/",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "ad2ccc87a7e9b1a7",
@@ -943,9 +993,10 @@
       "lon": 13.7655,
       "fit_tags": "",
       "fit": 7.0,
+      "apply_url": "https://europasinfonie.eu/call-for-compositions/",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "f271817424623446",
@@ -973,9 +1024,10 @@
       "lon": 4.6574,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://en.leeufan-arles.org/evenements/art-environment-prize",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "c533ce64739ab45a",
@@ -1003,9 +1055,10 @@
       "lon": 10.7267,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "5f9e0ad9b7b10b54",
@@ -1033,9 +1086,10 @@
       "lon": 2.3167,
       "fit_tags": "media art",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "37c3fb4eb4d27dea",
@@ -1063,9 +1117,10 @@
       "lon": -98.1221,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "672afec210da6b65",
@@ -1093,9 +1148,10 @@
       "lon": -73.5864,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "bc289876b8de0b13",
@@ -1123,9 +1179,10 @@
       "lon": -98.5699,
       "fit_tags": "media art",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "58339909b95abe85",
@@ -1153,9 +1210,10 @@
       "lon": -80.1548,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "7709ef866ad602ef",
@@ -1183,9 +1241,10 @@
       "lon": -79.3743,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "fdf0e439e0112e0b",
@@ -1213,9 +1272,10 @@
       "lon": -71.0817,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "f7921db9edb9a11e",
@@ -1243,9 +1303,10 @@
       "lon": -98.4731,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "38d4c8ac1aaef3f5",
@@ -1273,9 +1334,10 @@
       "lon": -74.0153,
       "fit_tags": "new media, media art",
       "fit": 8.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "bda7e7e5a9c904b7",
@@ -1303,9 +1365,10 @@
       "lon": -99.0354,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "916d49347c7aec27",
@@ -1333,9 +1396,10 @@
       "lon": -98.6743,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "e46f27a4fe134c27",
@@ -1363,9 +1427,10 @@
       "lon": 23.3149,
       "fit_tags": "media art",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "7689ccd38cf5c876",
@@ -1393,9 +1458,10 @@
       "lon": -73.9707,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "9bca088220fae662",
@@ -1423,9 +1489,10 @@
       "lon": -73.9527,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "60c65933e3578e76",
@@ -1453,9 +1520,10 @@
       "lon": 17.1494,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "dd79f95ebce86d77",
@@ -1483,9 +1551,10 @@
       "lon": -98.6476,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "fffb6f1899cfd00d",
@@ -1513,9 +1582,10 @@
       "lon": -98.8241,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "315f6286d831a98d",
@@ -1543,9 +1613,10 @@
       "lon": -98.8363,
       "fit_tags": "media art",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "0b88b262d04712b9",
@@ -1573,9 +1644,10 @@
       "lon": -80.169,
       "fit_tags": "media art",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "cfdbededc80f3838",
@@ -1603,9 +1675,10 @@
       "lon": -98.6928,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "9f5372cbe47d6262",
@@ -1633,9 +1706,10 @@
       "lon": -80.1898,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "f7af4230aeef7297",
@@ -1663,9 +1737,10 @@
       "lon": 2.3125,
       "fit_tags": "media art",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "0044c86dbb08e009",
@@ -1693,9 +1768,10 @@
       "lon": 117.6822,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://asean.org/call-for-application-asean-artists-residency-programme-aarp-myanmar/",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "b1a7234cca8d9c27",
@@ -1723,9 +1799,10 @@
       "lon": 19.2763,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "aa38d7b9623f7cf2",
@@ -1753,9 +1830,10 @@
       "lon": -0.1185,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.vam.ac.uk/blog/east/open-call-apply-for-the-british-council-fellowships-at-va-east",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "941e4952a5ff34e1",
@@ -1783,9 +1861,10 @@
       "lon": 17.0789,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": "https://www.performa-q.eu/open-call.html",
       "mark": null,
       "notes": null,
-      "days_left": -1
+      "days_left": -3
     },
     {
       "id": "daacfb1e1510c33d",
@@ -1813,9 +1892,10 @@
       "lon": 12.6941,
       "fit_tags": "sound art",
       "fit": 5.0,
+      "apply_url": "https://ombremeridiane.it/wp-content/uploads/2026/06/MCCD-26_International-Artistic-Residency-programme-Terre-Immerse-Fase-2_-Terre-Immerse-ENGLISH.pdf",
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "63a7de2f8ac7302f",
@@ -1843,9 +1923,10 @@
       "lon": 25.19,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://www.hypha-etc.ro/events/call-for-applications-night-as-commons-and-the-dark-side-of-light",
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "35f39975bc67f86c",
@@ -1873,9 +1954,10 @@
       "lon": -7.9142,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.barca13.pt/en/avistavulcao/agora/",
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "3f39eabe8e709c94",
@@ -1903,9 +1985,10 @@
       "lon": -0.095,
       "fit_tags": "media art",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "24894e2d695f5470",
@@ -1933,9 +2016,10 @@
       "lon": -105.9604,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "720dde5140de4d60",
@@ -1963,9 +2047,10 @@
       "lon": -98.7328,
       "fit_tags": "media art",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "3ce40c684c821374",
@@ -1993,9 +2078,10 @@
       "lon": -5.9374,
       "fit_tags": "media art",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "53367625293632ce",
@@ -2023,9 +2109,10 @@
       "lon": -74.0261,
       "fit_tags": "media art",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "b3e1f2dd3a6b492d",
@@ -2053,9 +2140,10 @@
       "lon": -99.0155,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "002d47032ef1326c",
@@ -2083,9 +2171,10 @@
       "lon": -74.004,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "0342ae39dfc2cd13",
@@ -2113,9 +2202,10 @@
       "lon": -98.6351,
       "fit_tags": "media art",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "579eadae89d85949",
@@ -2143,9 +2233,10 @@
       "lon": -74.016,
       "fit_tags": "media art",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "725c135d96fbd1a8",
@@ -2173,9 +2264,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.source.ie/writingprize2026/",
       "mark": null,
       "notes": null,
-      "days_left": 0
+      "days_left": -2
     },
     {
       "id": "ed4fce7760bfdfce",
@@ -2203,9 +2295,10 @@
       "lon": 133.8772,
       "fit_tags": "media art",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 1
+      "days_left": -1
     },
     {
       "id": "1ef3fc200ec04789",
@@ -2233,9 +2326,10 @@
       "lon": -103.3207,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 1
+      "days_left": -1
     },
     {
       "id": "bfb180ce720029fa",
@@ -2263,9 +2357,10 @@
       "lon": -3.9491,
       "fit_tags": "media art",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 1
+      "days_left": -1
     },
     {
       "id": "70e0bb7f5e223a4b",
@@ -2293,9 +2388,10 @@
       "lon": -73.9982,
       "fit_tags": "media art",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 1
+      "days_left": -1
     },
     {
       "id": "5ef90c697bcaae03",
@@ -2323,9 +2419,10 @@
       "lon": -98.6592,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 1
+      "days_left": -1
     },
     {
       "id": "0eef1c6f1f91e84b",
@@ -2353,9 +2450,10 @@
       "lon": 4.9236,
       "fit_tags": "media art",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 1
+      "days_left": -1
     },
     {
       "id": "a013a73c3d4ef2b4",
@@ -2383,9 +2481,10 @@
       "lon": 133.5584,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://bigci.org/awards/",
       "mark": null,
       "notes": null,
-      "days_left": 1
+      "days_left": -1
     },
     {
       "id": "3de7fa5c46534758",
@@ -2413,9 +2512,10 @@
       "lon": 5.7731,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://sheltercity.org/scnl-2027-eng/",
       "mark": null,
       "notes": null,
-      "days_left": 1
+      "days_left": -1
     },
     {
       "id": "684ad1285c24ae3f",
@@ -2443,9 +2543,10 @@
       "lon": 25.2164,
       "fit_tags": "new media",
       "fit": 4.0,
+      "apply_url": "https://movida.dance",
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "e3a9197f54b952fc",
@@ -2473,9 +2574,10 @@
       "lon": -74.016,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "b02a9a268d4936f2",
@@ -2503,9 +2605,10 @@
       "lon": -2.5834,
       "fit_tags": "media art",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "1495edca8b699611",
@@ -2533,9 +2636,10 @@
       "lon": -2.6287,
       "fit_tags": "media art",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "ad3eae3c8ea41b0b",
@@ -2563,9 +2667,10 @@
       "lon": -2.1853,
       "fit_tags": "media art",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "fa0bdaf384ebe847",
@@ -2593,9 +2698,10 @@
       "lon": -99.0379,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "037486534281d550",
@@ -2623,9 +2729,10 @@
       "lon": -74.0283,
       "fit_tags": "media art",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "1f7bf897b80150ed",
@@ -2653,9 +2760,10 @@
       "lon": 126.8289,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "http://www.gwangjubiennale.org/en/Board/BN_0000012098/detailView.do",
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "081534d06630771f",
@@ -2683,9 +2791,10 @@
       "lon": 24.7337,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://movida.dance/news/call-labs/",
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "4c9ed8f2dfbbd061",
@@ -2713,9 +2822,10 @@
       "lon": -75.146,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "2fd064b798ef4a33",
@@ -2743,9 +2853,10 @@
       "lon": -98.8335,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "36bf04e120d955a7",
@@ -2773,9 +2884,10 @@
       "lon": -79.3687,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "b65487e4c4ab17a0",
@@ -2803,9 +2915,10 @@
       "lon": 13.4051,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "1f987e5733a4a1c4",
@@ -2833,9 +2946,10 @@
       "lon": -0.1358,
       "fit_tags": "",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 2
+      "days_left": 0
     },
     {
       "id": "6a54a9d41cdf6406",
@@ -2863,9 +2977,10 @@
       "lon": -73.982,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 3
+      "days_left": 1
     },
     {
       "id": "4c5c0da6a60b2efd",
@@ -2893,9 +3008,10 @@
       "lon": -73.9807,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 3
+      "days_left": 1
     },
     {
       "id": "458880ccd7590253",
@@ -2923,9 +3039,10 @@
       "lon": -79.38,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 3
+      "days_left": 1
     },
     {
       "id": "6e5976613180b77e",
@@ -2953,9 +3070,10 @@
       "lon": -98.8645,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 3
+      "days_left": 1
     },
     {
       "id": "fd5a5b3f386b5353",
@@ -2983,9 +3101,10 @@
       "lon": -74.0494,
       "fit_tags": "",
       "fit": 6.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 3
+      "days_left": 1
     },
     {
       "id": "1be74cfc88301c9d",
@@ -3013,9 +3132,10 @@
       "lon": -105.9719,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 4
+      "days_left": 2
     },
     {
       "id": "de53fa0013064dde",
@@ -3043,9 +3163,10 @@
       "lon": 9.2092,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 5
+      "days_left": 3
     },
     {
       "id": "52fb18173f795162",
@@ -3073,9 +3194,10 @@
       "lon": 13.3959,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 5
+      "days_left": 3
     },
     {
       "id": "4726c5d8d8f757b5",
@@ -3103,9 +3225,10 @@
       "lon": 14.4136,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.prahamestoliteratury.cz/2027-prague-creative-residency/",
       "mark": null,
       "notes": null,
-      "days_left": 6
+      "days_left": 4
     },
     {
       "id": "7c46f41717d122e6",
@@ -3133,9 +3256,10 @@
       "lon": null,
       "fit_tags": "new media",
       "fit": 2.0,
+      "apply_url": "https://www.akademie-solitude.de/de/call-for-web-residencies-no-22-ignore-all-previous-instructions/",
       "mark": null,
       "notes": null,
-      "days_left": 6
+      "days_left": 4
     },
     {
       "id": "82d1b004b50edfc8",
@@ -3163,9 +3287,10 @@
       "lon": 14.4689,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.prahamestoliteratury.cz/2027-prague-creative-residency/",
       "mark": null,
       "notes": null,
-      "days_left": 6
+      "days_left": 4
     },
     {
       "id": "3ed240611f4e1f81",
@@ -3193,9 +3318,10 @@
       "lon": -0.1635,
       "fit_tags": "",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 6
+      "days_left": 4
     },
     {
       "id": "b5509d88905075d5",
@@ -3223,9 +3349,10 @@
       "lon": 8.6856,
       "fit_tags": "sound art",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 6
+      "days_left": 4
     },
     {
       "id": "0ea11babb473c69f",
@@ -3253,9 +3380,10 @@
       "lon": -73.9705,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 6
+      "days_left": 4
     },
     {
       "id": "814ef56934c35874",
@@ -3283,9 +3411,10 @@
       "lon": -73.9751,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 7
+      "days_left": 5
     },
     {
       "id": "6e71be7080f6fdb5",
@@ -3313,9 +3442,10 @@
       "lon": -106.6714,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 7
+      "days_left": 5
     },
     {
       "id": "d61d72d03967175a",
@@ -3343,9 +3473,10 @@
       "lon": 107.5712,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.goethe.de/ins/vn/en/kul/aus/tvr.html",
       "mark": null,
       "notes": null,
-      "days_left": 8
+      "days_left": 6
     },
     {
       "id": "499703db59dbe564",
@@ -3373,9 +3504,10 @@
       "lon": 108.0248,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 8
+      "days_left": 6
     },
     {
       "id": "167a604ca094b8ac",
@@ -3403,9 +3535,10 @@
       "lon": 126.9657,
       "fit_tags": "",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 8
+      "days_left": 6
     },
     {
       "id": "8a38c94c53ed3dee",
@@ -3433,9 +3566,10 @@
       "lon": -87.6117,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 8
+      "days_left": 6
     },
     {
       "id": "2ff82d6728b236dc",
@@ -3463,9 +3597,10 @@
       "lon": -74.0055,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 8
+      "days_left": 6
     },
     {
       "id": "6e903f0b32d4f656",
@@ -3493,9 +3628,10 @@
       "lon": -98.5039,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 8
+      "days_left": 6
     },
     {
       "id": "8e8f3810dade4b15",
@@ -3523,9 +3659,10 @@
       "lon": -98.4431,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 8
+      "days_left": 6
     },
     {
       "id": "bd7d2479102ab6d5",
@@ -3553,9 +3690,10 @@
       "lon": -0.1181,
       "fit_tags": "",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 8
+      "days_left": 6
     },
     {
       "id": "2de09af1f8b676b1",
@@ -3583,9 +3721,10 @@
       "lon": 11.6188,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 8
+      "days_left": 6
     },
     {
       "id": "8ec1fd87e0a657b8",
@@ -3613,9 +3752,10 @@
       "lon": 12.924,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://labobosa.it/projects/economics-of-being-looked-at/",
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 7
     },
     {
       "id": "e4aaa22e6c979ad0",
@@ -3643,9 +3783,10 @@
       "lon": 11.9596,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://www.lothringer13.com/opencall",
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 7
     },
     {
       "id": "fa0b7c5a4c03da7b",
@@ -3673,9 +3814,10 @@
       "lon": 10.7046,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 7
     },
     {
       "id": "677f06d90f207535",
@@ -3703,9 +3845,10 @@
       "lon": -0.1403,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 7
     },
     {
       "id": "1d4c40df42a2e44b",
@@ -3733,9 +3876,10 @@
       "lon": 12.5812,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 7
     },
     {
       "id": "4d72df85a2c0a14d",
@@ -3763,9 +3907,10 @@
       "lon": -98.669,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 7
     },
     {
       "id": "755ab379354724c6",
@@ -3793,9 +3938,10 @@
       "lon": -74.0223,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 7
     },
     {
       "id": "9fbba2a2dd647444",
@@ -3823,9 +3969,10 @@
       "lon": -99.013,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 7
     },
     {
       "id": "9e6c6ed1dd4946a4",
@@ -3853,9 +4000,10 @@
       "lon": -106.7783,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 7
     },
     {
       "id": "db9460efb5368bc5",
@@ -3883,9 +4031,10 @@
       "lon": 13.3619,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 9
+      "days_left": 7
     },
     {
       "id": "376635b507247f55",
@@ -3913,9 +4062,10 @@
       "lon": 2.3593,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 10
+      "days_left": 8
     },
     {
       "id": "4ff26b59eb30f03c",
@@ -3943,9 +4093,10 @@
       "lon": -1.5267,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://arts.britishcouncil.org/connections-through-culture",
       "mark": null,
       "notes": null,
-      "days_left": 11
+      "days_left": 9
     },
     {
       "id": "146baa1127d4ca00",
@@ -3973,9 +4124,10 @@
       "lon": 9.9981,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": "https://k3-hamburg.de/en/k3/jobs&callforproposals",
       "mark": null,
       "notes": null,
-      "days_left": 11
+      "days_left": 9
     },
     {
       "id": "09113e08ecc3c350",
@@ -4003,9 +4155,10 @@
       "lon": 8.2929,
       "fit_tags": "new media",
       "fit": 3.0,
+      "apply_url": "https://tada-residency.ch/en/residence",
       "mark": null,
       "notes": null,
-      "days_left": 11
+      "days_left": 9
     },
     {
       "id": "66c794b27c8210f1",
@@ -4033,9 +4186,10 @@
       "lon": 7.8731,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 11
+      "days_left": 9
     },
     {
       "id": "79eff608617ea982",
@@ -4063,9 +4217,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 11
+      "days_left": 9
     },
     {
       "id": "87a0aade07154d42",
@@ -4093,9 +4248,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 12
+      "days_left": 10
     },
     {
       "id": "5482ca004ba48d2e",
@@ -4123,9 +4279,10 @@
       "lon": 113.9611,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://iww.hkbu.edu.hk/wp-content/uploads/2026/05/2027-IWW-WR-Call-for-Application.pdf",
       "mark": null,
       "notes": null,
-      "days_left": 13
+      "days_left": 11
     },
     {
       "id": "133638a259739bda",
@@ -4153,9 +4310,10 @@
       "lon": 113.7213,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 13
+      "days_left": 11
     },
     {
       "id": "98788c70c75d9257",
@@ -4183,9 +4341,10 @@
       "lon": 138.6611,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://culturenext.eu/fresh-opportunities-and-new-steps-in-our-collaboration-with-eu-japan-fest/",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 12
     },
     {
       "id": "5b48e7817aaab2ba",
@@ -4213,9 +4372,10 @@
       "lon": null,
       "fit_tags": "new media",
       "fit": 5.0,
+      "apply_url": "https://padimai.net",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 12
     },
     {
       "id": "07d4a0a71d907fde",
@@ -4243,9 +4403,10 @@
       "lon": 103.8734,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.global-gastronomy.com/foodstay-en.html",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 12
     },
     {
       "id": "1aa56ba7fe1b130c",
@@ -4273,9 +4434,10 @@
       "lon": 21.4013,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://interart.com.mk/en/open-call-dance-residency-skopje-dance-theater-2027/",
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 12
     },
     {
       "id": "be70f30777bb836f",
@@ -4303,9 +4465,10 @@
       "lon": 25.9137,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 12
     },
     {
       "id": "e9d73e20efefe549",
@@ -4333,9 +4496,10 @@
       "lon": 104.3836,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 12
     },
     {
       "id": "3bb48a8d7545d84c",
@@ -4363,9 +4527,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 12
     },
     {
       "id": "eb9f09086a559591",
@@ -4393,9 +4558,10 @@
       "lon": 12.3712,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 14
+      "days_left": 12
     },
     {
       "id": "ddc0015bc0bffb44",
@@ -4423,9 +4589,10 @@
       "lon": 135.7797,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://airvine.info/2026/07/26/open-call-for-southeast-asian-arts-coordinator-creators-in-residence-kyoto-2026-exchange-programme/",
       "mark": null,
       "notes": null,
-      "days_left": 15
+      "days_left": 13
     },
     {
       "id": "de5c142e92a9bddc",
@@ -4453,9 +4620,10 @@
       "lon": 1.9149,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.citeinternationaledesarts.fr/en/appels-a-candidature/association-francoise-pour-loeuvre-contemporaine-x-cite-internationale-des-arts/",
       "mark": null,
       "notes": null,
-      "days_left": 15
+      "days_left": 13
     },
     {
       "id": "e170ebbeacdc7c2d",
@@ -4483,9 +4651,10 @@
       "lon": 138.6547,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 15
+      "days_left": 13
     },
     {
       "id": "8c842518cc4b176b",
@@ -4513,9 +4682,10 @@
       "lon": 113.7222,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 16
+      "days_left": 14
     },
     {
       "id": "1f94a3e535bc6e5b",
@@ -4543,9 +4713,10 @@
       "lon": 10.6565,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": "https://kunsthalle-goerlitz.de/wp-content/uploads/2026/07/OPEN-CALL-–-Granit-Gravitation-EN.pdf",
       "mark": null,
       "notes": null,
-      "days_left": 19
+      "days_left": 17
     },
     {
       "id": "11ce639f41cb18ff",
@@ -4573,9 +4744,10 @@
       "lon": 2.7078,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://www.fondationfrancoisschneider.org/en/contemporary-talents-competition/contemporary-talents-competition-the-earth/",
       "mark": null,
       "notes": null,
-      "days_left": 22
+      "days_left": 20
     },
     {
       "id": "04f100b2fd78e4d0",
@@ -4603,9 +4775,10 @@
       "lon": 2.3432,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 22
+      "days_left": 20
     },
     {
       "id": "baa110b09e6f9470",
@@ -4633,9 +4806,10 @@
       "lon": 9.9995,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://am.hamburg.de/intelliform/assistants/intelliForm-Mandanten/HH/Assistants-Dialoge/pro_elan_residency/pro_elan_residency/dialog;jsessionid=A-qy1dPIhdY2JwdJzpO1AXdr6Nn7BIWUgI2X5SN-.IF2?state=6416b96302fd0baa&cc=EZUDHvAKZOZO3CU61LYwMLhLPOZVbHSqhAV3aSiC-0",
       "mark": null,
       "notes": null,
-      "days_left": 26
+      "days_left": 24
     },
     {
       "id": "e52aadb90d0520eb",
@@ -4663,9 +4837,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 26
+      "days_left": 24
     },
     {
       "id": "f0eca01f0493b353",
@@ -4693,9 +4868,10 @@
       "lon": 8.4535,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://opencall.foodculturedays.com/en",
       "mark": null,
       "notes": null,
-      "days_left": 27
+      "days_left": 25
     },
     {
       "id": "6236e1085504c4f8",
@@ -4723,9 +4899,10 @@
       "lon": 2.4683,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.citeinternationaledesarts.fr/en/appels-a-candidature/bridges/",
       "mark": null,
       "notes": null,
-      "days_left": 29
+      "days_left": 27
     },
     {
       "id": "5597f8ca32df7215",
@@ -4753,9 +4930,10 @@
       "lon": 77.831,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 29
+      "days_left": 27
     },
     {
       "id": "7dc02c67fb99ee55",
@@ -4783,9 +4961,10 @@
       "lon": 2.383,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 29
+      "days_left": 27
     },
     {
       "id": "2dde47d872981af4",
@@ -4813,9 +4992,10 @@
       "lon": 5.0412,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://driftdance.eu/artists/open-call",
       "mark": null,
       "notes": null,
-      "days_left": 30
+      "days_left": 28
     },
     {
       "id": "d2273471447a24af",
@@ -4843,9 +5023,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.francophonie.org/industries-culturelles-les-appels-a-projets-2026-8384",
       "mark": null,
       "notes": null,
-      "days_left": 30
+      "days_left": 28
     },
     {
       "id": "92d3d622f10cf153",
@@ -4873,9 +5054,10 @@
       "lon": 12.9297,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://www.officinecaos.net/index.php/en/opencall26-27en/",
       "mark": null,
       "notes": null,
-      "days_left": 30
+      "days_left": 28
     },
     {
       "id": "eca1e0a201ecd31b",
@@ -4903,9 +5085,10 @@
       "lon": 8.1397,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://fondation-janmichalski.com/en/residences",
       "mark": null,
       "notes": null,
-      "days_left": 30
+      "days_left": 28
     },
     {
       "id": "6011c2ff9b43742b",
@@ -4933,9 +5116,10 @@
       "lon": 10.2617,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": "https://www.ae.mpg.de/en/research/inhabit-artist-in-residence.html",
       "mark": null,
       "notes": null,
-      "days_left": 31
+      "days_left": 29
     },
     {
       "id": "3fcd64bf98c8c929",
@@ -4963,9 +5147,10 @@
       "lon": 9.7754,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://juliesbicycle.org/news/iter-2026/",
       "mark": null,
       "notes": null,
-      "days_left": 31
+      "days_left": 29
     },
     {
       "id": "64a1d2e705e13988",
@@ -4993,9 +5178,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 31
+      "days_left": 29
     },
     {
       "id": "10d0fb2131db9dd2",
@@ -5023,9 +5209,10 @@
       "lon": -98.5397,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 33
+      "days_left": 31
     },
     {
       "id": "f3ca8fbcdd9488b6",
@@ -5053,9 +5240,10 @@
       "lon": 12.5715,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.idrateatro.it/2026/07/06/culture-moves-europe-2027-call-for-residents/",
       "mark": null,
       "notes": null,
-      "days_left": 35
+      "days_left": 33
     },
     {
       "id": "b54875f2bcfa4b0e",
@@ -5083,9 +5271,10 @@
       "lon": 8.3844,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 36
+      "days_left": 34
     },
     {
       "id": "fcf549eeab2d5201",
@@ -5113,9 +5302,10 @@
       "lon": 13.3977,
       "fit_tags": "",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 36
+      "days_left": 34
     },
     {
       "id": "e82e222975b17727",
@@ -5143,9 +5333,10 @@
       "lon": 31.223,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://platform.izolyatsia.org/en/contest/zmina-resilience-showcasing-1",
       "mark": null,
       "notes": null,
-      "days_left": 44
+      "days_left": 42
     },
     {
       "id": "42af923e1aaf4b59",
@@ -5173,9 +5364,10 @@
       "lon": -80.1999,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 48
+      "days_left": 46
     },
     {
       "id": "319be58a781e0649",
@@ -5203,9 +5395,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 51
+      "days_left": 49
     },
     {
       "id": "8da644fbfdcc4e3a",
@@ -5233,9 +5426,10 @@
       "lon": -90.0951,
       "fit_tags": "new media",
       "fit": 8.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 57
+      "days_left": 55
     },
     {
       "id": "7d7d04b69fc13a56",
@@ -5263,9 +5457,10 @@
       "lon": 14.4614,
       "fit_tags": "art and science",
       "fit": 4.0,
+      "apply_url": "https://ars.electronica.art/export/en/ecoc2028-ars-biologica-art-science-residency/",
       "mark": null,
       "notes": null,
-      "days_left": 58
+      "days_left": 56
     },
     {
       "id": "f0947ac86ee52c81",
@@ -5293,9 +5488,10 @@
       "lon": 104.4549,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 58
+      "days_left": 56
     },
     {
       "id": "0ffcf8755d6ac426",
@@ -5323,9 +5519,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://everydayphotography.org/centre/grant-2026",
       "mark": null,
       "notes": null,
-      "days_left": 60
+      "days_left": 58
     },
     {
       "id": "f2e2bc74ff7d7805",
@@ -5353,9 +5550,10 @@
       "lon": 12.1421,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://culturalfoundation.eu/stories/new-fellowship-programme-to-research-the-ecf-historical-archives/",
       "mark": null,
       "notes": null,
-      "days_left": 60
+      "days_left": 58
     },
     {
       "id": "99e1abd0420e2567",
@@ -5383,9 +5581,10 @@
       "lon": 2.259,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": "https://www.institutfrancais.com/en/program/aide-projet/connect-create-strengthen-cultural-links-africa-europe",
       "mark": null,
       "notes": null,
-      "days_left": 60
+      "days_left": 58
     },
     {
       "id": "0417249d320262d7",
@@ -5413,9 +5612,10 @@
       "lon": 38.4869,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://ettijahat.org/page/1545?_lang=1",
       "mark": null,
       "notes": null,
-      "days_left": 76
+      "days_left": 74
     },
     {
       "id": "4d5bfac3daa45614",
@@ -5443,9 +5643,10 @@
       "lon": 31.1413,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://performeurope.eu/open-call/",
       "mark": null,
       "notes": null,
-      "days_left": 82
+      "days_left": 80
     },
     {
       "id": "41cc7f1a30e4dc37",
@@ -5473,9 +5674,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 82
+      "days_left": 80
     },
     {
       "id": "94564e8101dd8019",
@@ -5503,9 +5705,10 @@
       "lon": 6.7476,
       "fit_tags": "electroacoustic, acousmatic, media art",
       "fit": 12.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 88
+      "days_left": 86
     },
     {
       "id": "bf39e947b9f14a6a",
@@ -5533,9 +5736,10 @@
       "lon": 7.5653,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.award.art",
       "mark": null,
       "notes": null,
-      "days_left": 92
+      "days_left": 90
     },
     {
       "id": "91c8c9d5d8a706e7",
@@ -5563,9 +5767,10 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.norden.org/en/nordiccurrents",
       "mark": null,
       "notes": null,
-      "days_left": 92
+      "days_left": 90
     },
     {
       "id": "97c6be96c7438d94",
@@ -5593,9 +5798,10 @@
       "lon": 8.6717,
       "fit_tags": "media art",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 92
+      "days_left": 90
     },
     {
       "id": "ea3a14b9999d695c",
@@ -5623,9 +5829,10 @@
       "lon": 25.2834,
       "fit_tags": "media art",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 101
+      "days_left": 99
     },
     {
       "id": "0627c7cff1df13f4",
@@ -5653,9 +5860,10 @@
       "lon": 28.1639,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 127
+      "days_left": 125
     },
     {
       "id": "027de9f0918f5701",
@@ -5683,9 +5891,10 @@
       "lon": 104.0866,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.a4artmuseum.com/en/a4-residencyartcenter/residing/latest-recruitment/",
       "mark": null,
       "notes": null,
-      "days_left": 152
+      "days_left": 150
     },
     {
       "id": "dc5f48a9bbe0efdb",
@@ -5713,9 +5922,10 @@
       "lon": -73.9986,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 178
+      "days_left": 176
     },
     {
       "id": "5a8515c2c55561de",
@@ -5743,9 +5953,10 @@
       "lon": 7.4462,
       "fit_tags": "",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 211
+      "days_left": 209
     },
     {
       "id": "c8e99f2921391781",
@@ -5773,9 +5984,10 @@
       "lon": 12.8003,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 242
+      "days_left": 240
     },
     {
       "id": "2b90489d9841d637",
@@ -5803,9 +6015,10 @@
       "lon": -98.6382,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 313
+      "days_left": 311
     },
     {
       "id": "efcdd09258787fed",
@@ -5833,9 +6046,10 @@
       "lon": -74.0432,
       "fit_tags": "new media",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
-      "days_left": 407
+      "days_left": 405
     },
     {
       "id": "f14730e4b40905f3",
@@ -5863,6 +6077,7 @@
       "lon": 135.7379,
       "fit_tags": "new media",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -5893,6 +6108,7 @@
       "lon": 12.5191,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -5923,6 +6139,7 @@
       "lon": -74.0459,
       "fit_tags": "new media",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -5953,6 +6170,7 @@
       "lon": 19.9624,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -5983,6 +6201,7 @@
       "lon": -2.2024,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6013,6 +6232,7 @@
       "lon": -73.9291,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6043,6 +6263,7 @@
       "lon": -0.1344,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6073,6 +6294,7 @@
       "lon": 4.4737,
       "fit_tags": "",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6103,6 +6325,7 @@
       "lon": -0.1249,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6133,6 +6356,7 @@
       "lon": -0.1038,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6163,6 +6387,7 @@
       "lon": -75.1862,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6193,6 +6418,7 @@
       "lon": -98.5271,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6223,6 +6449,7 @@
       "lon": -93.3043,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6253,6 +6480,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6283,6 +6511,7 @@
       "lon": 14.3109,
       "fit_tags": "media art",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6313,6 +6542,7 @@
       "lon": -80.2284,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6343,6 +6573,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6373,6 +6604,7 @@
       "lon": -115.5971,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6403,6 +6635,7 @@
       "lon": -115.5398,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6433,6 +6666,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6463,6 +6697,7 @@
       "lon": -98.928,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6493,6 +6728,7 @@
       "lon": 139.6937,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6523,6 +6759,7 @@
       "lon": -98.1904,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6553,6 +6790,7 @@
       "lon": 104.2836,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6583,6 +6821,7 @@
       "lon": 13.4007,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6613,6 +6852,7 @@
       "lon": 13.4251,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6643,6 +6883,7 @@
       "lon": 13.4376,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6673,6 +6914,7 @@
       "lon": 13.369,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6703,6 +6945,7 @@
       "lon": 13.3992,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6733,6 +6976,7 @@
       "lon": 13.3955,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6763,6 +7007,7 @@
       "lon": 8.3753,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6793,6 +7038,7 @@
       "lon": 13.4219,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6823,6 +7069,7 @@
       "lon": 13.4329,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6853,6 +7100,7 @@
       "lon": 13.3682,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6883,6 +7131,7 @@
       "lon": 13.4151,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6913,6 +7162,7 @@
       "lon": 13.3923,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6943,6 +7193,7 @@
       "lon": 13.3694,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -6973,6 +7224,7 @@
       "lon": 13.371,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7003,6 +7255,7 @@
       "lon": 13.3805,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7033,6 +7286,7 @@
       "lon": 13.3921,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7063,6 +7317,7 @@
       "lon": 13.4008,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7093,6 +7348,7 @@
       "lon": 13.3865,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7123,6 +7379,7 @@
       "lon": 8.3771,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7153,6 +7410,7 @@
       "lon": 13.4349,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7183,6 +7441,7 @@
       "lon": 13.4398,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7213,6 +7472,7 @@
       "lon": 13.3737,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7243,6 +7503,7 @@
       "lon": 13.4242,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7273,6 +7534,7 @@
       "lon": 13.3968,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7303,6 +7565,7 @@
       "lon": 13.3915,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7333,6 +7596,7 @@
       "lon": 13.4325,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7363,6 +7627,7 @@
       "lon": 31.5625,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7393,6 +7658,7 @@
       "lon": 13.4281,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7423,6 +7689,7 @@
       "lon": 13.3605,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7453,6 +7720,7 @@
       "lon": 10.8224,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7483,6 +7751,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7513,6 +7782,7 @@
       "lon": 13.4149,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7543,6 +7813,7 @@
       "lon": 8.4267,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7573,6 +7844,7 @@
       "lon": 13.393,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7603,6 +7875,7 @@
       "lon": 9.9157,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7633,6 +7906,7 @@
       "lon": 13.3999,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7663,6 +7937,7 @@
       "lon": 10.5828,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7693,6 +7968,7 @@
       "lon": 13.381,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7723,6 +7999,7 @@
       "lon": 13.4246,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7753,6 +8030,7 @@
       "lon": 10.2718,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7783,6 +8061,7 @@
       "lon": 10.0035,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7813,6 +8092,7 @@
       "lon": 23.3157,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7843,6 +8123,7 @@
       "lon": 10.6773,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7873,6 +8154,7 @@
       "lon": 13.3986,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7903,6 +8185,7 @@
       "lon": 13.3606,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7933,6 +8216,7 @@
       "lon": 13.3739,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7963,6 +8247,7 @@
       "lon": 13.374,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -7993,6 +8278,7 @@
       "lon": 13.3835,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8023,6 +8309,7 @@
       "lon": 13.388,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8053,6 +8340,7 @@
       "lon": 13.392,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8083,6 +8371,7 @@
       "lon": 13.4049,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8113,6 +8402,7 @@
       "lon": 9.9636,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8143,6 +8433,7 @@
       "lon": 13.3816,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8173,6 +8464,7 @@
       "lon": 13.3846,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8203,6 +8495,7 @@
       "lon": 13.3844,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8233,6 +8526,7 @@
       "lon": -0.1338,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8263,6 +8557,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://residency.hubfeenix.fi",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8293,6 +8588,7 @@
       "lon": 25.7297,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": "https://nomads.hubfeenix.fi",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8323,6 +8619,7 @@
       "lon": 12.3214,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "http://www.veneziacontemporanea.com",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8353,6 +8650,7 @@
       "lon": -8.2563,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://buinho.pt/residency-2/",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8383,6 +8681,7 @@
       "lon": -7.7586,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://buinho.pt/residency-2/",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8413,6 +8712,7 @@
       "lon": -74.0269,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://aca.submittable.com/submit",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8443,6 +8743,7 @@
       "lon": 135.763,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.kac.or.jp/en/news/20260615/",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8473,6 +8774,7 @@
       "lon": -58.384,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.fotocreativaba.com/chongqing",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8503,6 +8805,7 @@
       "lon": 12.6031,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://artestudioginestrelle.wordpress.com/",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8533,6 +8836,7 @@
       "lon": 13.3735,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://glogauair.net/residency/on-line/",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8563,6 +8867,7 @@
       "lon": -7.569,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.startartresidency.com/art-residency",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8593,6 +8898,7 @@
       "lon": -1.7563,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://cragpithouse.uk/",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8623,6 +8929,7 @@
       "lon": -7.8416,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.startartresidency.com/art-residency",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8653,6 +8960,7 @@
       "lon": -7.546,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": "https://www.startartresidency.com/art-residency",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8683,6 +8991,7 @@
       "lon": -8.2471,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://www.startartresidency.com/art-residency",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8713,6 +9022,7 @@
       "lon": -3.6788,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.startartresidency.com/art-residency",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8743,6 +9053,7 @@
       "lon": -8.109,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": "https://www.startartresidency.com/art-residency",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8773,6 +9084,7 @@
       "lon": -7.9642,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.startartresidency.com/art-residency",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8803,6 +9115,7 @@
       "lon": -102.6715,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8833,6 +9146,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": "https://www.taideniitty.fi/en",
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8863,6 +9177,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8893,6 +9208,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8923,6 +9239,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8953,6 +9270,7 @@
       "lon": -123.0943,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -8983,6 +9301,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9013,6 +9332,7 @@
       "lon": 6.1655,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9043,6 +9363,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9073,6 +9394,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9103,6 +9425,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9133,6 +9456,7 @@
       "lon": -74.1034,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9163,6 +9487,7 @@
       "lon": -74.0817,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9193,6 +9518,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9223,6 +9549,7 @@
       "lon": 21.7224,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9253,6 +9580,7 @@
       "lon": -98.4307,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9283,6 +9611,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9313,6 +9642,7 @@
       "lon": 43.1915,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9343,6 +9673,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9373,6 +9704,7 @@
       "lon": -63.6059,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9403,6 +9735,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9433,6 +9766,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9463,6 +9797,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9493,6 +9828,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9523,6 +9859,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9553,6 +9890,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 3.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9583,6 +9921,7 @@
       "lon": 12.3438,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9613,6 +9952,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9643,6 +9983,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9673,6 +10014,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9703,6 +10045,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9733,6 +10076,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9763,6 +10107,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9793,6 +10138,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9823,6 +10169,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9853,6 +10200,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9883,6 +10231,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9913,6 +10262,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9943,6 +10293,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -9973,6 +10324,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10003,6 +10355,7 @@
       "lon": -52.7617,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10033,6 +10386,7 @@
       "lon": -52.4936,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10063,6 +10417,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10093,6 +10448,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10123,6 +10479,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10153,6 +10510,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10183,6 +10541,7 @@
       "lon": -64.005,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10213,6 +10572,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10243,6 +10603,7 @@
       "lon": 98.9731,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10273,6 +10634,7 @@
       "lon": -52.5297,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10303,6 +10665,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10333,6 +10696,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10363,6 +10727,7 @@
       "lon": -2.0719,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10393,6 +10758,7 @@
       "lon": 16.3481,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10423,6 +10789,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10453,6 +10820,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10483,6 +10851,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10513,6 +10882,7 @@
       "lon": 12.3183,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10543,6 +10913,7 @@
       "lon": 12.3502,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10573,6 +10944,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10603,6 +10975,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10633,6 +11006,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10663,6 +11037,7 @@
       "lon": -4.0059,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10693,6 +11068,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10723,6 +11099,7 @@
       "lon": -3.13,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10753,6 +11130,7 @@
       "lon": 138.7273,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10783,6 +11161,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10813,6 +11192,7 @@
       "lon": 12.8152,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10843,6 +11223,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10873,6 +11254,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10903,6 +11285,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10933,6 +11316,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10963,6 +11347,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -10993,6 +11378,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11023,6 +11409,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11053,6 +11440,7 @@
       "lon": 20.4683,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11083,6 +11471,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11113,6 +11502,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11143,6 +11533,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11173,6 +11564,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11203,6 +11595,7 @@
       "lon": 12.2968,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11233,6 +11626,7 @@
       "lon": 12.3415,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11263,6 +11657,7 @@
       "lon": 98.9924,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11293,6 +11688,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11323,6 +11719,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 0.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11353,6 +11750,7 @@
       "lon": 25.6424,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11383,6 +11781,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11413,6 +11812,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11443,6 +11843,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11473,6 +11874,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11503,6 +11905,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11533,6 +11936,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11563,6 +11967,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11593,6 +11998,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 4.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11623,6 +12029,7 @@
       "lon": null,
       "fit_tags": "",
       "fit": 6.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11653,6 +12060,7 @@
       "lon": 10.8622,
       "fit_tags": "",
       "fit": 7.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11683,6 +12091,7 @@
       "lon": 10.4231,
       "fit_tags": "",
       "fit": 2.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11713,6 +12122,7 @@
       "lon": 13.3679,
       "fit_tags": "",
       "fit": 5.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null
@@ -11743,6 +12153,7 @@
       "lon": 14.3252,
       "fit_tags": "",
       "fit": 1.0,
+      "apply_url": null,
       "mark": null,
       "notes": null,
       "days_left": null

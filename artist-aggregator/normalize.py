@@ -11,6 +11,7 @@ from datetime import datetime, date
 from dateutil import parser as dparser
 
 import geo
+import prefs
 
 # --- Creative Europe / European country set (for region tagging) ---
 DE_WORDS = {"germany", "deutschland", "german", "berlin", "hamburg", "munich",
@@ -279,40 +280,15 @@ def guess_career_stage(text: str) -> str:
 
 
 # --- Fit scoring: how closely a call matches the searcher's actual practice ---
-# Tuned for OM/SYMBIONT: biofeedback-driven spatial composition (EEG, plant
-# bioelectric sensing), live electronics, sound/media-art residencies. Keyword
-# groups are weighted by how strong a signal they are; the score also folds in
-# funded/region/discipline boosts (see fit_score). This is triage sugar — it
-# reorders the same calls filtering already surfaced, it never hides anything.
-FIT_KEYWORDS = [
-    # weight 3 — lineage-defining: if these appear, it's almost certainly for OM
-    # (DE equivalents included — the searcher works in German and the home-turf
-    #  funders publish in German)
-    (3, ["biofeedback", "neurofeedback", "eeg", "brainwave", "brainwaves",
-         "brain-computer", "brain computer", "bio-art", "bioart", "bio art",
-         "bioelectric", "biosignal", "biosignals", "biosensor", "biosensing",
-         "spatial audio", "multichannel", "multi-channel", "ambisonic",
-         "ambisonics", "sound installation", "sound art", "sonic art", "sonic arts",
-         "klangkunst", "klanginstallation", "räumlicher klang", "mehrkanal",
-         "mehrkanalig", "bioelektrisch"]),
-    # weight 2 — strong medium/practice signals
-    (2, ["experimental music", "live electronics", "electroacoustic",
-         "electro-acoustic", "acousmatic", "generative", "media art", "new media",
-         "media-art", "max/msp", "max msp", "max for live", "creative coding",
-         "interactive installation", "immersive audio", "computer music",
-         "algorithmic", "art-science", "art science", "art and science",
-         "bio-media", "post-human", "posthuman",
-         "medienkunst", "elektroakustisch", "elektroakustische", "experimentelle musik",
-         "neue musik", "generativ", "live-elektronik", "klangforschung"]),
-    # weight 1 — context words: real but broad, capped so they can't dominate
-    (1, ["sound", "sonic", "audio", "composer", "composition", "installation",
-         "immersive", "electronic", "field recording", "spatial", "gestural",
-         "sensor", "sensors", "real-time", "real time", "modular", "synthesis",
-         "ableton", "loudspeaker", "diffusion",
-         "klang", "komposition", "komponist", "räumlich"]),
-]
+# The keyword groups come from the active profile (prefs.FIT_KEYWORDS): weighted
+# phrase lists, tuned per person — sound/media-art for one user, painting for
+# another, nothing at all for the neutral 'default' profile. The score also
+# folds in funded/region/discipline boosts (see fit_score). This is triage sugar
+# — it reorders the same calls filtering already surfaced, it never hides
+# anything, and with the default profile (no keywords) fit is 0 across the board.
+FIT_KEYWORDS = prefs.FIT_KEYWORDS
 _FIT_PATS = [(w, re.compile(r"(?<!\w)(" + "|".join(re.escape(p) for p in ps) + r")(?!\w)"))
-             for w, ps in FIT_KEYWORDS]
+             for w, ps in FIT_KEYWORDS if ps]
 _KW_CAP = 10   # ceiling on the keyword portion so a wall of weight-1 words can't
                # outweigh a genuine biofeedback/sound-art hit
 
@@ -340,20 +316,21 @@ def fit_signals(text: str):
 def fit_score(text: str, funded=None, region=None, disciplines=""):
     """Overall fit (higher = better match), plus the badge phrases.
 
-    Keyword relevance is the core; funded calls, home-turf (DE > EU) calls, and
-    sound/new-media/performance disciplines each nudge it up; fee-based calls
-    down. Floors at 0."""
+    Keyword relevance is the core; funded calls, the profile's home regions
+    (prefs.REGION_BOOST), and the profile's own disciplines each nudge it up;
+    fee-based calls down. Floors at 0. With the neutral 'default' profile every
+    term is empty, so fit stays 0."""
     tags, score = fit_signals(text)
     score += {"likely": 2, "mixed": 1, "fee-based": -2}.get(funded, 0)
-    score += {"DE": 2, "EU": 1}.get(region, 0)
+    score += prefs.REGION_BOOST.get(region, 0)
     # A call open to almost every discipline (the "open to all media" boards that
-    # fold every field into their text) is not a *sound/media* signal — only
-    # reward discipline focus when the list is reasonably specific.
+    # fold every field into their text) is not a focused signal — only reward
+    # discipline overlap when the list is reasonably specific.
     d = [x.strip() for x in (disciplines or "").split(",") if x.strip()]
     if len(d) <= 5:
-        if "Sound/Music" in d:       score += 2
-        if "Digital/New Media" in d: score += 2
-        if "Performance" in d:       score += 1
+        for disc in prefs.MY_DISCIPLINES:
+            if disc in d:
+                score += 2
     return max(score, 0), tags
 
 

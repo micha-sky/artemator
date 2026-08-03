@@ -1,0 +1,42 @@
+{
+  "label": "SYMBIONT — sound & media art (DE)",
+  "preferred_groups": [
+    "Germany", "German-speaking", "Western Europe", "Nordics",
+    "Eastern Europe", "Baltic", "France/Paris", "Mediterranean"
+  ],
+  "my_disciplines": ["Sound/Music", "Digital/New Media", "Performance"],
+  "region_boost": {"DE": 2, "EU": 1},
+  "enabled_sources": [
+    "colossal", "eflux", "hyperallergic", "resartis", "onthemove",
+    "kunstfonds", "transartists", "artconnect", "culture360",
+    "initiativemusik", "musikfonds", "zkm", "ctm", "arselectronica"
+  ],
+  "fit_keywords": [
+    {"weight": 3, "phrases": [
+      "biofeedback", "neurofeedback", "eeg", "brainwave", "brainwaves",
+      "brain-computer", "brain computer", "bio-art", "bioart", "bio art",
+      "bioelectric", "biosignal", "biosignals", "biosensor", "biosensing",
+      "spatial audio", "multichannel", "multi-channel", "ambisonic",
+      "ambisonics", "sound installation", "sound art", "sonic art", "sonic arts",
+      "klangkunst", "klanginstallation", "räumlicher klang", "mehrkanal",
+      "mehrkanalig", "bioelektrisch"
+    ]},
+    {"weight": 2, "phrases": [
+      "experimental music", "live electronics", "electroacoustic",
+      "electro-acoustic", "acousmatic", "generative", "media art", "new media",
+      "media-art", "max/msp", "max msp", "max for live", "creative coding",
+      "interactive installation", "immersive audio", "computer music",
+      "algorithmic", "art-science", "art science", "art and science",
+      "bio-media", "post-human", "posthuman",
+      "medienkunst", "elektroakustisch", "elektroakustische", "experimentelle musik",
+      "neue musik", "generativ", "live-elektronik", "klangforschung"
+    ]},
+    {"weight": 1, "phrases": [
+      "sound", "sonic", "audio", "composer", "composition", "installation",
+      "immersive", "electronic", "field recording", "spatial", "gestural",
+      "sensor", "sensors", "real-time", "real time", "modular", "synthesis",
+      "ableton", "loudspeaker", "diffusion",
+      "klang", "komposition", "komponist", "räumlich"
+    ]}
+  ]
+}

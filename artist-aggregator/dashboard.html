@@ -302,7 +302,7 @@
     <div>
       <div class="eyebrow">Open-Call Register · multi-source · new-flagged</div>
       <h1>Funding &amp; Open Calls</h1>
-      <div class="sub">Sound &amp; media art · biofeedback / spatial audio · Hesse-based · Germany + Europe</div>
+      <div class="sub" id="mastSub"></div>
     </div>
     <div class="mast-side">
       <div class="mast-actions">
@@ -331,9 +331,10 @@
 
   <div class="presets">
     <span class="flabel">Presets</span>
-    <button class="preset" id="presetSymbiont" title="Sound/new-media/performance work, ranked by fit (lineage keywords + funded + home-turf). Add ★ my regions to narrow to Germany + Europe.">◈ SYMBIONT fit</button>
-    <button class="preset" id="presetRes" title="Residencies · sound/new-media/performance · my regions · best-fit sort">⌂ Residency mode</button>
-    <button class="preset" id="presetMyRegions" title="Toggle all preferred regions at once (Germany → Europe)">★ my regions</button>
+    <button class="preset" id="presetSaved" title="Show only the calls you marked Interested">★ Interested <b id="savedCount"></b></button>
+    <button class="preset" id="presetFit" title="Everything ranked by best fit to your profile (keyword lineage + funded + home regions)">◈ Best fit</button>
+    <button class="preset" id="presetRes" title="Residencies · your disciplines · your regions · best-fit sort">⌂ Residency mode</button>
+    <button class="preset" id="presetMyRegions" title="Toggle all your preferred regions at once">★ my regions</button>
   </div>
 
   <section class="filters" id="filters">
@@ -377,17 +378,20 @@ const TODAY = new Date(); TODAY.setHours(0,0,0,0);
 const DATA = (window.OPPORTUNITIES && window.OPPORTUNITIES.opportunities) || [];
 const GENERATED = (window.OPPORTUNITIES && window.OPPORTUNITIES.generated) || null;
 const SOURCES = (window.OPPORTUNITIES && window.OPPORTUNITIES.sources) || {};
+// Personalization is baked into the data at build time by the active profile
+// (see prefs.py / profiles/*.json), so the same dashboard serves every user.
+const PROFILE = (window.OPPORTUNITIES && window.OPPORTUNITIES.profile) || {};
 
 const PAGE_SIZE = 25;
 let page = 1;
 
-// Residency-search presets. PREF_GROUPS mirrors geo.PREFERRED_GROUPS in the
-// Python side; MY_DISC is the "★ my disciplines" shortcut.
-const PREF_GROUPS = ["Germany","German-speaking","Western Europe","Nordics",
-                     "Eastern Europe","Baltic","France/Paris","Mediterranean"];
-const MY_DISC = ["Sound/Music","Digital/New Media","Performance"];
+// Region-group shortlist ("★ my regions") and "★ my disciplines" both come from
+// the profile; empty ⇒ the corresponding shortcut is simply inert/hidden.
+const PREF_GROUPS = PROFILE.preferred_groups || [];
+const MY_DISC = PROFILE.my_disciplines || [];
 let selGroups = new Set();   // active region-group chips
 let view = "list";           // "list" | "map"
+let savedOnly = false;       // "★ Interested" — narrow the register to marked calls
 
 let overlay = {};
 try { overlay = JSON.parse(localStorage.getItem("agg:overlay") || "{}"); } catch(e){ overlay = {}; }
@@ -490,8 +494,12 @@ function filtered(){
     .filter(o=> !f.hasDl  || o.deadline)
     .filter(o=> !f.newOnly|| o._new)
     .filter(o=> !f.within || (o.dleft!==null && o.dleft>=0 && o.dleft<=+f.within))
-    .filter(o=> !(f.hideExpired && o.dleft!==null && o.dleft<0))
-    .filter(o=> !(f.hideSkip && o._mark==="skip"));
+    // in the "★ Interested" view keep expired picks — a saved call shouldn't
+    // vanish just because its deadline passed
+    .filter(o=> savedOnly || !(f.hideExpired && o.dleft!==null && o.dleft<0))
+    .filter(o=> !(f.hideSkip && o._mark==="skip"))
+    // "★ Interested": only calls you marked interested
+    .filter(o=> !savedOnly || o._mark==="interested");
   const byDeadline = (a,b)=> (a.dleft===null)-(b.dleft===null) || (a.dleft??1e9)-(b.dleft??1e9);
   rows.sort(
     f.sort==="newest" ? (a,b)=> (b.first_seen||"").localeCompare(a.first_seen||"")
@@ -545,7 +553,7 @@ function renderChips(){
 const FILTER_IDS = ["fSearch","fSource","fType","fDiscipline","fFunded","fStage","fWithin",
                     "fSort","fFee","fUnkFee","fNew","fHasDl","fHideExpired","fHideSkip"];
 function saveFilters(){
-  const s = {groups:[...selGroups], view, advOpen};
+  const s = {groups:[...selGroups], view, advOpen, savedOnly};
   FILTER_IDS.forEach(id=>{ const el=document.getElementById(id);
     s[id] = el.type==="checkbox" ? el.checked : el.value; });
   localStorage.setItem("agg:filters", JSON.stringify(s));
@@ -557,6 +565,7 @@ function restoreFilters(){
     if(el.type==="checkbox") el.checked=!!s[id]; else el.value=s[id]; });
   selGroups = new Set(s.groups||[]);
   if(s.view==="map"||s.view==="list") view=s.view;
+  savedOnly = !!s.savedOnly;
   setAdv(!!s.advOpen);
 }
 
@@ -596,6 +605,10 @@ function renderHero(rows){
 
 function applyPanelHTML(o, id, url){
   const ov = overlay[o.id]||{}, done = ov.done||{};
+  // prefer the organiser's real application link dug out during enrich; fall
+  // back to the listing URL when we couldn't resolve one (see sources.py).
+  const applyUrl = safeUrl(o.apply_url || o.url);
+  const direct = o.apply_url && o.apply_url!==o.url;
   const reqs = (o.requirements||"").split(",").map(s=>s.trim()).filter(Boolean);
   const text = o.details || o.summary;
   const checklist = reqs.length
@@ -616,7 +629,8 @@ function applyPanelHTML(o, id, url){
     }</div>
     <textarea class="notes" data-id="${id}" placeholder="Notes for this application… (saved in this browser)">${esc(ov.notes||"")}</textarea>
     <div class="d-actions">
-      <a class="applylink" href="${url}" target="_blank" rel="noreferrer">Open application page ↗</a>
+      <a class="applylink" href="${applyUrl}" target="_blank" rel="noreferrer">Open application page ↗</a>
+      ${direct?`<span class="src" title="Skips the listing site — goes to the organiser's own application page">↳ direct to organiser</span>`:""}
       ${o.deadline?`<span class="src">deadline ${esc(fmtDate(o.deadline))}</span>`:""}
     </div>
   </div>`;
@@ -764,7 +778,12 @@ function render(){
   const rows = filtered();
   renderHero(rows);
   updateAdvBtn();
-  document.getElementById("regLabel").textContent = rows.length===DATA.length ? "The register" : `The register · ${rows.length} match${rows.length===1?"":"es"}`;
+  const savedN = DATA.filter(o=>(overlay[o.id]||{}).status==="interested").length;
+  document.getElementById("savedCount").textContent = savedN ? `(${savedN})` : "";
+  document.getElementById("presetSaved").classList.toggle("on", savedOnly);
+  const regBase = savedOnly ? "Interested" : "The register";
+  document.getElementById("regLabel").textContent = (!savedOnly && rows.length===DATA.length)
+    ? regBase : `${regBase} · ${rows.length} match${rows.length===1?"":"es"}`;
   const isMap = view==="map";
   document.getElementById("viewListBtn").classList.toggle("on", !isMap);
   document.getElementById("viewMapBtn").classList.toggle("on", isMap);
@@ -827,23 +846,26 @@ document.getElementById("resetBtn").onclick=()=>{
   document.getElementById("fFee").value=200;           // reset = show everything
   document.getElementById("fUnkFee").checked=true;
   updateFeeLabel();
-  selGroups=new Set(); renderChips();
+  selGroups=new Set(); savedOnly=false; renderChips();
   page=1; render();
 };
 
 // ---- presets ----
+document.getElementById("presetSaved").onclick=()=>{
+  savedOnly=!savedOnly; page=1; render();
+};
 document.getElementById("presetMyRegions").onclick=()=>{
-  const allOn = PREF_GROUPS.every(g=>selGroups.has(g));
+  const allOn = PREF_GROUPS.length && PREF_GROUPS.every(g=>selGroups.has(g));
   selGroups = allOn ? new Set() : new Set(PREF_GROUPS);
   page=1; renderChips(); render();
 };
-document.getElementById("presetSymbiont").onclick=()=>{
-  // the SYMBIONT brief in one click: sound/new-media/performance work, ranked by
-  // fit (keywords + funded + home-turf). Funded/region are *preferences* the fit
-  // sort already encodes, so they stay soft — nothing relevant is hard-filtered
-  // out. Use ★ my regions to narrow to home turf when you want to.
+document.getElementById("presetFit").onclick=()=>{
+  // everything ranked by best fit to the active profile: keyword lineage +
+  // funded + home regions. Funded/region are *preferences* the fit sort already
+  // encodes, so they stay soft — nothing relevant is hard-filtered out. When the
+  // profile names disciplines, narrow to them; use ★ my regions for home turf.
   document.getElementById("fType").value="";
-  document.getElementById("fDiscipline").value="__mine__";
+  document.getElementById("fDiscipline").value=MY_DISC.length?"__mine__":"";
   document.getElementById("fFunded").value="";
   document.getElementById("fStage").value="";
   document.getElementById("fFee").value=200;
@@ -856,12 +878,12 @@ document.getElementById("presetSymbiont").onclick=()=>{
 document.getElementById("presetRes").onclick=()=>{
   // residency-focused cut of the same brief
   document.getElementById("fType").value="Residency";
-  document.getElementById("fDiscipline").value="__mine__";
+  document.getElementById("fDiscipline").value=MY_DISC.length?"__mine__":"";
   document.getElementById("fFunded").value="";
   document.getElementById("fStage").value="";
   document.getElementById("fFee").value=200;
   document.getElementById("fUnkFee").checked=true;
-  document.getElementById("fSort").value="fit";
+  document.getElementById("fSort").value=PROFILE.has_fit?"fit":"deadline";
   updateFeeLabel(); updateAdvBtn();
   selGroups=new Set(PREF_GROUPS);
   page=1; renderChips(); render();
@@ -906,6 +928,28 @@ document.getElementById("gen").innerHTML = GENERATED
   : "no data yet — run: python aggregator.py update";
 document.getElementById("footnote").textContent =
   "Location, region groups, career stage, fees, type, discipline, funding tags and the “apply with” materials are heuristic guesses from each listing's (and its detail page's) text — confirm on the source page before relying on them. Map pins are approximate (city- or country-level); deadlines are auto-parsed and may be wrong or missing. Your status marks, filters, checklists, notes and application kit are saved only in this browser. This page reads opportunities.js, regenerated on each aggregator run.";
+
+// ---- adapt the chrome to the active profile: hide shortcuts that are inert
+// for it (no fit keywords → no fit preset/sort; no disciplines → no "my
+// disciplines" shortcut). Keeps the same dashboard universal across profiles.
+(function applyProfile(){
+  const hide = el => { if(el) el.style.display="none"; };
+  if(!PROFILE.has_fit){
+    hide(document.getElementById("presetFit"));
+    const opt = document.querySelector('#fSort option[value="fit"]');
+    if(opt) opt.remove();
+  }
+  if(!PREF_GROUPS.length) hide(document.getElementById("presetMyRegions"));
+  if(!MY_DISC.length){
+    const opt = document.querySelector('#fDiscipline option[value="__mine__"]');
+    if(opt) opt.remove();
+  }
+  if(PROFILE.label){
+    document.title = PROFILE.label + " · " + document.title;
+    const sub = document.getElementById("mastSub");
+    if(sub) sub.textContent = PROFILE.label;
+  }
+})();
 
 restoreFilters();
 updateFeeLabel();

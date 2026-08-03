@@ -11,7 +11,7 @@ import json
 import re
 import subprocess
 import time
-from urllib.parse import unquote
+from urllib.parse import unquote, urljoin, urlparse
 
 import requests
 import feedparser
@@ -444,21 +444,97 @@ def fetch_arselectronica():
              "country": "Linz, Austria", "region": "EU", "type": "Prize"}]
 
 
+# Hosts that are never the real application page: social/share widgets and
+# framework/CDN/utility links that litter listing pages.
+_SOCIAL_HOSTS = ("facebook.", "twitter.", "x.com", "instagram.", "linkedin.",
+                 "youtube.", "youtu.be", "pinterest.", "tiktok.", "whatsapp.",
+                 "t.me", "telegram.", "reddit.", "flickr.", "vimeo.", "threads.net",
+                 "mastodon.", "bsky.")
+_UTILITY_HOSTS = ("google.", "gstatic.", "googleapis.", "gravatar.", "w.org",
+                  "wp.com", "wordpress.org", "fonts.", "schema.org", "goo.gl",
+                  "creativecommons.org", "addtoany.", "sharethis.", "gmpg.org",
+                  "zendesk.", "intercom.", "hotjar.", "doubleclick.", "cookiebot.",
+                  "gmail.", "mailchimp.", "list-manage.com")
+# Anchor-text cues that mark the "go here to apply" link, and pure-nav text to skip.
+_APPLY_CUES = ("apply", "application", "more info", "more information", "official",
+               "website", "submit", "register", "open call", "call for", "read more",
+               "find out more", "learn more", "link to", "full details",
+               "how to apply", "apply now", "apply here", "enter now",
+               "further information", "further info", "visit the", "más información",
+               "weitere informationen", "zur ausschreibung", "jetzt bewerben")
+_NAV_TEXT = {"home", "about", "about us", "contact", "contact us", "privacy",
+             "privacy policy", "cookie", "cookies", "newsletter", "subscribe",
+             "log in", "login", "sign in", "sign up", "terms", "imprint",
+             "impressum", "datenschutz", "menu", "search", "donate", "shop"}
+
+
+def _reg_root(host):
+    """Rough registrable root, e.g. 'www.on-the-move.org' → 'on-the-move'. Good
+    enough to tell 'a link that leaves this aggregator' from an internal one."""
+    parts = host.lower().removeprefix("www.").split(".")
+    return parts[-2] if len(parts) >= 2 else host
+
+
+def _extract_apply_url(soup, page_url):
+    """Best-effort real application link on an aggregator's listing page.
+
+    Many sources (On the Move, culture360, Res Artis…) are intermediaries: their
+    page summarises a call and links out to the organiser's own site where you
+    actually apply. Find that outbound link so the dashboard's "Apply" button
+    skips the middleman. Returns None when nothing is confident enough — the
+    caller falls back to the listing URL.
+    """
+    page_root = _reg_root(urlparse(page_url).netloc)
+    content = soup.find("main") or soup.find("article") or soup.body or soup
+    best, best_score, externals = None, 0, {}
+    for a in content.find_all("a", href=True):
+        href = urljoin(page_url, a["href"].strip())
+        pu = urlparse(href)
+        if pu.scheme not in ("http", "https") or not pu.netloc:
+            continue
+        host = pu.netloc.lower()
+        if _reg_root(host) == page_root:                     # stays on the aggregator
+            continue
+        if any(h in host for h in _SOCIAL_HOSTS + _UTILITY_HOSTS):
+            continue
+        txt = a.get_text(" ", strip=True).lower()
+        cues = sum(1 for c in _APPLY_CUES if c in txt)
+        if not txt or (txt in _NAV_TEXT and not cues):       # bare logo / nav chrome
+            continue
+        externals.setdefault(host, href)
+        score = 2 * cues
+        if txt.startswith(("http", "www.")):                 # anchor text *is* a URL
+            score += 1
+        if score > best_score:
+            best_score, best = score, href
+    if best_score >= 2:                     # an explicit apply/more-info link won
+        return best
+    if len(externals) == 1:                 # one outbound host → almost surely the organiser
+        return next(iter(externals.values()))
+    return None
+
+
 def fetch_detail(url):
-    """Fetch a call's own page and return its readable text, best-effort.
+    """Fetch a call's own page; return (readable_text, apply_url).
 
     Used by `update`'s enrich step: listing blurbs rarely say what an
     application asks for (CV, portfolio, fee…) or even the deadline — the
     detail page usually does. Strips chrome (nav/header/footer/scripts) and
-    prefers the <main>/<article> region when the page marks one.
+    prefers the <main>/<article> region when the page marks one. Also digs out
+    the organiser's real application link (see _extract_apply_url) before the
+    chrome is thrown away, so aggregators don't strand you on their own page.
     """
     html = _get(url)
     soup = BeautifulSoup(html, "html.parser")
-    for t in soup(["script", "style", "nav", "header", "footer", "aside", "noscript", "form"]):
+    for t in soup(["script", "style", "noscript"]):
         t.decompose()
+    # drop chrome first so footer/sidebar sponsor links can't pose as the apply link
+    for t in soup(["nav", "header", "footer", "aside", "form"]):
+        t.decompose()
+    apply_url = _extract_apply_url(soup, url)
     node = soup.find("main") or soup.find("article") or soup.body or soup
     text = re.sub(r"\s+", " ", node.get_text(" ", strip=True)).strip()
-    return text[:6000]
+    return text[:6000], apply_url
 
 
 def _dedupe_local(items):

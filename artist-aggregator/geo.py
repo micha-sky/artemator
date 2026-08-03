@@ -10,14 +10,15 @@ fires inside "tunisia" and "santiago de compostela" wins over "santiago".
 
 Region groups are the residency-search facets the dashboard filters on. A
 country can sit in several (Croatia → Balkans + Mediterranean). PREFERRED_GROUPS
-is the searcher's own shortlist, surfaced as the "★ my regions" preset.
+is the searcher's own shortlist, surfaced as the "★ my regions" preset — it
+comes from the active profile (see prefs.py) so the same gazetteer serves
+everyone; only the shortlist changes per person.
 """
 import re
 
-PREFERRED_GROUPS = (
-    "Germany", "German-speaking", "Western Europe", "Nordics",
-    "Eastern Europe", "Baltic", "France/Paris", "Mediterranean",
-)
+import prefs
+
+PREFERRED_GROUPS = tuple(prefs.PREFERRED_GROUPS)
 
 # iso: (name aliases…, (lat, lon), region groups…)   — aliases lowercase.
 # Nouns only (no "spanish"/"french"): adjectives over-fire on language mentions.
