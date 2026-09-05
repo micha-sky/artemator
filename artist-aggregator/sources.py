@@ -7,6 +7,7 @@ changes over time — the CSS selectors marked "TUNE" are the bits you'll adjust
 on the first live run (open the page, inspect, fix the selector). Every fetcher
 is wrapped so one broken source never kills the whole run.
 """
+import functools
 import json
 import re
 import subprocess
@@ -564,6 +565,205 @@ def fetch_arselectronica():
              "country": "Linz, Austria", "region": "EU", "type": "Prize"}]
 
 
+# ---------- German / EU funders (config-driven) ----------
+#
+# The German-language funding landscape is the coverage gap: the English
+# aggregators carry the Bund/Länder foundations badly or not at all. Each one is
+# a small institutional site with a news or Förderung page, and writing fifteen
+# bespoke scrapers would mean fifteen selectors to re-tune every redesign. So
+# this is one fetcher driven by config, deliberately markup-agnostic:
+#
+#   1. use the site's RSS/Atom feed when it has one (auto-discovered from the
+#      page's <link rel="alternate">), because a feed never needs re-tuning;
+#   2. otherwise scan the listing page for call-shaped links — same host, real
+#      anchor text, and German call vocabulary somewhere in the surrounding
+#      block. That's how fetch_kunstfonds works, minus the site-specific CSS.
+#
+# A wrong path is survivable: a 404 on the configured URL retries the site root
+# and auto-discovers from there. Anything still broken shows up in the health
+# strip by name rather than failing quietly.
+
+_DE_CALL_SIGNALS = _KFN_CALL_SIGNALS + (
+    "ausschreibungen", "bewerbungsfrist", "antragsfrist", "abgabefrist",
+    "einreichfrist", "einreichungsfrist", "bewerbungsverfahren", "antragstellung",
+    "förderprogramm", "foerderprogramm", "förderung", "stipendium", "stipendien",
+    "residenz", "residency", "open call", "wettbewerb", "preis", "call",
+)
+# Href fragments worth following on a funder site; everything else is chrome.
+_DE_LINK_HINTS = ("ausschreibung", "foerder", "förder", "stipend", "bewerb",
+                  "antrag", "residen", "programm", "call", "wettbewerb",
+                  "preis", "news", "aktuel", "grant", "fellowship", "opportunit")
+
+
+def _discover_feed(html, base):
+    """The page's declared RSS/Atom feed, if it has one."""
+    soup = BeautifulSoup(html, "html.parser")
+    link = soup.find("link", rel=lambda v: v and "alternate" in
+                     (v if isinstance(v, str) else " ".join(v)).lower(),
+                     type=re.compile(r"rss|atom", re.I))
+    return urljoin(base, link["href"]) if link and link.get("href") else None
+
+
+def _funder_from_feed(feed_url, cfg):
+    out = []
+    for e in _feed(feed_url, cfg["source"]):
+        title = _clean_ws(e.get("title", ""))
+        summary = BeautifulSoup(e.get("summary", ""), "html.parser").get_text(" ", strip=True)
+        if len(title) < 8:
+            continue
+        if cfg.get("require_signal", True) and not _has_signal(title + " " + summary):
+            continue
+        out.append(_funder_item(title, e.get("link", ""), summary, cfg))
+    return out
+
+
+def _funder_from_html(html, page_url, cfg):
+    soup = BeautifulSoup(html, "html.parser")
+    for t in soup(["script", "style", "noscript", "nav", "header", "footer"]):
+        t.decompose()
+    host = _reg_root(urlparse(page_url).netloc)
+    out = []
+    for a in soup.find_all("a", href=True):
+        href = urljoin(page_url, a["href"].strip())
+        pu = urlparse(href)
+        if pu.scheme not in ("http", "https") or _reg_root(pu.netloc) != host:
+            continue
+        title = _clean_ws(a.get_text(" ", strip=True))
+        if len(title) < 12 or title.lower() in _NAV_TEXT:
+            continue
+        low = (pu.path or "").lower()
+        if not any(h in low for h in _DE_LINK_HINTS) and not _has_signal(title):
+            continue
+        # Climb to the block that carries this link's own call/deadline wording,
+        # and stop before the container that holds the *other* listings —
+        # otherwise every item inherits its neighbours' text and a news post
+        # passes the signal check on the strength of the call next to it.
+        text, node = title, a
+        for _ in range(5):
+            node = node.parent
+            if node is None or len(node.find_all("a", href=True)) > 2:
+                break
+            t = _clean_ws(node.get_text(" ", strip=True))
+            if len(t) > len(text):
+                text = t
+            if len(text) > 400:
+                break
+        if cfg.get("require_signal", True) and not _has_signal(text):
+            continue
+        out.append(_funder_item(title, href, text[:1200], cfg))
+    return out
+
+
+def _clean_ws(t):
+    return re.sub(r"\s+", " ", t or "").strip()
+
+
+def _has_signal(text):
+    low = (text or "").lower()
+    return any(sig in low for sig in _DE_CALL_SIGNALS)
+
+
+def _funder_item(title, url, summary, cfg):
+    item = {"title": title, "url": url, "summary": summary,
+            "source": cfg["source"], "org": cfg.get("org", cfg["source"])}
+    for k in ("region", "type", "country"):
+        if cfg.get(k):
+            item[k] = cfg[k]
+    return item
+
+
+def fetch_funder(cfg):
+    """One funder site → items. Feed first, listing-page scan as the fallback."""
+    url = cfg["url"]
+    try:
+        html = _get(url)
+    except requests.RequestException:
+        origin = "{0.scheme}://{0.netloc}/".format(urlparse(url))
+        if origin.rstrip("/") == url.rstrip("/"):
+            raise
+        html = _get(origin)                  # configured path moved — try the root
+        url = origin
+    if _looks_like_bot_wall(html):
+        raise RuntimeError(f"{cfg['source']} served a bot wall — needs a real browser")
+
+    feed_url = cfg.get("feed") or _discover_feed(html, url)
+    items = []
+    if feed_url:
+        try:
+            items = _funder_from_feed(feed_url, cfg)
+        except Exception:                    # feed dead or empty → scrape the page
+            items = []
+    if not items:
+        items = _funder_from_html(html, url, cfg)
+    if not items:
+        raise RuntimeError(
+            f"{cfg['source']}: no call-shaped links found at {url} "
+            f"— check the page and set 'feed' or widen the config")
+    return _dedupe_local(items)[:cfg.get("cap", 40)]
+
+
+# Each entry becomes a registered source named by its key. `url` is the
+# funding/news listing; `feed` overrides auto-discovery; region/type/org are
+# defaults normalize.py would otherwise have to guess from German prose.
+FUNDERS = {
+    # --- Bund / national ---
+    "kulturstiftungbund": {
+        "source": "Kulturstiftung des Bundes", "org": "Kulturstiftung des Bundes",
+        "url": "https://www.kulturstiftung-des-bundes.de/de/foerderung.html",
+        "region": "DE", "country": "Germany", "type": "Grant"},
+    "fondsdaku": {
+        "source": "Fonds Darstellende Künste", "org": "Fonds Darstellende Künste",
+        "url": "https://www.fonds-daku.de/foerderungen/",
+        "region": "DE", "country": "Germany", "type": "Grant"},
+    "fondssoziokultur": {
+        "source": "Fonds Soziokultur", "org": "Fonds Soziokultur",
+        "url": "https://www.fonds-soziokultur.de/foerderung/",
+        "region": "DE", "country": "Germany", "type": "Grant"},
+    "literaturfonds": {
+        "source": "Deutscher Literaturfonds", "org": "Deutscher Literaturfonds",
+        "url": "https://www.deutscher-literaturfonds.de/foerderung/",
+        "region": "DE", "country": "Germany", "type": "Grant"},
+    "kuenstlerbund": {
+        "source": "Deutscher Künstlerbund", "org": "Deutscher Künstlerbund",
+        "url": "https://www.kuenstlerbund.de/deutsch/ausschreibungen.html",
+        "region": "DE", "country": "Germany"},
+    "bbk": {
+        "source": "bbk Bundesverband", "org": "bbk Bundesverband",
+        "url": "https://www.bbk-bundesverband.de/aktuelles",
+        "region": "DE", "country": "Germany"},
+    "solitude": {
+        "source": "Akademie Schloss Solitude", "org": "Akademie Schloss Solitude",
+        "url": "https://www.akademie-solitude.de/en/fellowship/",
+        "region": "DE", "country": "Stuttgart, Germany", "type": "Residency"},
+    "scheringstiftung": {
+        "source": "Schering Stiftung", "org": "Schering Stiftung",
+        "url": "https://www.scheringstiftung.de/ausschreibungen/",
+        "region": "DE", "country": "Berlin, Germany"},
+    # --- Länder ---
+    "hessischekulturstiftung": {
+        "source": "Hessische Kulturstiftung", "org": "Hessische Kulturstiftung",
+        "url": "https://www.hkst.de/foerderung/", "region": "DE",
+        "country": "Hesse, Germany", "type": "Grant"},
+    "kunststiftungnrw": {
+        "source": "Kunststiftung NRW", "org": "Kunststiftung NRW",
+        "url": "https://www.kunststiftungnrw.de/foerderung/",
+        "region": "DE", "country": "Germany", "type": "Grant"},
+    "kdfs": {
+        "source": "Kulturstiftung Sachsen", "org": "Kulturstiftung des Freistaates Sachsen",
+        "url": "https://www.kdfs.de/foerderung/", "region": "DE",
+        "country": "Saxony, Germany", "type": "Grant"},
+    "kunststiftungbw": {
+        "source": "Kunststiftung BW", "org": "Kunststiftung Baden-Württemberg",
+        "url": "https://www.kunststiftung.de/ausschreibungen/",
+        "region": "DE", "country": "Germany", "type": "Grant"},
+    # --- EU ---
+    "creativeeuropede": {
+        "source": "Creative Europe Desk DE", "org": "Creative Europe Desk KULTUR",
+        "url": "https://www.creative-europe-desk.de/kultur/aktuelles",
+        "region": "EU", "type": "Grant"},
+}
+
+
 # Hosts that are never the real application page: social/share widgets and
 # framework/CDN/utility links that litter listing pages.
 _SOCIAL_HOSTS = ("facebook.", "twitter.", "x.com", "instagram.", "linkedin.",
@@ -816,3 +1016,7 @@ SOURCES = {
     "ctm":          fetch_ctm,
     "arselectronica": fetch_arselectronica,
 }
+
+# German / EU funders: one generic fetcher, one registry entry per site.
+for _name, _cfg in FUNDERS.items():
+    SOURCES[_name] = functools.partial(fetch_funder, _cfg)

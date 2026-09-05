@@ -9,7 +9,10 @@
   "enabled_sources": [
     "colossal", "eflux", "hyperallergic", "resartis", "onthemove",
     "kunstfonds", "transartists", "artconnect", "culture360",
-    "initiativemusik", "musikfonds", "zkm", "ctm", "arselectronica"
+    "initiativemusik", "musikfonds", "zkm", "ctm", "arselectronica",
+    "kulturstiftungbund", "fondsdaku", "fondssoziokultur", "literaturfonds", "kuenstlerbund",
+    "bbk", "solitude", "scheringstiftung", "hessischekulturstiftung", "kunststiftungnrw",
+    "kdfs", "kunststiftungbw", "creativeeuropede"
   ],
   "fit_keywords": [
     {"weight": 3, "phrases": [

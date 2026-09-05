@@ -64,6 +64,52 @@ hard-coded), **Ars Electronica** (Prix, emitted as one annual open call).
 Add your own by writing a `fetch_x()` in `sources.py` that returns
 `{title, url, summary, source}` dicts and registering it in `SOURCES`.
 
+### German & EU funders — the coverage wedge
+The English-language aggregators carry the Bund/Länder foundations badly or not
+at all, so these are scraped directly: **Kulturstiftung des Bundes**, **Fonds
+Darstellende Künste**, **Fonds Soziokultur**, **Deutscher Literaturfonds**,
+**Deutscher Künstlerbund**, **bbk Bundesverband**, **Akademie Schloss Solitude**,
+**Schering Stiftung**, plus the Länder foundations (**Hessische Kulturstiftung**,
+**Kunststiftung NRW**, **Kulturstiftung Sachsen**, **Kunststiftung BW**) and
+**Creative Europe Desk KULTUR**.
+
+They share one fetcher. Fifteen bespoke scrapers would mean fifteen selectors to
+re-tune after every redesign, so `fetch_funder` is deliberately markup-agnostic:
+it uses the site's RSS/Atom feed when it declares one, and otherwise scans the
+listing page for call-shaped links — same host, real anchor text, German call
+vocabulary in the link's own block. A wrong path is survivable (a 404 retries
+the site root and re-discovers). Adding a funder is a `FUNDERS` entry, not code:
+
+```jsonc
+"kunststiftungnrw": {
+  "source": "Kunststiftung NRW", "org": "Kunststiftung NRW",
+  "url": "https://www.kunststiftungnrw.de/foerderung/",
+  "region": "DE", "country": "Germany", "type": "Grant"
+  // "feed": "…"  — set explicitly if auto-discovery picks the wrong one
+}
+```
+
+Check one before trusting it — `probe` runs a fetcher and shows what it would
+emit, without touching the database (`✗` marks items `is_relevant` would drop):
+```bash
+python aggregator.py probe                          # every funder
+python aggregator.py probe --sources bbk,solitude --show 10
+```
+
+> **Status:** the funder URLs are configured but **not yet confirmed against the
+> live sites** — run `probe` and fix any that report `no call-shaped links
+> found`. The health strip names each one that fails, so nothing breaks quietly.
+
+### Reading German listings
+`normalize.py` parses German dates and funding vocabulary, not just English:
+`Bewerbungsschluss: 15. März 2027`, `Antragsfrist: 2. Jänner 2027` and
+`Frist: 15. Dez. 2026` all resolve, and *Förderung / Zuschuss / Honorar /
+Preisgeld* read as funding while *Teilnahmegebühr / Eigenanteil* read as a fee.
+This matters more than it sounds: German funders write "15. März 2027" far more
+often than "15.03.2027", and before this the parser found **0 deadlines in 55
+Kunstfonds listings** — a deadline tracker with no deadlines. Add a language by
+adding its month names to `_MONTH_NAMES` in `normalize.py`.
+
 > **Not added (checked):** Goethe-Institut has no central open-call board — its
 > residency/mobility calls are spread across program subpages and largely surface
 > via **On the Move** already; a dedicated scraper would be fragile. Add one as a

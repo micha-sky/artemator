@@ -125,6 +125,63 @@ check(src._looks_like_bot_wall(
     "sgcaptcha / 'just a moment' page recognised")
 check(not src._looks_like_bot_wall(XML), "real XML is not a bot wall")
 
+print("\nfetch_funder — generic German funder fetching (stubbed network)")
+FUNDER_HTML = """<html><head>
+  <link rel="alternate" type="application/rss+xml" href="/feed.xml">
+ </head><body>
+ <nav><a href="/kontakt">Kontakt</a><a href="/impressum">Impressum</a></nav>
+ <main>
+  <div class="item"><a href="/foerderung/arbeitsstipendium-2027">
+     Arbeitsstipendium Bildende Kunst 2027</a>
+     <p>Bewerbungsschluss: 15. M\u00e4rz 2027. F\u00f6rdersumme 12.000 Euro.</p></div>
+  <div class="item"><a href="/aktuelles/jahresbericht-2025">
+     Jahresbericht 2025 erschienen</a>
+     <p>Unser R\u00fcckblick auf das vergangene Jahr.</p></div>
+  <div class="item"><a href="https://elsewhere.example/partner">Partnerseite</a></div>
+ </main></body></html>"""
+CFG = {"source": "Testfonds", "org": "Testfonds", "url": "https://testfonds.de/foerderung/",
+       "region": "DE", "country": "Germany", "type": "Grant"}
+
+_saved = (src._get, src._feed)
+src._get = lambda u, tries=3: FUNDER_HTML
+src._feed = lambda u, s_: (_ for _ in ()).throw(RuntimeError("feed empty"))
+items = src.fetch_funder(CFG)
+check(len(items) == 1, f"scrapes only the call, not the annual report or the partner link (got {len(items)})")
+check(items[0]["url"] == "https://testfonds.de/foerderung/arbeitsstipendium-2027",
+      "relative href resolved against the listing page")
+check(items[0]["region"] == "DE" and items[0]["type"] == "Grant",
+      "config defaults applied to the item")
+
+from normalize import normalize as _norm
+n = _norm(items[0])
+check(n["deadline"] == "2027-03-15", f"German deadline parsed end-to-end (got {n['deadline']})")
+check(n["funded"] == "likely", f"F\u00f6rdersumme reads as funded (got {n['funded']})")
+
+class _E:
+    def __init__(s2, t, l, d): s2.d = {"title": t, "link": l, "summary": d}
+    def get(s2, k, default=""): return s2.d.get(k, default)
+src._feed = lambda u, s_: [_E("Ausschreibung Recherchestipendium 2027",
+                              "https://testfonds.de/a", "Antragsfrist 1. Juni 2027"),
+                           _E("Neue Website online", "https://testfonds.de/b", "Relaunch")]
+items = src.fetch_funder(CFG)
+check(len(items) == 1 and items[0]["url"] == "https://testfonds.de/a",
+      "feed path keeps the call and drops the news post")
+src._get, src._feed = _saved
+
+print("\nGerman-language extraction")
+from normalize import extract_deadline, guess_funded, guess_type
+for text, want in [("Bewerbungsschluss: 15. M\u00e4rz 2027", "2027-03-15"),
+                   ("Einsendeschluss ist der 1. Oktober 2026", "2026-10-01"),
+                   ("Frist: 15. Dez. 2026", "2026-12-15"),
+                   ("Antragsfrist: 2. J\u00e4nner 2027", "2027-01-02"),
+                   ("Deadline: March 15, 2027", "2027-03-15")]:
+    got = extract_deadline(text)
+    check(got == want, f"{text!r} \u2192 {want} (got {got})")
+check(guess_type("Reisekostenzuschuss f\u00fcr Projekte") == "Mobility", "Reisekosten \u2192 Mobility")
+check(guess_funded("Ausschreibung: Projektf\u00f6rderung 2027") == "likely",
+      "F\u00f6rderung \u2192 funded likely")
+check(guess_funded("Teilnahmegeb\u00fchr 25 Euro") == "fee-based", "Teilnahmegeb\u00fchr \u2192 fee-based")
+
 print()
 if FAILS:
     print(f"{len(FAILS)} FAILED: " + "; ".join(FAILS))

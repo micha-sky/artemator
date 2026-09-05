@@ -183,6 +183,38 @@ def cmd_reapply(args):
     print(f"  resolved {found}/{len(todo)} real apply links")
 
 
+def cmd_probe(args):
+    """Run one or more source fetchers and show what they'd emit, without
+    touching the database.
+
+    The German/EU funder configs in sources.FUNDERS are markup-agnostic by
+    design, but a listing URL can still be wrong or a site can want a feed set
+    explicitly. This is how you check one in a second, on a machine that has
+    network, before wiring it into the daily run.
+    """
+    which = args.sources.split(",") if args.sources else list(src.FUNDERS)
+    ok_n = 0
+    for name in which:
+        name = name.strip()
+        fn = src.SOURCES.get(name)
+        if not fn:
+            print(f"{name:24s} unknown source"); continue
+        try:
+            items = fn()
+        except Exception as e:
+            print(f"{name:24s} FAILED — {type(e).__name__}: {e}")
+            continue
+        ok_n += 1
+        print(f"{name:24s} {len(items):3d} items")
+        for it in items[:args.show]:
+            n = normalize(it)
+            keep = "  " if is_relevant(n) else " ✗"      # ✗ = filtered before storage
+            print(f"  {keep} {str(n['deadline'] or '—'):11s} {n['type']:10s} "
+                  f"{n['title'][:58]}")
+            print(f"       {it['url']}")
+    print(f"\n{ok_n}/{len(which)} source(s) returned items")
+
+
 def cmd_list(args):
     store.init()
     since = None
@@ -275,6 +307,11 @@ def build_parser():
     m.add_argument("--status", choices=["interested", "applied", "skip"])
     m.add_argument("--notes")
     m.set_defaults(func=cmd_mark)
+
+    pr = sub.add_parser("probe", help="dry-run source fetchers; no DB writes")
+    pr.add_argument("--sources", help="comma list (default: every German/EU funder)")
+    pr.add_argument("--show", type=int, default=5, help="sample items to print per source")
+    pr.set_defaults(func=cmd_probe)
 
     r = sub.add_parser("reapply", help="backfill real apply links on old aggregator listings")
     r.add_argument("--limit", type=int, default=400,

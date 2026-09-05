@@ -70,7 +70,8 @@ REQUIREMENT_RULES = [
 TYPE_RULES = [
     ("Residency", ["residency", "residencies", "résidence", "residence", "atelier", "artist-in-residence", "air "]),
     ("Grant",     ["grant", "stipend", "stipendium", "stipendien", "fellowship", "bursary", "förder", "funding", "scholarship"]),
-    ("Mobility",  ["mobility", "travel grant", "touring"]),
+    ("Mobility",  ["mobility", "travel grant", "touring", "reisekosten",
+                   "reisestipendium", "mobilitätsförderung", "reisezuschuss"]),
     ("Prize",     ["prize", "award", "preis", "competition", "biennial", "biennale"]),
     ("Open Call", ["open call", "call for", "exhibition", "juried", "submissions"]),
 ]
@@ -79,9 +80,18 @@ FUNDED_POS = ["stipend", "stipendium", "bursary", "fully funded", "fully-funded"
               "covers travel", "accommodation provided", "daily allowance",
               "monthly allowance", "honorarium", "honoraria", "production budget",
               "materials budget", "flights", "airfare", "living costs", "no fee",
-              "free of charge", "€", "eur ", "usd", "$", "£"]
+              "free of charge", "€", "eur ", "usd", "$", "£",
+              # German funding vocabulary — "Förderung"/"Zuschuss"/"Honorar" are
+              # the words German funders actually use for money changing hands
+              "förder", "foerder", "zuschuss", "zuwendung", "honorar",
+              "fördersumme", "preisgeld", "sachmittel", "reisekosten"]
 FEE_WORDS  = ["application fee", "entry fee", "submission fee", "participation fee",
-              "tuition", "fee to apply", "self-funded", "self funded"]
+              "tuition", "fee to apply", "self-funded", "self funded",
+              # German: Gebühr is the giveaway; Eigenanteil/Eigenbeteiligung is
+              # the "you cover part of it yourself" form
+              "teilnahmegebühr", "bewerbungsgebühr", "anmeldegebühr",
+              "bearbeitungsgebühr", "gebühr von", "eigenanteil",
+              "eigenbeteiligung", "selbstfinanziert"]
 
 # Explicit "free to apply" signals → fee_eur = 0.
 NO_FEE_PHRASES = ["no fee", "no application fee", "no entry fee", "no submission fee",
@@ -116,13 +126,67 @@ _YEARS_REQ_RE = re.compile(
 DEADLINE_CUES = ["deadline", "closes", "closing", "apply by", "applications close",
                  "until", "submit by", "bewerbungsschluss", "einsendeschluss", "frist"]
 
+# Month names → number. dateutil only speaks English, so a German date is
+# normalized here before it ever reaches the parser. German funders write
+# "Bewerbungsschluss: 15. März 2027" far more often than "15.03.2027", and
+# without this every one of those deadlines was silently dropped — Kunstfonds
+# parsed 0 deadlines out of 55 listings. Add a language by adding its names.
+_MONTH_NAMES = {
+    # English
+    "january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june": 6,
+    "july": 7, "august": 8, "september": 9, "october": 10, "november": 11,
+    "december": 12,
+    # German (jänner = Austrian January; märz/maerz for un-umlauted text)
+    "januar": 1, "jänner": 1, "jaenner": 1, "februar": 2, "märz": 3, "maerz": 3,
+    "mai": 5, "juni": 6, "juli": 7, "oktober": 10, "dezember": 12,
+}
+# Abbreviations, incl. the German ones that differ from English (mär, okt, dez).
+_MONTH_ABBR = {"jan": 1, "feb": 2, "mar": 3, "mär": 3, "maer": 3, "apr": 4,
+               "mai": 5, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9,
+               "sept": 9, "oct": 10, "okt": 10, "nov": 11, "dec": 12, "dez": 12}
+_MONTH_ALT = "|".join(sorted(set(_MONTH_NAMES) | set(_MONTH_ABBR),
+                             key=len, reverse=True))
+
 DATE_RE = re.compile(
-    r"(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{4})"
-    r"|((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2},?\s+\d{4})"
+    # "15. März 2027" / "15 March 2027" / "1. Okt. 2026" — day-first, any language
+    r"(\d{1,2}\.?\s+(?:" + _MONTH_ALT + r")\.?\s+\d{4})"
+    # "March 15, 2027" — month-first (English style)
+    r"|((?:" + _MONTH_ALT + r")\.?\s+\d{1,2},?\s+\d{4})"
     r"|(\d{4}-\d{2}-\d{2})"
     r"|(\d{1,2}[./]\d{1,2}[./]\d{4})",
     re.IGNORECASE,
 )
+_NAMED_DATE_RE = re.compile(
+    r"(?:(\d{1,2})\.?\s+(" + _MONTH_ALT + r")\.?|"
+    r"(" + _MONTH_ALT + r")\.?\s+(\d{1,2}),?)\s+(\d{4})", re.IGNORECASE)
+
+
+def _month_number(name):
+    n = (name or "").strip().lower().rstrip(".")
+    return _MONTH_NAMES.get(n) or _MONTH_ABBR.get(n) or _MONTH_ABBR.get(n[:4]) \
+        or _MONTH_ABBR.get(n[:3])
+
+
+def _parse_date(raw):
+    """Parse one matched date string to a `date`, or None.
+
+    Named months go through the multilingual map first, so "15. März 2027"
+    works; everything else (ISO, 30.09.2026) falls through to dateutil with
+    dayfirst=True, which is the European convention these sources use.
+    """
+    m = _NAMED_DATE_RE.search(raw)
+    if m:
+        day, mon = (m.group(1), m.group(2)) if m.group(1) else (m.group(4), m.group(3))
+        num = _month_number(mon)
+        if num:
+            try:
+                return date(int(m.group(5)), num, int(day))
+            except ValueError:          # 31 February and friends
+                return None
+    try:
+        return dparser.parse(raw, dayfirst=True, fuzzy=True).date()
+    except (ValueError, OverflowError):
+        return None
 
 
 def _clean(t: str) -> str:
@@ -385,9 +449,8 @@ def extract_deadline(text: str):
         window = low[max(0, span_start - 60): span_start]  # words just before the date
         near_cue = any(cue in window for cue in DEADLINE_CUES)
         raw = _clean(next(g for g in m.groups() if g))
-        try:
-            dt = dparser.parse(raw, dayfirst=True, fuzzy=True).date()
-        except (ValueError, OverflowError):
+        dt = _parse_date(raw)
+        if dt is None:
             continue
         candidates.append((near_cue, dt))
     if not candidates:
