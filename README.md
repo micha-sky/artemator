@@ -6,8 +6,8 @@ a filterable dashboard. You write the applications; this just does discovery,
 aggregation, dedup, new-detection and deadline tracking.
 
 ```
-aggregator.py     orchestrator + CLI (update / list / mark)
-sources.py        one fetcher per source (RSS + HTML scrapers)
+aggregator.py     orchestrator + CLI (update / list / mark / reapply)
+sources.py        one fetcher per source (RSS + HTML scrapers) + apply-link extraction
 normalize.py      deadline / region / type / funded extraction (heuristic)
 store.py          SQLite storage, new-detection, filtering, export
 dashboard.html    filterable UI (reads opportunities.js)
@@ -37,9 +37,11 @@ commits a fresh `opportunities.js`, and the push triggers a Netlify redeploy.
    timestamps survive across CI runs.
 
 That's it — the site updates itself once a day with no server to run. The
-dashboard shows a **source-health strip** (per-source item counts; a red dot +
-`error:` when a scraper breaks) and an **"updated Nm ago"** freshness badge, so
-a silently-broken source is visible at a glance.
+dashboard shows a **source-health strip** (per-source item counts; a red dot
+naming the failure, full message on hover) and an **"updated Nm ago"** freshness
+badge, so a silently-broken source is visible at a glance. Every fetch retries
+transient network failures before it counts as broken, and an RSS feed that
+parses to zero entries is reported as an error rather than a quiet `0`.
 
 > Auth-walled or heavily bot-protected sources may return 0 items from GitHub's
 > IP range even when they work locally — watch the health strip after the first
@@ -50,9 +52,10 @@ RSS (reliable): **Colossal** (monthly "Opportunities" roundup feed), **Hyperalle
 (dedicated Opportunities tag feed — grants, fellowships, prizes, residencies), **e-flux**.
 HTML (scraped): **On the Move** (Drupal "deadline blocks" — listings only, typed
 by category), **Stiftung Kunstfonds** (news feed, gated to posts with a German
-call/application signal). **Res Artis** is behind an `sgcaptcha` bot-challenge and
-can't be scraped over plain HTTP — its fetcher fails loudly so the health strip
-flags it rather than emitting junk; it needs a headless browser to revive.
+call/application signal). **Res Artis**' `/open-calls/` listing is behind an
+`sgcaptcha` bot-challenge, so its fetcher goes through the WordPress sitemap
+instead and lets the enrich step read each call's own page; when the sitemap
+index is itself bot-walled it probes the numbered sub-sitemaps directly.
 Add your own by writing a `fetch_x()` in `sources.py` that returns
 `{title, url, summary, source}` dicts and registering it in `SOURCES`.
 

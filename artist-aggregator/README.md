@@ -21,6 +21,7 @@ opportunities.js  generated data (a sample is included to start)
 ## Setup
 ```bash
 pip install -r requirements.txt
+python test_sources.py                   # offline checks (apply-link + sitemap rules)
 python aggregator.py update              # 'default' profile: every source, neutral ranking
 AGG_PROFILE=sash python aggregator.py update    # tailored to a specific practice
 open dashboard.html                      # or serve the folder
@@ -72,6 +73,32 @@ Add your own by writing a `fetch_x()` in `sources.py` that returns
 > returns 0 items, open the page, inspect it, and fix the CSS selector marked
 > `# TUNE` in `sources.py`. One failing source never stops the others.
 
+### Reading the health strip
+Every HTTP fetch retries transient failures (connection resets, timeouts, 429 /
+5xx) three times with backoff, so a one-off blip no longer costs a day of
+listings. What reaches the strip is therefore a real failure, and the chip names
+the kind — hover it for the full message:
+
+| chip | means |
+| --- | --- |
+| `resartis · 100` | fine |
+| `eflux · 0` | the fetcher ran and found nothing — a warning, worth a look |
+| `resartis · ConnectionError` | the site was unreachable for all three tries |
+| `resartis · RuntimeError` | our own diagnosis: markup moved, or we hit a bot wall |
+
+RSS sources **raise** on an empty channel rather than reporting 0 items: a feed
+that quietly returns nothing (a publisher filtering our User-Agent, a moved feed
+URL) is broken, and e-flux sat at 0 for weeks without anything going red.
+
+**Res Artis** needs two tricks. Its `/open-calls/` listing is behind an
+`sgcaptcha` bot wall, so the fetcher reads the WordPress sitemap instead and lets
+enrich fetch each `/open-call/<slug>/` page. The sitemap *index* is itself
+occasionally served as the bot wall or a connection error — when that happens the
+fetcher probes the numbered `wp-sitemap-posts-open_call-N.xml` files directly
+(they answer with a 404 status and a real XML body) and only gives up if those
+fail too. The three failure modes report distinctly — unreachable, bot wall, or a
+genuinely changed sitemap layout — instead of all showing up as "layout changed?".
+
 ## Filtering (CLI)
 ```bash
 python aggregator.py list --region DE --funded likely --within 60
@@ -109,11 +136,23 @@ samples, proposal, fee…), and fill in missing deadlines/amounts.
 middlemen: their page summarises a call and links out to the organiser's own site
 where you actually apply. During enrich, `fetch_detail` digs out that outbound
 link (`apply_url`) so the dashboard's **Open application page** button skips the
-middleman — cards that resolved one show a **↳ direct to organiser** note; the
-rest fall back to the listing URL. To backfill listings stored before this
-existed:
+middleman — cards that resolved one show a **↳ direct to organiser** note.
+
+A link is only accepted as `apply_url` when it looks like an application *and*
+addresses a specific page: an organiser's homepage or a bare `/en` section root
+is rejected, because landing on one and hunting for the call down a menu is worse
+than landing on the listing page, which at least describes it. Submission portals
+(`apply.` subdomains, Submittable, JotForm, Google Forms) count even without a
+path — the host *is* the application. Social, payment and link-hub URLs never do.
+When nothing clears the bar the card falls back to the listing URL and says so
+(**Open listing page** · ↳ *listing page · find "apply" there*), rather than
+promising an application page it can't deliver.
+
 ```bash
-python aggregator.py reapply          # re-fetch old aggregator pages for apply_url only
+python aggregator.py reapply                 # backfill apply_url on old listings
+python aggregator.py reapply --prune         # …and first drop links that only
+                                             #   point at a homepage
+python aggregator.py reapply --prune --limit 0   # prune only, no network
 ```
 
 In the dashboard every card shows an "apply with: …" chip row, and

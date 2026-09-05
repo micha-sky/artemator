@@ -25,18 +25,85 @@ _ISO_NAME = {iso: names[0].title() for iso, (names, _c, _g) in geo.COUNTRIES.ite
 
 HEADERS = {"User-Agent": "artist-aggregator/1.0 (personal opportunity tracker)"}
 TIMEOUT = 20
+TRIES = 3          # a scraper run is once a day — a couple of retries is cheap
+# Statuses worth retrying: rate limits and the origin/CDN hiccups that make a
+# single-shot fetch report a permanently-dead source.
+RETRY_STATUS = {408, 425, 429, 500, 502, 503, 504}
 
 
-def _get(url):
-    r = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
-    r.raise_for_status()
-    return r.text
+def _request(url, tries=TRIES, lax=False):
+    """GET with retries and exponential backoff.
+
+    Transient failures (DNS blips, TLS resets, connection timeouts, a 502 from
+    a CDN) are the single biggest source of false "this scraper is broken"
+    reports in the health strip — resartis.org, kunstfonds.de and
+    culture360.asef.org have each shown up as a one-run
+    `HTTPSConnectionPool(...)` error and been fine the next day. Retrying turns
+    those into a working run instead of a red dot and a day of lost listings.
+
+    `lax=True` ignores the status code (resartis.org serves its wp-sitemap
+    sub-files with a 404 status and the real XML in the body) but still retries
+    connection-level failures.
+    """
+    last = None
+    for attempt in range(max(1, tries)):
+        try:
+            r = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+            if lax:
+                return r.text
+            if r.status_code in RETRY_STATUS:
+                last = requests.HTTPError(f"HTTP {r.status_code} for {url}", response=r)
+            else:
+                r.raise_for_status()
+                return r.text
+        except requests.RequestException as e:
+            last = e
+        if attempt < tries - 1:
+            time.sleep(2 * 2 ** attempt)          # 2s, 4s
+    raise last
 
 
-def _get_lax(url):
-    """Like _get but ignores the status code. resartis.org serves its
-    wp-sitemap sub-files with a 404 status and the real XML in the body."""
-    return requests.get(url, headers=HEADERS, timeout=TIMEOUT).text
+def _get(url, tries=TRIES):
+    return _request(url, tries=tries)
+
+
+def _get_lax(url, tries=TRIES):
+    """Like _get but ignores the status code — see _request."""
+    return _request(url, tries=tries, lax=True)
+
+
+# Bodies that come back with a 200 but are a bot wall, not the page. Without
+# this a challenge page is parsed as if it were the real markup and the source
+# reports a confident but wrong diagnosis ("layout changed") instead of "we got
+# blocked".
+_BOT_WALL_MARKERS = ("sgcaptcha", "captcha", "just a moment",
+                     "checking your browser", "cf-browser-verification",
+                     "enable javascript and cookies", "attention required!",
+                     "ddos protection by", "please verify you are a human")
+
+
+def _looks_like_bot_wall(text):
+    head = (text or "")[:4000].lower()
+    return any(m in head for m in _BOT_WALL_MARKERS)
+
+
+def _feed(url, source):
+    """Parse an RSS/Atom feed, fetched through _get so it gets our User-Agent
+    and the retry/backoff above (feedparser's own fetcher sends its default UA,
+    which some publishers 403 — that reads as a silently empty feed).
+
+    A feed that parses to zero entries is treated as broken and raises: an
+    empty channel is indistinguishable from a working source on a quiet day,
+    and e-flux sat at 0 items for weeks without anything going red.
+    """
+    parsed = feedparser.parse(_get(url))
+    if not parsed.entries:
+        reason = getattr(parsed, "bozo_exception", None)
+        raise RuntimeError(
+            f"{source} feed parsed to 0 entries ({url})"
+            + (f" — {type(reason).__name__}: {reason}" if reason else
+               " — feed reachable but empty; check the feed URL"))
+    return parsed.entries
 
 
 def _get_curl(url, tries=2):
@@ -58,34 +125,83 @@ def _get_curl(url, tries=2):
 
 # ---------- RSS sources (robust) ----------
 
+def _feed_items(url, source):
+    return [{"title": e.get("title", ""), "url": e.get("link", ""),
+             "summary": BeautifulSoup(e.get("summary", ""), "html.parser").get_text(" ", strip=True),
+             "source": source} for e in _feed(url, source)]
+
+
 def fetch_colossal():
     """This Is Colossal — dedicated monthly 'Opportunities' roundup feed.
 
     Each roundup post lists many calls in its body; we emit the post itself.
     """
-    feed = feedparser.parse("https://www.thisiscolossal.com/category/opportunities/feed/")
-    return [{"title": e.get("title", ""), "url": e.get("link", ""),
-             "summary": BeautifulSoup(e.get("summary", ""), "html.parser").get_text(" ", strip=True),
-             "source": "Colossal"} for e in feed.entries]
+    return _feed_items("https://www.thisiscolossal.com/category/opportunities/feed/",
+                       "Colossal")
 
 
 def fetch_eflux():
-    feed = feedparser.parse("https://www.e-flux.com/announcements/feed/")
-    return [{"title": e.get("title", ""), "url": e.get("link", ""),
-             "summary": BeautifulSoup(e.get("summary", ""), "html.parser").get_text(" ", strip=True),
-             "source": "e-flux"} for e in feed.entries]
+    """e-flux announcements. Read through _feed: fetched with our own
+    User-Agent (feedparser's default UA gets filtered by some publishers) and
+    loud about an empty channel rather than quietly reporting 0 items."""
+    return _feed_items("https://www.e-flux.com/announcements/feed/", "e-flux")
 
 
 def fetch_hyperallergic():
     """Hyperallergic — dedicated 'Opportunities' tag feed (open calls, grants,
     fellowships, residencies). Reliable RSS."""
-    feed = feedparser.parse("https://hyperallergic.com/tag/opportunities/feed/")
-    return [{"title": e.get("title", ""), "url": e.get("link", ""),
-             "summary": BeautifulSoup(e.get("summary", ""), "html.parser").get_text(" ", strip=True),
-             "source": "Hyperallergic"} for e in feed.entries]
+    return _feed_items("https://hyperallergic.com/tag/opportunities/feed/",
+                       "Hyperallergic")
 
 
 # ---------- HTML scrapers (TUNE selectors on first live run) ----------
+
+_RESARTIS_INDEX = "https://resartis.org/wp-sitemap.xml"
+_RESARTIS_OC_MAP = "https://resartis.org/wp-sitemap-posts-open_call-{n}.xml"
+_RESARTIS_MAP_RE = re.compile(r"https://resartis\.org/wp-sitemap-posts-open_call-(\d+)\.xml")
+_RESARTIS_LOC_RE = re.compile(r"<loc>(https://resartis\.org/open-call/[^<]+)</loc>")
+
+
+def _resartis_open_call_maps():
+    """URLs of the open_call sub-sitemaps, newest last.
+
+    Normally they're listed in the sitemap index. The index is also the one
+    resartis.org URL that intermittently comes back as the sgcaptcha wall or a
+    connection error, which used to fail the whole source with a confidently
+    wrong "sitemap layout changed?". So when the index is unusable, probe the
+    numbered sub-sitemaps directly — they are served (with a 404 status and a
+    real XML body, hence _get_lax) even when the index isn't.
+    """
+    index, index_err = "", None
+    try:
+        index = _get(_RESARTIS_INDEX)
+    except Exception as e:                       # noqa: BLE001 — reported below
+        index_err = e
+    nums = sorted({int(n) for n in _RESARTIS_MAP_RE.findall(index)})
+    if nums:
+        return [_RESARTIS_OC_MAP.format(n=n) for n in nums]
+
+    probed = []
+    for n in range(1, 11):                       # stop at the first gap
+        try:
+            body = _get_lax(_RESARTIS_OC_MAP.format(n=n), tries=2)
+        except requests.RequestException:
+            break
+        if not _RESARTIS_LOC_RE.search(body):
+            break
+        probed.append(_RESARTIS_OC_MAP.format(n=n))
+    if probed:
+        return probed
+
+    # Nothing worked — say which of the three it actually was.
+    if index_err is not None:
+        raise RuntimeError(
+            f"resartis sitemap unreachable — {type(index_err).__name__}: {index_err}")
+    if _looks_like_bot_wall(index):
+        raise RuntimeError("resartis sitemap returned the sgcaptcha bot wall, not XML "
+                           "— needs a headless browser to revive")
+    raise RuntimeError("no open_call sitemap found — sitemap layout changed?")
+
 
 def fetch_resartis(newest=100):
     """Res Artis open calls, via the WordPress sitemap.
@@ -98,14 +214,18 @@ def fetch_resartis(newest=100):
     the structured "Application deadline YYYY-MM-DD … Location <Country>"
     block the extractors feed on.
     """
-    index = _get("https://resartis.org/wp-sitemap.xml")
-    oc_maps = re.findall(r"https://resartis\.org/wp-sitemap-posts-open_call-\d+\.xml", index)
-    if not oc_maps:
-        raise RuntimeError("no open_call sitemap found — sitemap layout changed?")
+    oc_maps = _resartis_open_call_maps()
     urls = []
     for sm in oc_maps[-2:]:                       # last two files cover the newest posts
         # _get_lax: these sub-sitemaps come back with a 404 status + real XML body
-        urls += re.findall(r"<loc>(https://resartis\.org/open-call/[^<]+)</loc>", _get_lax(sm))
+        body = _get_lax(sm)
+        found = _RESARTIS_LOC_RE.findall(body)
+        if not found and _looks_like_bot_wall(body):
+            raise RuntimeError(f"resartis served the bot wall for {sm} instead of XML")
+        urls += found
+    if not urls:
+        raise RuntimeError("resartis sitemaps carried no /open-call/ URLs "
+                           "— post type renamed?")
     out = []
     for u in urls[-newest:]:
         slug = unquote(u.rstrip("/").rsplit("/", 1)[-1])
@@ -449,23 +569,139 @@ def fetch_arselectronica():
 _SOCIAL_HOSTS = ("facebook.", "twitter.", "x.com", "instagram.", "linkedin.",
                  "youtube.", "youtu.be", "pinterest.", "tiktok.", "whatsapp.",
                  "t.me", "telegram.", "reddit.", "flickr.", "vimeo.", "threads.net",
-                 "mastodon.", "bsky.")
+                 "mastodon.", "bsky.", "wa.me", "api.whatsapp.com",
+                 "messenger.com", "linktr.ee", "linktree.")
 _UTILITY_HOSTS = ("google.", "gstatic.", "googleapis.", "gravatar.", "w.org",
                   "wp.com", "wordpress.org", "fonts.", "schema.org", "goo.gl",
                   "creativecommons.org", "addtoany.", "sharethis.", "gmpg.org",
                   "zendesk.", "intercom.", "hotjar.", "doubleclick.", "cookiebot.",
-                  "gmail.", "mailchimp.", "list-manage.com")
-# Anchor-text cues that mark the "go here to apply" link, and pure-nav text to skip.
-_APPLY_CUES = ("apply", "application", "more info", "more information", "official",
-               "website", "submit", "register", "open call", "call for", "read more",
-               "find out more", "learn more", "link to", "full details",
-               "how to apply", "apply now", "apply here", "enter now",
-               "further information", "further info", "visit the", "más información",
-               "weitere informationen", "zur ausschreibung", "jetzt bewerben")
+                  "gmail.", "mailchimp.", "list-manage.com",
+                  "buy.stripe.com", "checkout.stripe.com", "paypal.", "gofundme.")
+# Anchor-text cues, split by how much they actually promise. A "apply here"
+# link names the application; a "website" link is usually the organiser's
+# homepage, which is exactly the generic landing page this is meant to avoid.
+_APPLY_CUES_STRONG = ("apply now", "apply here", "apply online", "how to apply",
+                      "application form", "apply", "application", "submit",
+                      "submission", "enter now", "register", "registration",
+                      "open call", "call for", "full details", "guidelines",
+                      "jetzt bewerben", "zur ausschreibung", "bewerbung",
+                      "bewerben", "ausschreibung", "candidature", "postuler",
+                      "convocatoria", "inscription", "iscrizione")
+_APPLY_CUES_WEAK = ("more info", "more information", "further information",
+                    "further info", "official", "website", "read more",
+                    "find out more", "learn more", "link to", "visit the",
+                    "details", "más información", "weitere informationen")
+_APPLY_CUES = _APPLY_CUES_STRONG + _APPLY_CUES_WEAK
 _NAV_TEXT = {"home", "about", "about us", "contact", "contact us", "privacy",
              "privacy policy", "cookie", "cookies", "newsletter", "subscribe",
              "log in", "login", "sign in", "sign up", "terms", "imprint",
              "impressum", "datenschutz", "menu", "search", "donate", "shop"}
+# Path fragments that mark a URL as addressing a specific call rather than a
+# site's front door. Matched against the path only — "residency.example.com"
+# is still just a homepage.
+_APPLY_PATH_CUES = ("apply", "application", "open-call", "opencall", "open_call",
+                    "call-for", "callfor", "opportunit", "residenc", "submission",
+                    "submit", "fellowship", "grant", "prize", "award",
+                    "competition", "programme", "program", "bewerb", "ausschreib",
+                    "stipendi", "convocatoria", "form", "openkall")
+
+
+# Submission portals: the host itself *is* the application, so even a
+# path-less URL on one (apply.foundation.org, a forms.gle short link) is a real
+# application link rather than somebody's front page.
+_PORTAL_HOSTS = ("submittable.com", "forms.gle", "jotform.com", "typeform.com",
+                 "airtable.com", "surveymonkey.", "cognitoforms.", "wufoo.",
+                 "formstack.", "smapply.io", "slideroom.com", "openwater.",
+                 "artcall.org", "callforentry.org", "zapplication.org",
+                 "submit.art", "opencall.")
+_PORTAL_PATHS = ("docs.google.com/forms", "google.com/forms")
+# Single-segment paths that are a site section, not a call: language switches,
+# boilerplate pages. Anything else with a real slug is treated as a page.
+_SECTION_PATHS = {"en", "de", "fr", "es", "it", "nl", "pt", "pl", "cz", "jp",
+                  "bg", "eu", "us", "uk", "home", "index", "about", "about-us",
+                  "contact", "kontakt", "news", "blog", "shop", "donate",
+                  "support", "privacy", "imprint", "impressum", "datenschutz",
+                  "ueber-uns", "search"}
+
+
+def _is_application_portal(url):
+    """True for a submission-platform URL (Submittable, JotForm, Google Forms,
+    an `apply.` subdomain…) — the whole point of the host is the application."""
+    pu = urlparse(url)
+    host = pu.netloc.lower()
+    hp = host + (pu.path or "")
+    return (host.startswith(("apply.", "apply-", "submit.", "application."))
+            or any(h in host for h in _PORTAL_HOSTS)
+            or any(h in hp for h in _PORTAL_PATHS))
+
+
+def _is_bare_root(url):
+    """True for a site front door — 'https://example.org' or 'https://example.org/'."""
+    pu = urlparse(url)
+    if (pu.path or "").strip("/") or pu.query:
+        return False
+    return not _is_application_portal(url)
+
+
+def is_specific_apply_url(url):
+    """True when a URL addresses a page you could actually apply from.
+
+    Homepages and bare section roots ('/es', '/en') fail: landing on one and
+    hunting for the call down a menu is worse than landing on the listing page
+    we already have, which at least describes it. Anything that names a call, a
+    submission portal, or a real page slug passes.
+    """
+    if not url:
+        return False
+    pu = urlparse(url)
+    if pu.scheme not in ("http", "https") or not pu.netloc:
+        return False
+    if _is_application_portal(url):
+        return True
+    path = (pu.path or "").strip("/").lower()
+    if not path:
+        return bool(pu.query)          # '/?p=1234' still addresses one post
+    if any(c in path for c in _APPLY_PATH_CUES):
+        return True
+    if pu.query or path.count("/") >= 1:   # ?id=266, /en/news/<slug> and friends
+        return True
+    # one path segment: a page slug is fine, a bare section code is not
+    return len(path) >= 3 and path not in _SECTION_PATHS
+
+
+def is_usable_apply_url(url):
+    """Would the extractor accept this URL as an application link today?
+
+    Host rules and page-specificity in one predicate, so `reapply --prune` can
+    re-check links captured under an older, looser rule without re-fetching
+    every page.
+    """
+    if not is_specific_apply_url(url):
+        return False
+    host = urlparse(url).netloc.lower()
+    if _is_application_portal(url):
+        return True
+    return not any(h in host for h in _SOCIAL_HOSTS + _UTILITY_HOSTS)
+
+
+def _apply_link_score(href, text):
+    """How strongly a link looks like *the* application page (higher = better)."""
+    path = (urlparse(href).path or "").rstrip("/").lower()
+    score = 0
+    if any(c in text for c in _APPLY_CUES_STRONG):
+        score += 3
+    elif any(c in text for c in _APPLY_CUES_WEAK):
+        score += 1
+    if any(c in path for c in _APPLY_PATH_CUES):
+        score += 2
+    if path.count("/") >= 2:                             # a deep page, not a section
+        score += 1
+    if text.startswith(("http", "www.")):                # anchor text *is* a URL
+        score += 1
+    return score
+
+
+_APPLY_ACCEPT = 3      # "apply"-ish anchor text, or a weak cue on a call-shaped URL
 
 
 def _reg_root(host):
@@ -481,8 +717,13 @@ def _extract_apply_url(soup, page_url):
     Many sources (On the Move, culture360, Res Artis…) are intermediaries: their
     page summarises a call and links out to the organiser's own site where you
     actually apply. Find that outbound link so the dashboard's "Apply" button
-    skips the middleman. Returns None when nothing is confident enough — the
-    caller falls back to the listing URL.
+    skips the middleman.
+
+    Returns None unless the link clears two bars — it looks like an application
+    link (score) *and* it addresses a specific page (is_specific_apply_url).
+    Returning None is a good outcome: the caller falls back to the listing URL,
+    which at least describes the call. An organiser's homepage does not, and
+    handing one over as "the application page" is worse than not linking out.
     """
     page_root = _reg_root(urlparse(page_url).netloc)
     content = soup.find("main") or soup.find("article") or soup.body or soup
@@ -495,22 +736,31 @@ def _extract_apply_url(soup, page_url):
         host = pu.netloc.lower()
         if _reg_root(host) == page_root:                     # stays on the aggregator
             continue
-        if any(h in host for h in _SOCIAL_HOSTS + _UTILITY_HOSTS):
+        if (any(h in host for h in _SOCIAL_HOSTS + _UTILITY_HOSTS)
+                and not _is_application_portal(href)):
             continue
         txt = a.get_text(" ", strip=True).lower()
-        cues = sum(1 for c in _APPLY_CUES if c in txt)
-        if not txt or (txt in _NAV_TEXT and not cues):       # bare logo / nav chrome
+        if not txt or (txt in _NAV_TEXT and not any(c in txt for c in _APPLY_CUES)):
+            continue                                         # bare logo / nav chrome
+        if _is_bare_root(href):
+            # remember the host so the single-outbound-host fallback still knows
+            # the organiser, but a front door is never the application page
+            externals.setdefault(host, None)
             continue
-        externals.setdefault(host, href)
-        score = 2 * cues
-        if txt.startswith(("http", "www.")):                 # anchor text *is* a URL
-            score += 1
-        if score > best_score:
+        if not externals.get(host):
+            externals[host] = href
+        score = _apply_link_score(href, txt)
+        # prefer a higher score, then the more specific (deeper) URL
+        if score > best_score or (score == best_score and score and best
+                                  and href.count("/") > best.count("/")):
             best_score, best = score, href
-    if best_score >= 2:                     # an explicit apply/more-info link won
+    if best_score >= _APPLY_ACCEPT and is_specific_apply_url(best):
         return best
-    if len(externals) == 1:                 # one outbound host → almost surely the organiser
-        return next(iter(externals.values()))
+    # exactly one outbound organiser, and we found a real page on it (not just
+    # their front door) → that page is almost surely where the call lives
+    pages = [u for u in externals.values() if u and is_specific_apply_url(u)]
+    if len(externals) == 1 and len(pages) == 1:
+        return pages[0]
     return None
 
 

@@ -57,8 +57,8 @@ def cmd_update(args):
             print(f"  {name:12s} {len(items):4d} items")
         except Exception as e:  # one bad source must not kill the run
             errors.append(f"{name}: {type(e).__name__}: {e}")
-            health[name] = f"error: {e}"[:60] or f"error: {type(e).__name__}"
-            print(f"  {name:12s} FAILED — {e}")
+            health[name] = _health_error(e)
+            print(f"  {name:12s} FAILED — {type(e).__name__}: {e}")
 
     normalized, seen, dropped = [], set(), 0
     for r in raw_all:
@@ -85,6 +85,21 @@ def cmd_update(args):
             print(_fmt_line(it))
         if args.email:
             _send_digest(new_items)
+
+
+def _health_error(exc):
+    """Short, readable failure line for the dashboard's source-health strip.
+
+    The exception type carries the useful half of the diagnosis (a
+    ConnectionError is a network blip; a RuntimeError is our own "this markup
+    moved" message), and long library reprs used to be truncated mid-word right
+    where the reason would have been. Keep the type, keep the head of the
+    message, and mark it when there's more.
+    """
+    msg = " ".join(str(exc).split())
+    if len(msg) > 110:
+        msg = msg[:110].rsplit(" ", 1)[0] + "…"
+    return f"error: {type(exc).__name__}" + (f": {msg}" if msg else "")
 
 
 def _enrich(cap):
@@ -140,9 +155,18 @@ def cmd_reapply(args):
     field existed. New calls get it during enrich, so this is only for the
     backlog."""
     store.init()
+    if args.prune:
+        stale = [r for r in store.stored_apply_urls()
+                 if not src.is_usable_apply_url(r["apply_url"])]
+        for r in stale:
+            print(f"  – {r['source']}: {r['title'][:50]} → {r['apply_url']}")
+        n = store.clear_apply_urls(r["id"] for r in stale)
+        print(f"pruned {n} apply link(s) that pointed at a homepage or a "
+              f"non-application host; those calls fall back to their listing page.")
     todo = store.needing_apply_url(limit=args.limit, sources=INTERMEDIARY_SOURCES)
     if not todo:
         print("nothing to backfill — every intermediary call already has an apply link.")
+        store.export()
         return
     print(f"backfilling apply links for {len(todo)} call(s)…")
     found = 0
@@ -253,7 +277,10 @@ def build_parser():
     m.set_defaults(func=cmd_mark)
 
     r = sub.add_parser("reapply", help="backfill real apply links on old aggregator listings")
-    r.add_argument("--limit", type=int, default=400, help="max listings to re-fetch")
+    r.add_argument("--limit", type=int, default=400,
+                   help="max listings to re-fetch (0 = prune only, no network)")
+    r.add_argument("--prune", action="store_true",
+                   help="first drop stored apply links that only point at a homepage")
     r.set_defaults(func=cmd_reapply)
     return p
 

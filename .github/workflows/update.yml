@@ -32,6 +32,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Offline checks
+        # Guards the rules that decide what the dashboard's Apply button points
+        # at, and the Res Artis sitemap parsing. No network — runs in seconds.
+        run: python test_sources.py
+
       - name: Run aggregator
         # data.db is committed in the repo, so "NEW since last run" detection and
         # first-seen timestamps survive across CI runs.

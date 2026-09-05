@@ -131,6 +131,30 @@ def needing_apply_url(limit=200, sources=None):
         return [dict(r) for r in c.execute(sql, args).fetchall()]
 
 
+def stored_apply_urls():
+    """(id, source, title, apply_url) for every call carrying an apply link.
+
+    Used by `reapply --prune` to re-check links captured under an older, looser
+    rule and drop the ones that only point at an organiser's homepage.
+    """
+    with _conn() as c:
+        return [dict(r) for r in c.execute(
+            "SELECT id, source, title, apply_url FROM opportunities "
+            "WHERE apply_url IS NOT NULL AND apply_url<>''")]
+
+
+def clear_apply_urls(ids):
+    """Null out apply links that no longer meet the quality bar. The dashboard
+    then falls back to the listing URL, which at least describes the call."""
+    ids = list(ids)
+    if not ids:
+        return 0
+    with _conn() as c:
+        c.executemany("UPDATE opportunities SET apply_url=NULL WHERE id=?",
+                      [(i,) for i in ids])
+    return len(ids)
+
+
 def save_apply_url(opp_id, apply_url):
     """Set the organiser apply link without touching anything else (backfill)."""
     if not apply_url:

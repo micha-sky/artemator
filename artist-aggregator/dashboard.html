@@ -453,8 +453,11 @@ document.getElementById("themeBtn").onclick = () => {
     const v = SOURCES[n];
     const bad = typeof v!=="number", warn = v===0;
     const cls = bad?"bad":warn?"warn":"ok";
-    const txt = bad ? String(v) : v+"";
-    return `<span class="src-chip"><span class="sdot ${cls}"></span>${esc(n)} · ${esc(txt)}</span>`;
+    // a full error repr is unreadable inline — chip shows the kind of failure,
+    // the tooltip carries the whole thing
+    const full = bad ? String(v) : v+" items";
+    const txt = bad ? (String(v).match(/^error: ([A-Za-z]+)/)||[,"failed"])[1] : v+"";
+    return `<span class="src-chip" title="${esc(n)} — ${esc(full)}"><span class="sdot ${cls}"></span>${esc(n)} · ${esc(txt)}</span>`;
   }).join("");
 })();
 
@@ -609,6 +612,10 @@ function applyPanelHTML(o, id, url){
   // back to the listing URL when we couldn't resolve one (see sources.py).
   const applyUrl = safeUrl(o.apply_url || o.url);
   const direct = o.apply_url && o.apply_url!==o.url;
+  // Only a resolved organiser link is promised as "the application page". When
+  // there isn't one we send you to the listing, which at least describes the
+  // call — better than a guessed homepage that says nothing about it.
+  const applyLabel = direct ? "Open application page ↗" : "Open listing page ↗";
   const reqs = (o.requirements||"").split(",").map(s=>s.trim()).filter(Boolean);
   const text = o.details || o.summary;
   const checklist = reqs.length
@@ -629,8 +636,10 @@ function applyPanelHTML(o, id, url){
     }</div>
     <textarea class="notes" data-id="${id}" placeholder="Notes for this application… (saved in this browser)">${esc(ov.notes||"")}</textarea>
     <div class="d-actions">
-      <a class="applylink" href="${applyUrl}" target="_blank" rel="noreferrer">Open application page ↗</a>
-      ${direct?`<span class="src" title="Skips the listing site — goes to the organiser's own application page">↳ direct to organiser</span>`:""}
+      <a class="applylink" href="${applyUrl}" target="_blank" rel="noreferrer">${applyLabel}</a>
+      ${direct
+        ? `<span class="src" title="Skips the listing site — goes to the organiser's own application page">↳ direct to organiser</span>`
+        : `<span class="src" title="No organiser application link could be resolved for this call — the listing page is the closest thing we have">↳ listing page · find “apply” there</span>`}
       ${o.deadline?`<span class="src">deadline ${esc(fmtDate(o.deadline))}</span>`:""}
     </div>
   </div>`;
